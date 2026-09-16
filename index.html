@@ -22,90 +22,133 @@
             --text-muted: #94a3b8;
             --font-family: 'Outfit', sans-serif;
             --accent-glow: rgba(56, 189, 248, 0.4);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
         }
 
         body { 
             background-color: var(--bg-main); 
             color: var(--text-main); 
             font-family: var(--font-family); 
-            transition: all 0.4s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
         }
 
         .card { 
             background-color: var(--bg-card); 
             border: 1px solid var(--border-color); 
-            border-radius: 16px; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 18px; 
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* 3D Dynamic Animated Icon Style */
+        .card:hover {
+            box-shadow: 0 20px 30px -10px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Continuous Floating Icon Animation */
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(3deg); }
+        }
+
         .icon-3d {
-            transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            animation: floatIcon 3.5s ease-in-out infinite;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             transform-style: preserve-3d;
         }
 
         .icon-3d:hover {
-            transform: translateY(-4px) rotateX(10deg) rotateY(-10deg) scale(1.1);
+            animation: none;
+            transform: translateY(-6px) rotateX(12deg) rotateY(-12deg) scale(1.2);
             filter: drop-shadow(0 10px 15px var(--accent-glow));
         }
 
         /* Dynamic Themes */
         body.theme-ocean { 
             --bg-main: #0b1329; --bg-card: #131c35; --border-color: #1e293b; 
-            --text-main: #e2e8f0; --text-muted: #94a3b8; --accent-glow: rgba(56, 189, 248, 0.4);
+            --text-main: #e2e8f0; --text-muted: #94a3b8; --accent-glow: rgba(56, 189, 248, 0.35);
         }
         body.theme-pastel { 
             --bg-main: #f8fafc; --bg-card: #ffffff; --border-color: #e2e8f0; 
-            --text-main: #1e293b; --text-muted: #64748b; --accent-glow: rgba(244, 114, 182, 0.3);
+            --text-main: #1e293b; --text-muted: #64748b; --accent-glow: rgba(244, 114, 182, 0.25);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         body.theme-midnight { 
             --bg-main: #09090b; --bg-card: #18181b; --border-color: #27272a; 
-            --text-main: #f4f4f5; --text-muted: #a1a1aa; --accent-glow: rgba(168, 85, 247, 0.4);
+            --text-main: #f4f4f5; --text-muted: #a1a1aa; --accent-glow: rgba(168, 85, 247, 0.35);
         }
         body.theme-forest { 
             --bg-main: #061e14; --bg-card: #0b2e20; --border-color: #134e38; 
-            --text-main: #ecfdf5; --text-muted: #6ee7b7; --accent-glow: rgba(16, 185, 129, 0.4);
+            --text-main: #ecfdf5; --text-muted: #6ee7b7; --accent-glow: rgba(16, 185, 129, 0.35);
         }
 
-        body.theme-pastel .card-bg-subtle { background-color: #f1f5f9; }
         body.theme-pastel input, body.theme-pastel textarea, body.theme-pastel select {
-            background-color: #f8fafc !important;
+            background-color: #f1f5f9 !important;
             color: #0f172a !important;
             border-color: #cbd5e1 !important;
         }
 
-        /* Font Classes */
+        /* Fonts */
         body.font-outfit { font-family: 'Outfit', sans-serif; }
         body.font-inter { font-family: 'Inter', sans-serif; }
         body.font-poppins { font-family: 'Poppins', sans-serif; }
         body.font-mono { font-family: 'Roboto Mono', monospace; }
 
-        .status-done { background-color: #10b981; }
-        .status-partial { background-color: #f59e0b; }
-        .status-missed { background-color: #ef4444; }
+        .status-done { background-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .status-partial { background-color: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .status-missed { background-color: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
         .status-unset { background-color: #475569; }
+
+        /* Smooth Scroll Fade-In Animation */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px) scale(0.97);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Touch / Click Ripple & Pulse */
+        .touch-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .touch-effect:active {
+            transform: scale(0.96);
+            transition: transform 0.1s ease;
+        }
+
+        canvas {
+            border: none !important;
+            outline: none !important;
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
 
     <!-- Header Navigation -->
-    <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-700/50 pb-4">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-700/40 pb-4 reveal-on-scroll">
         <div>
             <h1 class="text-2xl md:text-3xl font-bold tracking-wide flex items-center gap-3">
                 <i class="fa-solid fa-chart-line text-sky-400 icon-3d"></i>
                 <span>TRANSFORMATION TRACKER</span>
             </h1>
-            <p class="text-slate-400 text-sm mt-1">Aesthetic, ADHD-Friendly Consistency Dashboard</p>
+            <p class="text-slate-400 text-sm mt-1">Aesthetic, ADHD-Friendly Smooth Dashboard</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-            <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30 hover:scale-105 active:scale-95">
+            <button onclick="switchTab('daily')" id="tab-daily" class="touch-effect px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30 hover:scale-105">
                 <i class="fa-solid fa-calendar-day mr-2 icon-3d"></i>Daily Routine
             </button>
-            <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105 active:scale-95">
+            <button onclick="switchTab('weekly')" id="tab-weekly" class="touch-effect px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105">
                 <i class="fa-solid fa-chart-pie mr-2 icon-3d"></i>Weekly Analytics
             </button>
             <!-- Settings Button -->
-            <button onclick="openSettingsModal()" class="px-3 py-2 rounded-xl text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 hover:scale-105 transition-all">
+            <button onclick="openSettingsModal()" class="touch-effect px-3 py-2 rounded-xl text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 hover:scale-105 transition-all">
                 <i class="fa-solid fa-gear icon-3d"></i> Settings
             </button>
         </div>
@@ -115,7 +158,7 @@
     <div id="view-daily" class="space-y-6">
         <!-- Top Stats Row -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
+            <div class="card p-4 flex items-center gap-4 reveal-on-scroll">
                 <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl icon-3d">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
@@ -124,7 +167,7 @@
                     <div class="text-2xl font-bold"><span id="daily-progress-pct">0</span>%</div>
                 </div>
             </div>
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
+            <div class="card p-4 flex items-center gap-4 reveal-on-scroll">
                 <div class="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl icon-3d">
                     <i class="fa-solid fa-bullseye"></i>
                 </div>
@@ -133,7 +176,7 @@
                     <div class="text-sm font-semibold text-sky-400">Control & Routine</div>
                 </div>
             </div>
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
+            <div class="card p-4 flex items-center gap-4 reveal-on-scroll">
                 <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl icon-3d">
                     <i class="fa-solid fa-fire"></i>
                 </div>
@@ -142,7 +185,7 @@
                     <div class="text-sm font-semibold text-purple-400">Consistency First</div>
                 </div>
             </div>
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
+            <div class="card p-4 flex items-center gap-4 reveal-on-scroll">
                 <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl icon-3d">
                     <i class="fa-solid fa-crown"></i>
                 </div>
@@ -156,7 +199,7 @@
         <!-- Main Layout Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Daily Schedule Column -->
-            <div class="card p-5 lg:col-span-1 space-y-4">
+            <div class="card p-5 lg:col-span-1 space-y-4 reveal-on-scroll">
                 <h2 class="text-lg font-bold flex items-center justify-between">
                     <span><i class="fa-regular fa-clock text-sky-400 mr-2 icon-3d"></i>Ideal Daily Schedule</span>
                     <span class="text-xs text-slate-400">Anchor Timeline</span>
@@ -166,9 +209,9 @@
                 </div>
             </div>
 
-            <!-- Middle Column: Checklist & Dot Matrix -->
+            <!-- Middle Column: Checklist & Matrix -->
             <div class="space-y-6 lg:col-span-1">
-                <div class="card p-5 space-y-4">
+                <div class="card p-5 space-y-4 reveal-on-scroll">
                     <div class="flex justify-between items-center">
                         <h2 class="text-lg font-bold">
                             <i class="fa-solid fa-list-check text-emerald-400 mr-2 icon-3d"></i>Task Checklist
@@ -180,7 +223,7 @@
                     </div>
                 </div>
 
-                <div class="card p-5 space-y-4">
+                <div class="card p-5 space-y-4 reveal-on-scroll">
                     <h2 class="text-lg font-bold">
                         <i class="fa-solid fa-calendar-week text-amber-400 mr-2 icon-3d"></i>Weekly Matrix
                     </h2>
@@ -208,17 +251,17 @@
 
             <!-- Right Column: Notes & Plan -->
             <div class="space-y-6 lg:col-span-1">
-                <div class="card p-5 space-y-4">
+                <div class="card p-5 space-y-4 reveal-on-scroll">
                     <h2 class="text-lg font-bold">
                         <i class="fa-solid fa-pen-to-square text-purple-400 mr-2 icon-3d"></i>Daily Journal
                     </h2>
-                    <textarea id="daily-notes" rows="6" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl p-3 text-sm focus:outline-none focus:border-purple-500" placeholder="Write thoughts, improvements, reflections..."></textarea>
-                    <button onclick="saveNotes()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 rounded-xl text-sm transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-purple-600/30">
+                    <textarea id="daily-notes" rows="6" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl p-3 text-sm focus:outline-none focus:border-purple-500 transition" placeholder="Write thoughts, reflections, improvements..."></textarea>
+                    <button onclick="saveNotes()" class="touch-effect w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-lg shadow-purple-600/30">
                         Save Reflection
                     </button>
                 </div>
 
-                <div class="card p-5 space-y-3">
+                <div class="card p-5 space-y-3 reveal-on-scroll">
                     <h2 class="text-lg font-bold">
                         <i class="fa-solid fa-map text-indigo-400 mr-2 icon-3d"></i>6-Month Roadmap
                     </h2>
@@ -247,13 +290,13 @@
     <!-- TAB 2: WEEKLY REVIEW -->
     <div id="view-weekly" class="hidden space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="card p-5 space-y-4">
+            <div class="card p-5 space-y-4 reveal-on-scroll">
                 <h2 class="text-lg font-bold">
                     <i class="fa-solid fa-chart-column text-sky-400 mr-2 icon-3d"></i>Weekly Completion Score (%)
                 </h2>
                 <div class="h-64"><canvas id="habitChart"></canvas></div>
             </div>
-            <div class="card p-5 space-y-4">
+            <div class="card p-5 space-y-4 reveal-on-scroll">
                 <h2 class="text-lg font-bold">
                     <i class="fa-solid fa-chart-pie text-purple-400 mr-2 icon-3d"></i>Life Balance Radar
                 </h2>
@@ -267,14 +310,14 @@
         <div class="card p-6 w-full max-w-md space-y-5 border-slate-600 shadow-2xl">
             <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
                 <h3 class="text-lg font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-amber-400 icon-3d"></i> App Themes & Customization
+                    <i class="fa-solid fa-sliders text-amber-400 icon-3d"></i> App Customization
                 </h3>
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
             </div>
 
             <!-- Theme Picker -->
             <div class="space-y-2">
-                <label class="text-xs font-semibold uppercase tracking-wider block">Theme Aesthetic</label>
+                <label class="text-xs font-semibold uppercase tracking-wider block">Theme Style</label>
                 <select id="setting-theme" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none">
                     <option value="theme-pastel">🌸 Soft Pastel Aesthetic (ADHD Friendly)</option>
                     <option value="theme-ocean">🌊 Deep Ocean (Dark Blue)</option>
@@ -295,7 +338,7 @@
             </div>
 
             <div class="pt-3 border-t border-slate-700/60 flex justify-end">
-                <button onclick="closeSettingsModal()" class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-2 rounded-xl text-sm transition hover:scale-105">
+                <button onclick="closeSettingsModal()" class="touch-effect bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-2 rounded-xl text-sm transition">
                     Done
                 </button>
             </div>
@@ -308,13 +351,13 @@
             { time: "05:30 AM - 06:00 AM", title: "Wake Up & Hydrate", desc: "No phone first 30 mins", icon: "fa-sun", color: "text-amber-400" },
             { time: "06:00 AM - 07:00 AM", title: "Exercise / Workout", desc: "Physical fitness & movement", icon: "fa-dumbbell", color: "text-emerald-400" },
             { time: "07:00 AM - 08:00 AM", title: "Shower & Breakfast", desc: "Clean diet, get ready", icon: "fa-utensils", color: "text-sky-400" },
-            { time: "08:00 AM - 12:00 PM", title: "Deep Work Block 1", desc: "High priority learning/tasks", icon: "fa-brain", color: "text-purple-400" },
+            { time: "08:00 AM - 12:00 PM", title: "Deep Work Block 1", desc: "High priority tasks", icon: "fa-brain", color: "text-purple-400" },
             { time: "12:00 PM - 01:00 PM", title: "Lunch & Mental Reset", desc: "Rest, walk, avoid scrolling", icon: "fa-mug-hot", color: "text-teal-400" },
             { time: "01:00 PM - 05:00 PM", title: "Deep Work Block 2", desc: "Skills, English, projects", icon: "fa-laptop-code", color: "text-indigo-400" },
             { time: "05:00 PM - 06:30 PM", title: "Reading / Skill Practice", desc: "Personal growth books", icon: "fa-book-open", color: "text-amber-300" },
             { time: "06:30 PM - 08:30 PM", title: "Family / Free Time", desc: "Unwind and connect", icon: "fa-heart", color: "text-rose-400" },
             { time: "08:30 PM - 09:30 PM", title: "Daily Review & Planning", desc: "Log habits, prepare tomorrow", icon: "fa-list-check", color: "text-emerald-300" },
-            { time: "10:00 PM", title: "Lights Out", desc: "8 hours high quality sleep", icon: "fa-moon", color: "text-slate-400" }
+            { time: "10:00 PM", title: "Lights Out", desc: "8 hours quality sleep", icon: "fa-moon", color: "text-slate-400" }
         ];
 
         const habitList = [
@@ -343,7 +386,21 @@
             loadSavedData();
             loadCustomization();
             initCharts();
+            setupScrollObserver();
         });
+
+        // Intersection Observer for Smooth Scroll Animation
+        function setupScrollObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll(".reveal-on-scroll").forEach(el => observer.observe(el));
+        }
 
         function switchTab(tab) {
             const dailyView = document.getElementById("view-daily");
@@ -354,15 +411,16 @@
             if (tab === 'daily') {
                 dailyView.classList.remove("hidden");
                 weeklyView.classList.add("hidden");
-                btnDaily.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
-                btnWeekly.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                btnDaily.className = "touch-effect px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
+                btnWeekly.className = "touch-effect px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
             } else {
                 dailyView.classList.add("hidden");
                 weeklyView.classList.remove("hidden");
-                btnWeekly.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
-                btnDaily.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                btnWeekly.className = "touch-effect px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
+                btnDaily.className = "touch-effect px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
                 updateCharts();
             }
+            setTimeout(setupScrollObserver, 100);
         }
 
         function openSettingsModal() { document.getElementById("settings-modal").classList.remove("hidden"); }
@@ -376,6 +434,10 @@
 
             const settings = { theme, font };
             localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
+
+            if (habitChartInstance && balanceChartInstance) {
+                updateCharts();
+            }
         }
 
         function loadCustomization() {
@@ -388,7 +450,7 @@
         function renderSchedule() {
             const container = document.getElementById("schedule-container");
             container.innerHTML = scheduleData.map(item => `
-                <div class="p-3 rounded-xl border border-slate-700/40 flex items-start gap-3 hover:scale-[1.01] transition">
+                <div class="touch-effect p-3 rounded-xl border border-slate-700/40 flex items-start gap-3 hover:scale-[1.01] transition">
                     <div class="mt-1 ${item.color} text-lg icon-3d"><i class="fa-solid ${item.icon}"></i></div>
                     <div class="flex-1">
                         <div class="text-xs font-mono text-slate-400">${item.time}</div>
@@ -407,7 +469,7 @@
                 const checked = savedState[habit.id] ? "checked" : "";
                 const isDone = savedState[habit.id] ? "line-through opacity-50" : "";
                 return `
-                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-700/40 cursor-pointer hover:scale-[1.01] transition">
+                    <label class="touch-effect flex items-center gap-3 p-3 rounded-xl border border-slate-700/40 cursor-pointer hover:scale-[1.01] transition">
                         <input type="checkbox" onchange="toggleChecklist('${habit.id}')" ${checked} class="w-4 h-4 accent-sky-500 rounded cursor-pointer">
                         <span class="text-sm font-medium ${isDone}">${habit.name}</span>
                     </label>
@@ -445,7 +507,7 @@
 
                     return `
                         <td class="p-1 text-center">
-                            <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="w-6 h-6 rounded-full ${colorClass} transition-all hover:scale-125 active:scale-90 border border-slate-700/30 inline-block icon-3d"></button>
+                            <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="touch-effect w-6 h-6 rounded-full ${colorClass} transition-all border border-slate-700/30 inline-block icon-3d"></button>
                         </td>
                     `;
                 }).join("");
@@ -480,6 +542,9 @@
         }
 
         function initCharts() {
+            Chart.defaults.borderColor = 'transparent';
+            Chart.defaults.color = '#94a3b8';
+
             const ctx1 = document.getElementById('habitChart').getContext('2d');
             const ctx2 = document.getElementById('balanceChart').getContext('2d');
 
@@ -491,13 +556,17 @@
                         label: 'Completion Score (%)',
                         data: calculateScores(),
                         backgroundColor: '#38bdf8',
-                        borderRadius: 8
+                        borderRadius: 8,
+                        borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true, max: 100 } },
+                    scales: { 
+                        y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                        x: { grid: { display: false } }
+                    },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -508,7 +577,8 @@
                     labels: ['Workout', 'Books', 'English', 'Skill', 'Money Save', 'Phone Control'],
                     datasets: [{
                         data: [70, 60, 55, 50, 45, 80],
-                        backgroundColor: ['#10b981', '#38bdf8', '#c084fc', '#f59e0b', '#a855f7', '#f43f5e']
+                        backgroundColor: ['#10b981', '#38bdf8', '#c084fc', '#f59e0b', '#a855f7', '#f43f5e'],
+                        borderWidth: 0
                     }]
                 },
                 options: {
@@ -540,4 +610,4 @@
         }
     </script>
 </body>
- </html>
+     </html>
