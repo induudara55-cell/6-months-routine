@@ -41,7 +41,7 @@
         .status-missed { background-color: #dc2626; }
         .status-unset { background-color: #334155; }
         
-        /* Dynamic Theme Themes */
+        /* Dynamic Themes */
         body.theme-ocean { --bg-main: #0b1329; --bg-card: #131c35; --border-color: #1e293b; }
         body.theme-midnight { --bg-main: #09090b; --bg-card: #18181b; --border-color: #27272a; }
         body.theme-forest { --bg-main: #061e14; --bg-card: #0b2e20; --border-color: #134e38; }
@@ -54,7 +54,7 @@
         body.font-mono { font-family: 'Roboto Mono', monospace; }
     </style>
 </head>
-<body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
+<body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen relative pb-24">
 
     <!-- Header Navigation -->
     <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-700 pb-4">
@@ -71,7 +71,6 @@
             <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
                 <i class="fa-solid fa-chart-pie mr-2"></i>Weekly Review
             </button>
-            <!-- Settings Button -->
             <button onclick="openSettingsModal()" class="px-3 py-2 rounded-lg text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700">
                 <i class="fa-solid fa-gear"></i> Settings
             </button>
@@ -80,7 +79,6 @@
 
     <!-- TAB 1: DAILY ROUTINE & CHECKLIST -->
     <div id="view-daily" class="space-y-6">
-        <!-- Top Stats Row -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="card p-4 flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
@@ -120,22 +118,16 @@
             </div>
         </div>
 
-        <!-- Main Daily Layout Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Daily Schedule Column -->
             <div class="card p-5 lg:col-span-1 space-y-4">
                 <h2 class="text-lg font-bold text-white flex items-center justify-between">
                     <span><i class="fa-regular fa-clock text-sky-400 mr-2"></i>Ideal Daily Schedule</span>
                     <span class="text-xs font-normal text-slate-400">Fixed Anchor Routine</span>
                 </h2>
-                <div class="space-y-2 max-h-[600px] overflow-y-auto pr-1" id="schedule-container">
-                    <!-- Dynamic Schedule Content -->
-                </div>
+                <div class="space-y-2 max-h-[600px] overflow-y-auto pr-1" id="schedule-container"></div>
             </div>
 
-            <!-- Middle Column: Checklist & Weekly Dot Matrix -->
             <div class="space-y-6 lg:col-span-1">
-                <!-- Daily Checklist -->
                 <div class="card p-5 space-y-4">
                     <div class="flex justify-between items-center">
                         <h2 class="text-lg font-bold text-white">
@@ -143,17 +135,13 @@
                         </h2>
                         <span class="text-xs text-slate-400">Tap to toggle status</span>
                     </div>
-                    <div class="space-y-2" id="checklist-container">
-                        <!-- Dynamic Checklist Items -->
-                    </div>
+                    <div class="space-y-2" id="checklist-container"></div>
                 </div>
 
-                <!-- Weekly Matrix (Dot Toggles) -->
                 <div class="card p-5 space-y-4">
                     <h2 class="text-lg font-bold text-white">
                         <i class="fa-solid fa-calendar-week text-amber-400 mr-2"></i>Weekly Habit Matrix
                     </h2>
-                    <p class="text-xs text-slate-400">Tap status dots to cycle: Done (Green) | Partial (Yellow) | Missed (Red)</p>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
                             <thead class="text-xs uppercase bg-slate-800 text-slate-400">
@@ -168,15 +156,12 @@
                                     <th class="p-1 text-center">S</th>
                                 </tr>
                             </thead>
-                            <tbody id="matrix-container" class="divide-y divide-slate-800">
-                                <!-- Dynamic Weekly Matrix -->
-                            </tbody>
+                            <tbody id="matrix-container" class="divide-y divide-slate-800"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Notes & Quick Vision -->
             <div class="space-y-6 lg:col-span-1">
                 <div class="card p-5 space-y-4">
                     <h2 class="text-lg font-bold text-white">
@@ -187,137 +172,102 @@
                         Save Journal Note
                     </button>
                 </div>
-
-                <!-- 6-Month Roadmap Summary Card -->
-                <div class="card p-5 space-y-3 bg-gradient-to-br from-slate-900 to-indigo-950/40">
-                    <h2 class="text-lg font-bold text-white">
-                        <i class="fa-solid fa-map text-indigo-400 mr-2"></i>6-Month Master Plan
-                    </h2>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
-                            <span class="font-bold text-sky-400 block">Month 1</span> Control & Routine
-                        </div>
-                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
-                            <span class="font-bold text-emerald-400 block">Month 2</span> Consistency
-                        </div>
-                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
-                            <span class="font-bold text-purple-400 block">Month 3</span> Strength & Skill
-                        </div>
-                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
-                            <span class="font-bold text-amber-400 block">Month 4</span> Discipline
-                        </div>
-                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50 col-span-2">
-                            <span class="font-bold text-rose-400 block">Months 5 & 6</span> High Performance & Peak Identity
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 2: WEEKLY REVIEW & ANALYTICS -->
+    <!-- TAB 2: WEEKLY REVIEW -->
     <div id="view-weekly" class="hidden space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Chart 1: Habit Scores -->
             <div class="card p-5 space-y-4">
-                <h2 class="text-lg font-bold text-white">
-                    <i class="fa-solid fa-chart-column text-sky-400 mr-2"></i>Weekly Consistency Score (%)
-                </h2>
-                <div class="h-64">
-                    <canvas id="habitChart"></canvas>
-                </div>
+                <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-chart-column text-sky-400 mr-2"></i>Weekly Consistency Score (%)</h2>
+                <div class="h-64"><canvas id="habitChart"></canvas></div>
             </div>
-
-            <!-- Chart 2: Category Radar / Balance -->
             <div class="card p-5 space-y-4">
-                <h2 class="text-lg font-bold text-white">
-                    <i class="fa-solid fa-chart-pie text-purple-400 mr-2"></i>Life Balance Distribution
-                </h2>
-                <div class="h-64 flex justify-center">
-                    <canvas id="balanceChart"></canvas>
-                </div>
+                <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-chart-pie text-purple-400 mr-2"></i>Life Balance Distribution</h2>
+                <div class="h-64 flex justify-center"><canvas id="balanceChart"></canvas></div>
             </div>
         </div>
 
-        <!-- Weekly Self Review Form -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="card p-5 space-y-3">
                 <h3 class="font-bold text-emerald-400 text-sm">1. What did I do well this week?</h3>
-                <textarea id="review-well" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" placeholder="Type your response..."></textarea>
+                <textarea id="review-well" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none"></textarea>
             </div>
             <div class="card p-5 space-y-3">
                 <h3 class="font-bold text-rose-400 text-sm">2. What was my biggest mistake?</h3>
-                <textarea id="review-mistake" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" placeholder="Type your response..."></textarea>
+                <textarea id="review-mistake" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none"></textarea>
             </div>
             <div class="card p-5 space-y-3">
                 <h3 class="font-bold text-sky-400 text-sm">3. What can I improve next week?</h3>
-                <textarea id="review-improve" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" placeholder="Type your response..."></textarea>
+                <textarea id="review-improve" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none"></textarea>
             </div>
         </div>
-
         <div class="flex justify-end">
-            <button onclick="saveWeeklyReview()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition">
-                Save Weekly Self-Review
-            </button>
-        </div>
-
-        <!-- Key Reminders Card -->
-        <div class="card p-5 space-y-3 bg-slate-900/80 border-amber-500/30">
-            <h3 class="font-bold text-amber-400 text-sm flex items-center gap-2">
-                <i class="fa-solid fa-lightbulb"></i> KEY REMINDERS
-            </h3>
-            <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
-                <li>Progress over perfection.</li>
-                <li>Small steps create big results.</li>
-                <li>Don't miss twice in a row.</li>
-                <li>Protect your mental health & sleep.</li>
-                <li>You are doing better than you think!</li>
-            </ul>
-            <div class="text-center font-bold text-amber-400 italic pt-2">You got this! 👑</div>
+            <button onclick="saveWeeklyReview()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition">Save Review</button>
         </div>
     </div>
 
-    <!-- SETTINGS MODAL DIALOG -->
+    <!-- SETTINGS MODAL -->
     <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="card p-6 w-full max-w-md space-y-5 border-slate-600 shadow-2xl">
             <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-amber-400"></i> App Customization
-                </h3>
-                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-sliders text-amber-400"></i> Settings</h3>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
             </div>
-
-            <!-- Theme Picker -->
             <div class="space-y-2">
-                <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider block">Background Theme</label>
-                <select id="setting-theme" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none">
-                    <option value="theme-ocean">Deep Ocean (Dark Blue)</option>
-                    <option value="theme-midnight">Midnight Cyber (Pitch Black)</option>
-                    <option value="theme-forest">Forest Growth (Deep Green)</option>
-                    <option value="theme-gold">Luxury Dark (Warm Slate)</option>
+                <label class="text-xs text-slate-300">Gemini API Key (AI Chat එක සඳහා)</label>
+                <input type="password" id="setting-apikey" placeholder="Enter Gemini API Key..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:outline-none">
+            </div>
+            <div class="space-y-2">
+                <label class="text-xs text-slate-300">Theme</label>
+                <select id="setting-theme" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
+                    <option value="theme-ocean">Deep Ocean</option>
+                    <option value="theme-midnight">Midnight Cyber</option>
+                    <option value="theme-forest">Forest Growth</option>
+                    <option value="theme-gold">Luxury Dark</option>
                 </select>
             </div>
-
-            <!-- Font Picker -->
             <div class="space-y-2">
-                <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider block">Font Style</label>
-                <select id="setting-font" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none">
-                    <option value="font-segoe">Segoe UI (Default Modern)</option>
-                    <option value="font-inter">Inter (Clean & Minimal)</option>
-                    <option value="font-poppins">Poppins (Stylish & Round)</option>
-                    <option value="font-mono">Roboto Mono (Techy)</option>
+                <label class="text-xs text-slate-300">Font Style</label>
+                <select id="setting-font" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
+                    <option value="font-segoe">Segoe UI</option>
+                    <option value="font-inter">Inter</option>
+                    <option value="font-poppins">Poppins</option>
+                    <option value="font-mono">Roboto Mono</option>
                 </select>
             </div>
-
-            <div class="pt-3 border-t border-slate-700 flex justify-end gap-2">
-                <button onclick="closeSettingsModal()" class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-5 py-2 rounded-lg text-sm">
-                    Done
-                </button>
-            </div>
+            <button onclick="closeSettingsModal()" class="w-full bg-sky-500 hover:bg-sky-400 text-white font-semibold py-2 rounded-lg text-sm">Save & Close</button>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- AI CHAT FLOATING BUTTON & MODAL -->
+    <button onclick="toggleAiChat()" class="fixed bottom-6 right-6 bg-gradient-to-r from-sky-500 to-indigo-600 text-white p-4 rounded-full shadow-2xl hover:scale-105 transition-all z-40 flex items-center gap-2">
+        <i class="fa-solid fa-robot text-xl"></i>
+        <span class="font-semibold text-sm hidden md:inline">AI Coach</span>
+    </button>
+
+    <div id="ai-chat-modal" class="fixed bottom-20 right-4 md:right-6 w-[92vw] md:w-[400px] h-[500px] card border border-slate-700 shadow-2xl flex flex-col z-50 hidden overflow-hidden">
+        <div class="bg-slate-800/90 p-3 border-b border-slate-700 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-brain text-sky-400"></i>
+                <span class="font-bold text-sm text-white">Life Transformation AI</span>
+            </div>
+            <button onclick="toggleAiChat()" class="text-slate-400 hover:text-white">&times;</button>
+        </div>
+
+        <div id="ai-messages" class="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
+            <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300">
+                👋 <b>හලෝ!</b> මම ඔයාගේ AI Life Coach. ඔයාගේ Daily Habit Progress එක පදනම් කරගෙන වැරදි හදාගන්න සහ Routine එක සාර්ථක කරගන්න ඕනෑම දෙයක් මගෙන් අහන්න!
+            </div>
+        </div>
+
+        <div class="p-2 border-t border-slate-700 bg-slate-900 flex gap-2">
+            <input type="text" id="ai-input" onkeypress="handleKeyPress(event)" placeholder="Ask AI Coach..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+            <button onclick="sendAiMessage()" class="bg-sky-500 hover:bg-sky-400 text-white px-3 py-2 rounded-lg text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <script>
         const scheduleData = [
             { time: "05:30 AM - 06:00 AM", title: "Wake Up & Hydrate", desc: "No phone first 30 mins", icon: "fa-sun", color: "text-amber-400" },
@@ -342,7 +292,6 @@
         ];
 
         const days = ["M", "T", "W", "T", "F", "S", "S"];
-
         const STORAGE_KEY_CHECKLIST = "life_transform_checklist_v1";
         const STORAGE_KEY_MATRIX = "life_transform_matrix_v1";
         const STORAGE_KEY_NOTES = "life_transform_notes_v1";
@@ -381,35 +330,34 @@
             }
         }
 
-        /* Settings Modal Logic */
-        function openSettingsModal() {
-            document.getElementById("settings-modal").classList.remove("hidden");
-        }
-
-        function closeSettingsModal() {
-            document.getElementById("settings-modal").classList.add("hidden");
+        function openSettingsModal() { document.getElementById("settings-modal").classList.remove("hidden"); }
+        function closeSettingsModal() { 
+            const apiKey = document.getElementById("setting-apikey").value;
+            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
+            settings.apiKey = apiKey;
+            localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
+            document.getElementById("settings-modal").classList.add("hidden"); 
         }
 
         function applyCustomization() {
             const theme = document.getElementById("setting-theme").value;
             const font = document.getElementById("setting-font").value;
-
-            document.body.className = `${theme} ${font} p-4 md:p-6 max-w-7xl mx-auto min-h-screen`;
-
-            const settings = { theme, font };
+            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
+            settings.theme = theme; settings.font = font;
+            document.body.className = `${theme} ${font} p-4 md:p-6 max-w-7xl mx-auto min-h-screen relative pb-24`;
             localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
         }
 
         function loadCustomization() {
-            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{"theme":"theme-ocean","font":"font-segoe"}');
-            document.getElementById("setting-theme").value = settings.theme;
-            document.getElementById("setting-font").value = settings.font;
+            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{"theme":"theme-ocean","font":"font-segoe","apiKey":""}');
+            document.getElementById("setting-theme").value = settings.theme || "theme-ocean";
+            document.getElementById("setting-font").value = settings.font || "font-segoe";
+            document.getElementById("setting-apikey").value = settings.apiKey || "";
             applyCustomization();
         }
 
         function renderSchedule() {
-            const container = document.getElementById("schedule-container");
-            container.innerHTML = scheduleData.map(item => `
+            document.getElementById("schedule-container").innerHTML = scheduleData.map(item => `
                 <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-800/80 flex items-start gap-3">
                     <div class="mt-1 ${item.color}"><i class="fa-solid ${item.icon}"></i></div>
                     <div class="flex-1">
@@ -422,20 +370,17 @@
         }
 
         function renderChecklist() {
-            const container = document.getElementById("checklist-container");
             const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY_CHECKLIST) || "{}");
-
-            container.innerHTML = habitList.map(habit => {
+            document.getElementById("checklist-container").innerHTML = habitList.map(habit => {
                 const checked = savedState[habit.id] ? "checked" : "";
                 const isDone = savedState[habit.id] ? "line-through text-slate-500" : "text-slate-200";
                 return `
                     <label class="flex items-center gap-3 p-3 bg-slate-900/80 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
                         <input type="checkbox" onchange="toggleChecklist('${habit.id}')" ${checked} class="w-4 h-4 accent-sky-500 rounded cursor-pointer">
-                        <span class="text-sm font-medium ${isDone}" id="checklist-text-${habit.id}">${habit.name}</span>
+                        <span class="text-sm font-medium ${isDone}">${habit.name}</span>
                     </label>
                 `;
             }).join("");
-
             calculateDailyProgress();
         }
 
@@ -454,10 +399,8 @@
         }
 
         function renderMatrix() {
-            const container = document.getElementById("matrix-container");
             const matrixData = JSON.parse(localStorage.getItem(STORAGE_KEY_MATRIX) || "{}");
-
-            container.innerHTML = habitList.map(habit => {
+            document.getElementById("matrix-container").innerHTML = habitList.map(habit => {
                 let dotsHtml = days.map((day, idx) => {
                     const state = (matrixData[habit.id] && matrixData[habit.id][idx]) || 0;
                     let colorClass = "status-unset";
@@ -465,27 +408,18 @@
                     if (state === 2) colorClass = "status-partial";
                     if (state === 3) colorClass = "status-missed";
 
-                    return `
-                        <td class="p-1 text-center">
-                            <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="w-6 h-6 rounded-full ${colorClass} transition-transform active:scale-95 border border-slate-700/50 inline-block"></button>
-                        </td>
-                    `;
+                    return `<td class="p-1 text-center">
+                        <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="w-6 h-6 rounded-full ${colorClass} border border-slate-700/50 inline-block"></button>
+                    </td>`;
                 }).join("");
 
-                return `
-                    <tr>
-                        <td class="p-2 font-medium text-slate-300 text-xs">${habit.name}</td>
-                        ${dotsHtml}
-                    </tr>
-                `;
+                return `<tr><td class="p-2 font-medium text-slate-300 text-xs">${habit.name}</td>${dotsHtml}</tr>`;
             }).join("");
         }
 
         function cycleMatrixState(habitId, dayIndex) {
             const matrixData = JSON.parse(localStorage.getItem(STORAGE_KEY_MATRIX) || "{}");
-            if (!matrixData[habitId]) {
-                matrixData[habitId] = [0, 0, 0, 0, 0, 0, 0];
-            }
+            if (!matrixData[habitId]) matrixData[habitId] = [0, 0, 0, 0, 0, 0, 0];
             matrixData[habitId][dayIndex] = (matrixData[habitId][dayIndex] + 1) % 4;
             localStorage.setItem(STORAGE_KEY_MATRIX, JSON.stringify(matrixData));
             renderMatrix();
@@ -493,9 +427,8 @@
         }
 
         function saveNotes() {
-            const text = document.getElementById("daily-notes").value;
-            localStorage.setItem(STORAGE_KEY_NOTES, text);
-            alert("Daily Journal Note Saved!");
+            localStorage.setItem(STORAGE_KEY_NOTES, document.getElementById("daily-notes").value);
+            alert("Journal Saved!");
         }
 
         function saveWeeklyReview() {
@@ -509,9 +442,7 @@
         }
 
         function loadSavedData() {
-            const notes = localStorage.getItem(STORAGE_KEY_NOTES) || "";
-            document.getElementById("daily-notes").value = notes;
-
+            document.getElementById("daily-notes").value = localStorage.getItem(STORAGE_KEY_NOTES) || "";
             const review = JSON.parse(localStorage.getItem(STORAGE_KEY_REVIEW) || "{}");
             if (review.well) document.getElementById("review-well").value = review.well;
             if (review.mistake) document.getElementById("review-mistake").value = review.mistake;
@@ -526,39 +457,18 @@
                 type: 'bar',
                 data: {
                     labels: habitList.map(h => h.name.split(' ')[0]),
-                    datasets: [{
-                        label: 'Completion Score (%)',
-                        data: calculateScores(),
-                        backgroundColor: '#38bdf8',
-                        borderRadius: 6
-                    }]
+                    datasets: [{ label: 'Score (%)', data: calculateScores(), backgroundColor: '#38bdf8', borderRadius: 6 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
             });
 
             balanceChartInstance = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Workout', 'Books', 'English', 'Skill', 'Money Save', 'Phone Control'],
-                    datasets: [{
-                        data: [70, 60, 55, 50, 45, 80],
-                        backgroundColor: ['#4ade80', '#38bdf8', '#c084fc', '#fbbf24', '#a855f7', '#f43f5e'],
-                        borderWidth: 0
-                    }]
+                    labels: ['Workout', 'Books', 'English', 'Skill', 'Money', 'Phone'],
+                    datasets: [{ data: [70, 60, 55, 50, 45, 80], backgroundColor: ['#4ade80', '#38bdf8', '#c084fc', '#fbbf24', '#a855f7', '#f43f5e'] }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
@@ -567,10 +477,7 @@
             return habitList.map(habit => {
                 const arr = matrixData[habit.id] || [0,0,0,0,0,0,0];
                 let points = 0;
-                arr.forEach(val => {
-                    if (val === 1) points += 1;
-                    if (val === 2) points += 0.5;
-                });
+                arr.forEach(val => { if (val === 1) points += 1; if (val === 2) points += 0.5; });
                 return Math.round((points / 7) * 100);
             });
         }
@@ -581,6 +488,68 @@
                 habitChartInstance.update();
             }
         }
+
+        /* AI CHAT LOGIC */
+        function toggleAiChat() {
+            const modal = document.getElementById("ai-chat-modal");
+            modal.classList.toggle("hidden");
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === "Enter") sendAiMessage();
+        }
+
+        async function sendAiMessage() {
+            const inputField = document.getElementById("ai-input");
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            const chatContainer = document.getElementById("ai-messages");
+            chatContainer.innerHTML += `<div class="bg-sky-600/30 p-2.5 rounded-lg border border-sky-500/40 text-slate-100 text-right ml-6">${message}</div>`;
+            inputField.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
+            const apiKey = settings.apiKey;
+
+            if (!apiKey) {
+                chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg border border-rose-500/40 text-rose-300">⚠️ කරුණාකර Settings වෙත ගොස් නොමිලේ ලබාගත් Gemini API Key එක ඇතුළත් කරන්න.</div>`;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                return;
+            }
+
+            // Fetch app status for context
+            const notes = localStorage.getItem(STORAGE_KEY_NOTES) || "No notes today";
+            const progress = document.getElementById("daily-progress-pct").innerText;
+            const promptContext = `You are a helpful Life Transformation Coach. User's current daily completion rate is ${progress}%. User notes: "${notes}". Respond concisely, friendly, in Sinhala (or Sinhala-English mixture). User message: ${message}`;
+
+            chatContainer.innerHTML += `<div id="loading-msg" class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-400 italic">AI හිතමින් පවතී...</div>`;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptContext }] }]
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById("loading-msg").remove();
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiReply = data.candidates[0].content.parts[0].text;
+                    chatContainer.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-200">${aiReply.replace(/\n/g, '<br>')}</div>`;
+                } else {
+                    chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg text-rose-300">error: පිළිතුරක් ලබාගැනීමට නොහැකි විය.</div>`;
+                }
+            } catch (err) {
+                document.getElementById("loading-msg")?.remove();
+                chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg text-rose-300">Connection Error! API key එක නිවැරදිදැයි බලන්න.</div>`;
+            }
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
     </script>
 </body>
-                 </html>
+     </html>
