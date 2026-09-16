@@ -21,6 +21,9 @@
         .status-partial { background-color: #ca8a04; }
         .status-missed { background-color: #dc2626; }
         .status-unset { background-color: #334155; }
+        /* nicer time input icon on dark bg */
+        input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+        select option { background-color: #1e293b; color: #e2e8f0; }
     </style>
 </head>
 <body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
@@ -89,10 +92,24 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Daily Schedule Column -->
             <div class="card p-5 lg:col-span-1 space-y-4">
-                <h2 class="text-lg font-bold text-white flex items-center justify-between">
-                    <span><i class="fa-regular fa-clock text-sky-400 mr-2"></i>Ideal Daily Schedule</span>
-                    <span class="text-xs font-normal text-slate-400">Fixed Anchor Routine</span>
-                </h2>
+                <div class="flex items-center justify-between gap-2">
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-regular fa-clock text-sky-400 mr-2"></i>Ideal Daily Schedule
+                    </h2>
+                    <div class="flex gap-1.5">
+                        <button onclick="addScheduleItem()" title="Add new activity"
+                                class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 hover:bg-sky-500 hover:text-white transition flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button onclick="resetSchedule()" title="Reset to default schedule"
+                                class="w-8 h-8 rounded-lg bg-slate-700/60 text-slate-400 hover:bg-slate-600 hover:text-white transition flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-400 -mt-2">
+                    <i class="fa-solid fa-pen text-sky-400 mr-1"></i>Tap the pencil icon to change any time, title or note.
+                </p>
                 <div class="space-y-2 max-h-[600px] overflow-y-auto pr-1" id="schedule-container">
                     <!-- Dynamic Schedule Content -->
                 </div>
@@ -244,96 +261,389 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Data Models
-        const scheduleData = [
-            { time: "05:30 AM - 06:00 AM", title: "Wake Up & Hydrate", desc: "No phone first 30 mins", icon: "fa-sun", color: "text-amber-400" },
-            { time: "06:00 AM - 07:00 AM", title: "Exercise / Workout", desc: "Physical fitness & movement", icon: "fa-dumbbell", color: "text-emerald-400" },
-            { time: "07:00 AM - 08:00 AM", title: "Shower & Breakfast", desc: "Clean diet, get ready", icon: "fa-utensils", color: "text-sky-400" },
-            { time: "08:00 AM - 12:00 PM", title: "Deep Work Block 1", desc: "High priority learning/tasks", icon: "fa-brain", color: "text-purple-400" },
-            { time: "12:00 PM - 01:00 PM", title: "Lunch & Mental Reset", desc: "Rest, walk, avoid scrolling", icon: "fa-mug-hot", color: "text-teal-400" },
-            { time: "01:00 PM - 05:00 PM", title: "Deep Work Block 2", desc: "Skills, English, projects", icon: "fa-laptop-code", color: "text-indigo-400" },
-            { time: "05:00 PM - 06:30 PM", title: "Reading / Skill Practice", desc: "Personal growth books", icon: "fa-book-open", color: "text-amber-300" },
-            { time: "06:30 PM - 08:30 PM", title: "Family / Free Time", desc: "Unwind and connect", icon: "fa-heart", color: "text-rose-400" },
-            { time: "08:30 PM - 09:30 PM", title: "Daily Review & Planning", desc: "Log habits, prepare tomorrow", icon: "fa-list-check", color: "text-emerald-300" },
-            { time: "10:00 PM", title: "Lights Out", desc: "8 hours high quality sleep", icon: "fa-moon", color: "text-slate-400" }
+        /* ============================================================
+           1. DEFAULT DATA
+           ============================================================ */
+
+        // Times are stored as 24h "HH:MM" — displayed as 12h AM/PM.
+        const DEFAULT_SCHEDULE = [
+            { start: "05:30", end: "06:00", title: "Wake Up & Hydrate",        desc: "No phone first 30 mins",          icon: "fa-sun",          color: "text-amber-400" },
+            { start: "06:00", end: "07:00", title: "Exercise / Workout",       desc: "Physical fitness & movement",     icon: "fa-dumbbell",     color: "text-emerald-400" },
+            { start: "07:00", end: "08:00", title: "Shower & Breakfast",       desc: "Clean diet, get ready",           icon: "fa-utensils",     color: "text-sky-400" },
+            { start: "08:00", end: "12:00", title: "Deep Work Block 1",        desc: "High priority learning/tasks",    icon: "fa-brain",        color: "text-purple-400" },
+            { start: "12:00", end: "13:00", title: "Lunch & Mental Reset",     desc: "Rest, walk, avoid scrolling",     icon: "fa-mug-hot",      color: "text-teal-400" },
+            { start: "13:00", end: "17:00", title: "Deep Work Block 2",        desc: "Skills, English, projects",       icon: "fa-laptop-code",  color: "text-indigo-400" },
+            { start: "17:00", end: "18:30", title: "Reading / Skill Practice", desc: "Personal growth books",           icon: "fa-book-open",    color: "text-amber-300" },
+            { start: "18:30", end: "20:30", title: "Family / Free Time",       desc: "Unwind and connect",              icon: "fa-heart",        color: "text-rose-400" },
+            { start: "20:30", end: "21:30", title: "Daily Review & Planning",  desc: "Log habits, prepare tomorrow",    icon: "fa-list-check",   color: "text-emerald-300" },
+            { start: "22:00", end: "",      title: "Lights Out",               desc: "8 hours high quality sleep",      icon: "fa-moon",         color: "text-slate-400" }
+        ];
+
+        // Icon choices for the editor
+        const ICON_OPTIONS = [
+            { v: "fa-sun",              l: "Sun / Morning" },
+            { v: "fa-moon",             l: "Moon / Sleep" },
+            { v: "fa-dumbbell",         l: "Workout" },
+            { v: "fa-person-running",   l: "Running" },
+            { v: "fa-utensils",         l: "Meal" },
+            { v: "fa-mug-hot",          l: "Break / Tea" },
+            { v: "fa-brain",            l: "Deep Focus" },
+            { v: "fa-laptop-code",      l: "Work / Coding" },
+            { v: "fa-book-open",        l: "Reading" },
+            { v: "fa-graduation-cap",   l: "Study" },
+            { v: "fa-heart",            l: "Family" },
+            { v: "fa-list-check",       l: "Planning" },
+            { v: "fa-briefcase",        l: "Job" },
+            { v: "fa-music",            l: "Music" },
+            { v: "fa-spa",              l: "Relax / Meditation" },
+            { v: "fa-car",              l: "Travel" },
+            { v: "fa-bed",              l: "Rest" },
+            { v: "fa-star",             l: "Other" },
+            { v: "fa-clock",            l: "General" }
+        ];
+
+        // Colour choices for the editor
+        const COLOR_OPTIONS = [
+            { v: "text-amber-400",   l: "Amber" },
+            { v: "text-emerald-400", l: "Green" },
+            { v: "text-sky-400",     l: "Blue" },
+            { v: "text-purple-400",  l: "Purple" },
+            { v: "text-teal-400",    l: "Teal" },
+            { v: "text-indigo-400",  l: "Indigo" },
+            { v: "text-rose-400",    l: "Rose" },
+            { v: "text-slate-400",   l: "Gray" }
         ];
 
         const habitList = [
             { id: "workout", name: "Workout / Fitness" },
-            { id: "books", name: "Reading (15+ mins)" },
+            { id: "books",   name: "Reading (15+ mins)" },
             { id: "english", name: "English Practice" },
-            { id: "skill", name: "Skill Development" },
-            { id: "money", name: "No Unnecessary Spend" },
-            { id: "phone", name: "Screen Time Controlled" }
+            { id: "skill",   name: "Skill Development" },
+            { id: "money",   name: "No Unnecessary Spend" },
+            { id: "phone",   name: "Screen Time Controlled" }
         ];
 
         const days = ["M", "T", "W", "T", "F", "S", "S"];
 
-        // LocalStorage Keys
+        /* ============================================================
+           2. STORAGE KEYS & STATE
+           ============================================================ */
+        const STORAGE_KEY_SCHEDULE  = "life_transform_schedule_v2";
         const STORAGE_KEY_CHECKLIST = "life_transform_checklist_v1";
-        const STORAGE_KEY_MATRIX = "life_transform_matrix_v1";
-        const STORAGE_KEY_NOTES = "life_transform_notes_v1";
-        const STORAGE_KEY_REVIEW = "life_transform_review_v1";
+        const STORAGE_KEY_MATRIX    = "life_transform_matrix_v1";
+        const STORAGE_KEY_NOTES     = "life_transform_notes_v1";
+        const STORAGE_KEY_REVIEW    = "life_transform_review_v1";
 
+        let scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)); // deep copy
+        let editingIndex = null;   // index of the schedule item being edited
         let habitChartInstance = null;
         let balanceChartInstance = null;
+        let chartsInitialized = false;
 
-        // Initialize App
+        /* ============================================================
+           3. SMALL HELPERS
+           ============================================================ */
+        function escapeHtml(str) {
+            return String(str ?? "").replace(/[&<>"']/g, c => (
+                { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+            ));
+        }
+
+        // "05:30" -> "05:30 AM"
+        function formatTime12(t) {
+            if (!t) return "";
+            const parts = t.split(":");
+            let h = parseInt(parts[0], 10);
+            const m = parts[1] || "00";
+            const ampm = h >= 12 ? "PM" : "AM";
+            h = h % 12;
+            if (h === 0) h = 12;
+            return `${String(h).padStart(2, "0")}:${m} ${ampm}`;
+        }
+
+        // Builds "05:30 AM - 06:00 AM" (or just start time if no end)
+        function formatRange(start, end) {
+            if (!start) return "Set time";
+            return end ? `${formatTime12(start)} - ${formatTime12(end)}` : formatTime12(start);
+        }
+
+        function sortSchedule() {
+            scheduleData.sort((a, b) =>
+                (a.start || "99:99").localeCompare(b.start || "99:99")
+            );
+        }
+
+        /* ============================================================
+           4. INIT
+           ============================================================ */
         document.addEventListener("DOMContentLoaded", () => {
+            loadSchedule();
             renderSchedule();
             renderChecklist();
             renderMatrix();
             loadSavedData();
-            initCharts();
+            // Charts are created lazily when the Weekly tab is opened,
+            // so they size correctly inside the hidden container.
         });
 
-        // Tab Switching
+        /* ============================================================
+           5. TAB SWITCHING
+           ============================================================ */
         function switchTab(tab) {
-            const dailyView = document.getElementById("view-daily");
+            const dailyView  = document.getElementById("view-daily");
             const weeklyView = document.getElementById("view-weekly");
-            const btnDaily = document.getElementById("tab-daily");
-            const btnWeekly = document.getElementById("tab-weekly");
+            const btnDaily   = document.getElementById("tab-daily");
+            const btnWeekly  = document.getElementById("tab-weekly");
 
-            if (tab === 'daily') {
+            if (tab === "daily") {
                 dailyView.classList.remove("hidden");
                 weeklyView.classList.add("hidden");
-                btnDaily.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
+                btnDaily.className  = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
                 btnWeekly.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
             } else {
                 dailyView.classList.add("hidden");
                 weeklyView.classList.remove("hidden");
                 btnWeekly.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
-                btnDaily.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
-                updateCharts();
+                btnDaily.className  = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+
+                if (!chartsInitialized) {
+                    initCharts();
+                    chartsInitialized = true;
+                } else {
+                    updateCharts();
+                }
             }
         }
 
-        // Render Schedule
-        function renderSchedule() {
-            const container = document.getElementById("schedule-container");
-            container.innerHTML = scheduleData.map(item => `
-                <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-800/80 flex items-start gap-3">
-                    <div class="mt-1 ${item.color}"><i class="fa-solid ${item.icon}"></i></div>
-                    <div class="flex-1">
-                        <div class="text-xs text-slate-400 font-mono">${item.time}</div>
-                        <div class="text-sm font-semibold text-slate-200">${item.title}</div>
-                        <div class="text-xs text-slate-400">${item.desc}</div>
-                    </div>
-                </div>
-            `).join("");
+        /* ============================================================
+           6. SCHEDULE — LOAD / SAVE
+           ============================================================ */
+        function loadSchedule() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY_SCHEDULE);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length) {
+                        scheduleData = parsed;
+                    }
+                }
+            } catch (e) {
+                console.warn("Could not load saved schedule, using defaults.");
+            }
         }
 
-        // Render Checklist
+        function saveSchedule() {
+            try {
+                localStorage.setItem(STORAGE_KEY_SCHEDULE, JSON.stringify(scheduleData));
+            } catch (e) {
+                console.warn("Could not save schedule.");
+            }
+        }
+
+        /* ============================================================
+           7. SCHEDULE — RENDER
+           ============================================================ */
+        function renderSchedule() {
+            const container = document.getElementById("schedule-container");
+
+            if (!scheduleData.length) {
+                container.innerHTML = `
+                    <div class="text-center text-xs text-slate-500 py-8 border border-dashed border-slate-700 rounded-lg">
+                        No activities yet.<br>Click the <span class="text-sky-400 font-bold">+</span> button to add one.
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = scheduleData.map((item, idx) =>
+                idx === editingIndex
+                    ? scheduleEditHTML(item, idx)
+                    : scheduleItemHTML(item, idx)
+            ).join("");
+        }
+
+        // ----- Read-only row -----
+        function scheduleItemHTML(item, idx) {
+            return `
+                <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-800/80 flex items-start gap-3 group hover:border-slate-700 transition">
+                    <div class="mt-1 ${item.color || "text-sky-400"}">
+                        <i class="fa-solid ${item.icon || "fa-star"}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs text-slate-400 font-mono">${formatRange(item.start, item.end)}</div>
+                        <div class="text-sm font-semibold text-slate-200 break-words">${escapeHtml(item.title || "Untitled")}</div>
+                        ${item.desc ? `<div class="text-xs text-slate-400 break-words">${escapeHtml(item.desc)}</div>` : ""}
+                    </div>
+                    <div class="flex gap-1 opacity-50 group-hover:opacity-100 transition shrink-0">
+                        <button onclick="editScheduleItem(${idx})" title="Edit"
+                                class="w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-slate-300 hover:text-white transition flex items-center justify-center text-[11px]">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteScheduleItem(${idx})" title="Delete"
+                                class="w-7 h-7 rounded-md bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white transition flex items-center justify-center text-[11px]">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        // ----- Editable form -----
+        function scheduleEditHTML(item, idx) {
+            const iconOpts = ICON_OPTIONS.map(o =>
+                `<option value="${o.v}" ${o.v === item.icon ? "selected" : ""}>${o.l}</option>`
+            ).join("");
+
+            const colorOpts = COLOR_OPTIONS.map(o =>
+                `<option value="${o.v}" ${o.v === item.color ? "selected" : ""}>${o.l}</option>`
+            ).join("");
+
+            return `
+                <div class="p-3 bg-slate-900 rounded-lg border border-sky-500/60 space-y-2 shadow-lg shadow-sky-500/10">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">Start Time</label>
+                            <input type="time" id="edit-start-${idx}" value="${escapeHtml(item.start)}"
+                                   class="w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">End Time <span class="text-slate-500 normal-case">(optional)</span></label>
+                            <input type="time" id="edit-end-${idx}" value="${escapeHtml(item.end)}"
+                                   class="w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">Title</label>
+                        <input type="text" id="edit-title-${idx}" value="${escapeHtml(item.title)}" placeholder="e.g. Deep Work Block"
+                               class="w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">Note</label>
+                        <input type="text" id="edit-desc-${idx}" value="${escapeHtml(item.desc)}" placeholder="Short description"
+                               class="w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">Icon</label>
+                            <select id="edit-icon-${idx}"
+                                    class="w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                                ${iconOpts}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">Colour</label>
+                            <select id="edit-color-${idx}"
+                                    class="w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                                ${colorOpts}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-1">
+                        <button onclick="saveScheduleItem(${idx})"
+                                class="flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold py-1.5 rounded-md transition">
+                            <i class="fa-solid fa-check mr-1"></i>Save
+                        </button>
+                        <button onclick="cancelScheduleEdit()"
+                                class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold py-1.5 rounded-md transition">
+                            Cancel
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        /* ============================================================
+           8. SCHEDULE — ACTIONS
+           ============================================================ */
+        function editScheduleItem(idx) {
+            editingIndex = idx;
+            renderSchedule();
+            const el = document.getElementById(`edit-title-${idx}`);
+            if (el) { el.focus(); el.select(); }
+        }
+
+        function addScheduleItem() {
+            if (editingIndex !== null) return; // finish current edit first
+
+            scheduleData.push({
+                start: "", end: "", title: "", desc: "",
+                icon: "fa-star", color: "text-sky-400", _isNew: true
+            });
+            editingIndex = scheduleData.length - 1;
+            renderSchedule();
+
+            const el = document.getElementById(`edit-start-${editingIndex}`);
+            if (el) el.focus();
+        }
+
+        function saveScheduleItem(idx) {
+            const startEl = document.getElementById(`edit-start-${idx}`);
+            const endEl   = document.getElementById(`edit-end-${idx}`);
+            const titleEl = document.getElementById(`edit-title-${idx}`);
+            const descEl  = document.getElementById(`edit-desc-${idx}`);
+            const iconEl  = document.getElementById(`edit-icon-${idx}`);
+            const colorEl = document.getElementById(`edit-color-${idx}`);
+
+            if (!startEl || !titleEl) return;
+
+            scheduleData[idx] = {
+                start: startEl.value || "",
+                end:   endEl ? endEl.value : "",
+                title: titleEl.value.trim() || "Untitled Activity",
+                desc:  descEl ? descEl.value.trim() : "",
+                icon:  iconEl ? iconEl.value : "fa-star",
+                color: colorEl ? colorEl.value : "text-sky-400"
+            };
+
+            sortSchedule();
+            saveSchedule();
+            editingIndex = null;
+            renderSchedule();
+        }
+
+        function cancelScheduleEdit() {
+            if (
+                editingIndex !== null &&
+                scheduleData[editingIndex] &&
+                scheduleData[editingIndex]._isNew
+            ) {
+                scheduleData.splice(editingIndex, 1); // remove the blank draft
+            }
+            editingIndex = null;
+            renderSchedule();
+        }
+
+        function deleteScheduleItem(idx) {
+            if (!confirm("Delete this schedule item?")) return;
+            scheduleData.splice(idx, 1);
+            if (editingIndex === idx) editingIndex = null;
+            saveSchedule();
+            renderSchedule();
+        }
+
+        function resetSchedule() {
+            if (!confirm("Reset the schedule back to the default routine? Your custom edits will be lost.")) return;
+            scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+            editingIndex = null;
+            saveSchedule();
+            renderSchedule();
+        }
+
+        /* ============================================================
+           9. CHECKLIST
+           ============================================================ */
         function renderChecklist() {
             const container = document.getElementById("checklist-container");
             const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY_CHECKLIST) || "{}");
 
             container.innerHTML = habitList.map(habit => {
                 const checked = savedState[habit.id] ? "checked" : "";
-                const isDone = savedState[habit.id] ? "line-through text-slate-500" : "text-slate-200";
+                const isDone  = savedState[habit.id] ? "line-through text-slate-500" : "text-slate-200";
                 return `
                     <label class="flex items-center gap-3 p-3 bg-slate-900/80 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
-                        <input type="checkbox" onchange="toggleChecklist('${habit.id}')" ${checked} class="w-4 h-4 accent-sky-500 rounded cursor-pointer">
+                        <input type="checkbox" onchange="toggleChecklist('${habit.id}')" ${checked}
+                               class="w-4 h-4 accent-sky-500 rounded cursor-pointer">
                         <span class="text-sm font-medium ${isDone}" id="checklist-text-${habit.id}">${habit.name}</span>
                     </label>
                 `;
@@ -356,14 +666,16 @@
             document.getElementById("daily-progress-pct").innerText = pct;
         }
 
-        // Render Matrix (Dot Toggles)
-        // States: 0 = unset, 1 = done, 2 = partial, 3 = missed
+        /* ============================================================
+           10. WEEKLY MATRIX
+           States: 0 = unset, 1 = done, 2 = partial, 3 = missed
+           ============================================================ */
         function renderMatrix() {
             const container = document.getElementById("matrix-container");
             const matrixData = JSON.parse(localStorage.getItem(STORAGE_KEY_MATRIX) || "{}");
 
             container.innerHTML = habitList.map(habit => {
-                let dotsHtml = days.map((day, idx) => {
+                const dotsHtml = days.map((day, idx) => {
                     const state = (matrixData[habit.id] && matrixData[habit.id][idx]) || 0;
                     let colorClass = "status-unset";
                     if (state === 1) colorClass = "status-done";
@@ -372,7 +684,8 @@
 
                     return `
                         <td class="p-1 text-center">
-                            <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="w-6 h-6 rounded-full ${colorClass} transition-transform active:scale-95 border border-slate-700/50 inline-block"></button>
+                            <button onclick="cycleMatrixState('${habit.id}', ${idx})"
+                                    class="w-6 h-6 rounded-full ${colorClass} transition-transform active:scale-95 border border-slate-700/50 inline-block"></button>
                         </td>
                     `;
                 }).join("");
@@ -397,7 +710,9 @@
             if (habitChartInstance) updateCharts();
         }
 
-        // Save Notes & Reviews
+        /* ============================================================
+           11. NOTES & REVIEWS
+           ============================================================ */
         function saveNotes() {
             const text = document.getElementById("daily-notes").value;
             localStorage.setItem(STORAGE_KEY_NOTES, text);
@@ -406,7 +721,7 @@
 
         function saveWeeklyReview() {
             const review = {
-                well: document.getElementById("review-well").value,
+                well:    document.getElementById("review-well").value,
                 mistake: document.getElementById("review-mistake").value,
                 improve: document.getElementById("review-improve").value
             };
@@ -419,24 +734,26 @@
             document.getElementById("daily-notes").value = notes;
 
             const review = JSON.parse(localStorage.getItem(STORAGE_KEY_REVIEW) || "{}");
-            if (review.well) document.getElementById("review-well").value = review.well;
+            if (review.well)    document.getElementById("review-well").value = review.well;
             if (review.mistake) document.getElementById("review-mistake").value = review.mistake;
             if (review.improve) document.getElementById("review-improve").value = review.improve;
         }
 
-        // Charts Logic
+        /* ============================================================
+           12. CHARTS
+           ============================================================ */
         function initCharts() {
-            const ctx1 = document.getElementById('habitChart').getContext('2d');
-            const ctx2 = document.getElementById('balanceChart').getContext('2d');
+            const ctx1 = document.getElementById("habitChart").getContext("2d");
+            const ctx2 = document.getElementById("balanceChart").getContext("2d");
 
             habitChartInstance = new Chart(ctx1, {
-                type: 'bar',
+                type: "bar",
                 data: {
-                    labels: habitList.map(h => h.name.split(' ')[0]),
+                    labels: habitList.map(h => h.name.split(" ")[0]),
                     datasets: [{
-                        label: 'Completion Score (%)',
+                        label: "Completion Score (%)",
                         data: calculateScores(),
-                        backgroundColor: '#38bdf8',
+                        backgroundColor: "#38bdf8",
                         borderRadius: 6
                     }]
                 },
@@ -444,27 +761,29 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: { beginAtZero: true, max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                        y: { beginAtZero: true, max: 100, ticks: { color: "#94a3b8" }, grid: { color: "#1e293b" } },
+                        x: { ticks: { color: "#94a3b8" }, grid: { display: false } }
                     },
                     plugins: { legend: { display: false } }
                 }
             });
 
             balanceChartInstance = new Chart(ctx2, {
-                type: 'doughnut',
+                type: "doughnut",
                 data: {
-                    labels: ['Workout', 'Books', 'English', 'Skill', 'Money Save', 'Phone Control'],
+                    labels: ["Workout", "Books", "English", "Skill", "Money Save", "Phone Control"],
                     datasets: [{
                         data: [70, 60, 55, 50, 45, 80],
-                        backgroundColor: ['#4ade80', '#38bdf8', '#c084fc', '#fbbf24', '#a855f7', '#f43f5e'],
+                        backgroundColor: ["#4ade80", "#38bdf8", "#c084fc", "#fbbf24", "#a855f7", "#f43f5e"],
                         borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } }
+                    plugins: {
+                        legend: { position: "bottom", labels: { color: "#94a3b8", font: { size: 10 } } }
+                    }
                 }
             });
         }
@@ -472,7 +791,7 @@
         function calculateScores() {
             const matrixData = JSON.parse(localStorage.getItem(STORAGE_KEY_MATRIX) || "{}");
             return habitList.map(habit => {
-                const arr = matrixData[habit.id] || [0,0,0,0,0,0,0];
+                const arr = matrixData[habit.id] || [0, 0, 0, 0, 0, 0, 0];
                 let points = 0;
                 arr.forEach(val => {
                     if (val === 1) points += 1;
@@ -490,4 +809,4 @@
         }
     </script>
 </body>
-                                     </html>
+ </html>
