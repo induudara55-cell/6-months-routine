@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Transformation & Aesthetic Routine Tracker</title>
+    <title>Life Transformation & Routine Tracker</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -11,102 +11,69 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@400;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg-main: #0b1329;
             --bg-card: #131c35;
             --border-color: #1e293b;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --font-family: 'Outfit', sans-serif;
-            --accent-glow: rgba(56, 189, 248, 0.4);
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --accent-color: #38bdf8;
         }
 
         body { 
             background-color: var(--bg-main); 
-            color: var(--text-main); 
+            color: #e2e8f0; 
             font-family: var(--font-family); 
-            transition: all 0.4s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .card { 
             background-color: var(--bg-card); 
             border: 1px solid var(--border-color); 
-            border-radius: 16px; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px; 
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        /* 3D Dynamic Animated Icon Style */
-        .icon-3d {
-            transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
-            transform-style: preserve-3d;
-        }
-
-        .icon-3d:hover {
-            transform: translateY(-4px) rotateX(10deg) rotateY(-10deg) scale(1.1);
-            filter: drop-shadow(0 10px 15px var(--accent-glow));
-        }
-
-        /* Dynamic Themes */
-        body.theme-ocean { 
-            --bg-main: #0b1329; --bg-card: #131c35; --border-color: #1e293b; 
-            --text-main: #e2e8f0; --text-muted: #94a3b8; --accent-glow: rgba(56, 189, 248, 0.4);
-        }
-        body.theme-pastel { 
-            --bg-main: #f8fafc; --bg-card: #ffffff; --border-color: #e2e8f0; 
-            --text-main: #1e293b; --text-muted: #64748b; --accent-glow: rgba(244, 114, 182, 0.3);
-        }
-        body.theme-midnight { 
-            --bg-main: #09090b; --bg-card: #18181b; --border-color: #27272a; 
-            --text-main: #f4f4f5; --text-muted: #a1a1aa; --accent-glow: rgba(168, 85, 247, 0.4);
-        }
-        body.theme-forest { 
-            --bg-main: #061e14; --bg-card: #0b2e20; --border-color: #134e38; 
-            --text-main: #ecfdf5; --text-muted: #6ee7b7; --accent-glow: rgba(16, 185, 129, 0.4);
-        }
-
-        body.theme-pastel .card-bg-subtle { background-color: #f1f5f9; }
-        body.theme-pastel input, body.theme-pastel textarea, body.theme-pastel select {
-            background-color: #f8fafc !important;
-            color: #0f172a !important;
-            border-color: #cbd5e1 !important;
-        }
+        .status-done { background-color: #16a34a; }
+        .status-partial { background-color: #ca8a04; }
+        .status-missed { background-color: #dc2626; }
+        .status-unset { background-color: #334155; }
+        
+        /* Dynamic Theme Themes */
+        body.theme-ocean { --bg-main: #0b1329; --bg-card: #131c35; --border-color: #1e293b; }
+        body.theme-midnight { --bg-main: #09090b; --bg-card: #18181b; --border-color: #27272a; }
+        body.theme-forest { --bg-main: #061e14; --bg-card: #0b2e20; --border-color: #134e38; }
+        body.theme-gold { --bg-main: #1c1917; --bg-card: #292524; --border-color: #44403c; }
 
         /* Font Classes */
-        body.font-outfit { font-family: 'Outfit', sans-serif; }
+        body.font-segoe { font-family: 'Segoe UI', sans-serif; }
         body.font-inter { font-family: 'Inter', sans-serif; }
         body.font-poppins { font-family: 'Poppins', sans-serif; }
         body.font-mono { font-family: 'Roboto Mono', monospace; }
-
-        .status-done { background-color: #10b981; }
-        .status-partial { background-color: #f59e0b; }
-        .status-missed { background-color: #ef4444; }
-        .status-unset { background-color: #475569; }
     </style>
 </head>
 <body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
 
     <!-- Header Navigation -->
-    <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-700/50 pb-4">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-700 pb-4">
         <div>
-            <h1 class="text-2xl md:text-3xl font-bold tracking-wide flex items-center gap-3">
-                <i class="fa-solid fa-chart-line text-sky-400 icon-3d"></i>
-                <span>TRANSFORMATION TRACKER</span>
+            <h1 class="text-2xl md:text-3xl font-bold tracking-wide text-white flex items-center">
+                <i class="fa-solid fa-chart-line text-sky-400 mr-2"></i>LIFE TRANSFORMATION TRACKER
             </h1>
-            <p class="text-slate-400 text-sm mt-1">Aesthetic, ADHD-Friendly Consistency Dashboard</p>
+            <p class="text-slate-400 text-sm mt-1">Better than yesterday. That's the goal.</p>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
-            <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30 hover:scale-105 active:scale-95">
-                <i class="fa-solid fa-calendar-day mr-2 icon-3d"></i>Daily Routine
+        <div class="flex flex-wrap items-center gap-2">
+            <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30">
+                <i class="fa-solid fa-calendar-day mr-2"></i>Daily
             </button>
-            <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105 active:scale-95">
-                <i class="fa-solid fa-chart-pie mr-2 icon-3d"></i>Weekly Analytics
+            <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-chart-pie mr-2"></i>Weekly Review
             </button>
             <!-- Settings Button -->
-            <button onclick="openSettingsModal()" class="px-3 py-2 rounded-xl text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 hover:scale-105 transition-all">
-                <i class="fa-solid fa-gear icon-3d"></i> Settings
+            <button onclick="openSettingsModal()" class="px-3 py-2 rounded-lg text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700">
+                <i class="fa-solid fa-gear"></i> Settings
             </button>
         </div>
     </header>
@@ -115,78 +82,81 @@
     <div id="view-daily" class="space-y-6">
         <!-- Top Stats Row -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl icon-3d">
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
                 <div>
-                    <div class="text-slate-400 text-xs font-medium">Daily Progress</div>
-                    <div class="text-2xl font-bold"><span id="daily-progress-pct">0</span>%</div>
+                    <div class="text-slate-400 text-xs font-medium">Daily Completion Rate</div>
+                    <div class="text-2xl font-bold text-white"><span id="daily-progress-pct">0</span>%</div>
                 </div>
             </div>
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
-                <div class="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl icon-3d">
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
                     <i class="fa-solid fa-bullseye"></i>
                 </div>
                 <div>
-                    <div class="text-slate-400 text-xs font-medium">Monthly Focus</div>
-                    <div class="text-sm font-semibold text-sky-400">Control & Routine</div>
+                    <div class="text-slate-400 text-xs font-medium">Monthly Goal Focus</div>
+                    <div class="text-sm font-semibold text-sky-300">Month 1: Control & Routine</div>
                 </div>
             </div>
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
-                <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl icon-3d">
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl">
                     <i class="fa-solid fa-fire"></i>
                 </div>
                 <div>
-                    <div class="text-slate-400 text-xs font-medium">Mindset</div>
-                    <div class="text-sm font-semibold text-purple-400">Consistency First</div>
+                    <div class="text-slate-400 text-xs font-medium">Consistency Mindset</div>
+                    <div class="text-sm font-semibold text-purple-300">Discipline Today • Freedom Tomorrow</div>
                 </div>
             </div>
-            <div class="card p-4 flex items-center gap-4 hover:shadow-lg transition">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl icon-3d">
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
                     <i class="fa-solid fa-crown"></i>
                 </div>
                 <div>
-                    <div class="text-slate-400 text-xs font-medium">Ultimate Target</div>
-                    <div class="text-sm font-semibold text-amber-400">Peak Identity</div>
+                    <div class="text-slate-400 text-xs font-medium">Ultimate Identity Target</div>
+                    <div class="text-sm font-semibold text-amber-300">Unstoppable Version of You</div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Layout Grid -->
+        <!-- Main Daily Layout Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Daily Schedule Column -->
             <div class="card p-5 lg:col-span-1 space-y-4">
-                <h2 class="text-lg font-bold flex items-center justify-between">
-                    <span><i class="fa-regular fa-clock text-sky-400 mr-2 icon-3d"></i>Ideal Daily Schedule</span>
-                    <span class="text-xs text-slate-400">Anchor Timeline</span>
+                <h2 class="text-lg font-bold text-white flex items-center justify-between">
+                    <span><i class="fa-regular fa-clock text-sky-400 mr-2"></i>Ideal Daily Schedule</span>
+                    <span class="text-xs font-normal text-slate-400">Fixed Anchor Routine</span>
                 </h2>
-                <div class="space-y-3 max-h-[600px] overflow-y-auto pr-1" id="schedule-container">
-                    <!-- Dynamic Schedule -->
+                <div class="space-y-2 max-h-[600px] overflow-y-auto pr-1" id="schedule-container">
+                    <!-- Dynamic Schedule Content -->
                 </div>
             </div>
 
-            <!-- Middle Column: Checklist & Dot Matrix -->
+            <!-- Middle Column: Checklist & Weekly Dot Matrix -->
             <div class="space-y-6 lg:col-span-1">
+                <!-- Daily Checklist -->
                 <div class="card p-5 space-y-4">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-bold">
-                            <i class="fa-solid fa-list-check text-emerald-400 mr-2 icon-3d"></i>Task Checklist
+                        <h2 class="text-lg font-bold text-white">
+                            <i class="fa-solid fa-list-check text-emerald-400 mr-2"></i>Daily Task Checklist
                         </h2>
-                        <span class="text-xs text-slate-400">Toggle Status</span>
+                        <span class="text-xs text-slate-400">Tap to toggle status</span>
                     </div>
-                    <div class="space-y-2.5" id="checklist-container">
-                        <!-- Dynamic Checklist -->
+                    <div class="space-y-2" id="checklist-container">
+                        <!-- Dynamic Checklist Items -->
                     </div>
                 </div>
 
+                <!-- Weekly Matrix (Dot Toggles) -->
                 <div class="card p-5 space-y-4">
-                    <h2 class="text-lg font-bold">
-                        <i class="fa-solid fa-calendar-week text-amber-400 mr-2 icon-3d"></i>Weekly Matrix
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-calendar-week text-amber-400 mr-2"></i>Weekly Habit Matrix
                     </h2>
+                    <p class="text-xs text-slate-400">Tap status dots to cycle: Done (Green) | Partial (Yellow) | Missed (Red)</p>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
-                            <thead class="text-xs uppercase bg-slate-800/40 text-slate-400">
+                            <thead class="text-xs uppercase bg-slate-800 text-slate-400">
                                 <tr>
                                     <th class="p-2">Habit</th>
                                     <th class="p-1 text-center">M</th>
@@ -198,45 +168,46 @@
                                     <th class="p-1 text-center">S</th>
                                 </tr>
                             </thead>
-                            <tbody id="matrix-container" class="divide-y divide-slate-800/40">
-                                <!-- Dynamic Matrix -->
+                            <tbody id="matrix-container" class="divide-y divide-slate-800">
+                                <!-- Dynamic Weekly Matrix -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Notes & Plan -->
+            <!-- Right Column: Notes & Quick Vision -->
             <div class="space-y-6 lg:col-span-1">
                 <div class="card p-5 space-y-4">
-                    <h2 class="text-lg font-bold">
-                        <i class="fa-solid fa-pen-to-square text-purple-400 mr-2 icon-3d"></i>Daily Journal
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-pen-to-square text-purple-400 mr-2"></i>Daily Reflection & Notes
                     </h2>
-                    <textarea id="daily-notes" rows="6" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl p-3 text-sm focus:outline-none focus:border-purple-500" placeholder="Write thoughts, improvements, reflections..."></textarea>
-                    <button onclick="saveNotes()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 rounded-xl text-sm transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-purple-600/30">
-                        Save Reflection
+                    <textarea id="daily-notes" rows="6" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-purple-500" placeholder="What went well today? What can be improved tomorrow?"></textarea>
+                    <button onclick="saveNotes()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 rounded-lg text-sm transition">
+                        Save Journal Note
                     </button>
                 </div>
 
-                <div class="card p-5 space-y-3">
-                    <h2 class="text-lg font-bold">
-                        <i class="fa-solid fa-map text-indigo-400 mr-2 icon-3d"></i>6-Month Roadmap
+                <!-- 6-Month Roadmap Summary Card -->
+                <div class="card p-5 space-y-3 bg-gradient-to-br from-slate-900 to-indigo-950/40">
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-map text-indigo-400 mr-2"></i>6-Month Master Plan
                     </h2>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="p-2.5 bg-slate-800/40 rounded-xl border border-slate-700/40">
-                            <span class="font-bold text-sky-400 block">Month 1</span> Routine Base
+                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
+                            <span class="font-bold text-sky-400 block">Month 1</span> Control & Routine
                         </div>
-                        <div class="p-2.5 bg-slate-800/40 rounded-xl border border-slate-700/40">
+                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
                             <span class="font-bold text-emerald-400 block">Month 2</span> Consistency
                         </div>
-                        <div class="p-2.5 bg-slate-800/40 rounded-xl border border-slate-700/40">
-                            <span class="font-bold text-purple-400 block">Month 3</span> Skill Growth
+                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
+                            <span class="font-bold text-purple-400 block">Month 3</span> Strength & Skill
                         </div>
-                        <div class="p-2.5 bg-slate-800/40 rounded-xl border border-slate-700/40">
+                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50">
                             <span class="font-bold text-amber-400 block">Month 4</span> Discipline
                         </div>
-                        <div class="p-2.5 bg-slate-800/40 rounded-xl border border-slate-700/40 col-span-2">
-                            <span class="font-bold text-rose-400 block">Months 5-6</span> Peak Performance
+                        <div class="p-2 bg-slate-800/60 rounded border border-slate-700/50 col-span-2">
+                            <span class="font-bold text-rose-400 block">Months 5 & 6</span> High Performance & Peak Identity
                         </div>
                     </div>
                 </div>
@@ -244,58 +215,102 @@
         </div>
     </div>
 
-    <!-- TAB 2: WEEKLY REVIEW -->
+    <!-- TAB 2: WEEKLY REVIEW & ANALYTICS -->
     <div id="view-weekly" class="hidden space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Chart 1: Habit Scores -->
             <div class="card p-5 space-y-4">
-                <h2 class="text-lg font-bold">
-                    <i class="fa-solid fa-chart-column text-sky-400 mr-2 icon-3d"></i>Weekly Completion Score (%)
+                <h2 class="text-lg font-bold text-white">
+                    <i class="fa-solid fa-chart-column text-sky-400 mr-2"></i>Weekly Consistency Score (%)
                 </h2>
-                <div class="h-64"><canvas id="habitChart"></canvas></div>
+                <div class="h-64">
+                    <canvas id="habitChart"></canvas>
+                </div>
             </div>
+
+            <!-- Chart 2: Category Radar / Balance -->
             <div class="card p-5 space-y-4">
-                <h2 class="text-lg font-bold">
-                    <i class="fa-solid fa-chart-pie text-purple-400 mr-2 icon-3d"></i>Life Balance Radar
+                <h2 class="text-lg font-bold text-white">
+                    <i class="fa-solid fa-chart-pie text-purple-400 mr-2"></i>Life Balance Distribution
                 </h2>
-                <div class="h-64 flex justify-center"><canvas id="balanceChart"></canvas></div>
+                <div class="h-64 flex justify-center">
+                    <canvas id="balanceChart"></canvas>
+                </div>
             </div>
+        </div>
+
+        <!-- Weekly Self Review Form -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card p-5 space-y-3">
+                <h3 class="font-bold text-emerald-400 text-sm">1. What did I do well this week?</h3>
+                <textarea id="review-well" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" placeholder="Type your response..."></textarea>
+            </div>
+            <div class="card p-5 space-y-3">
+                <h3 class="font-bold text-rose-400 text-sm">2. What was my biggest mistake?</h3>
+                <textarea id="review-mistake" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" placeholder="Type your response..."></textarea>
+            </div>
+            <div class="card p-5 space-y-3">
+                <h3 class="font-bold text-sky-400 text-sm">3. What can I improve next week?</h3>
+                <textarea id="review-improve" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" placeholder="Type your response..."></textarea>
+            </div>
+        </div>
+
+        <div class="flex justify-end">
+            <button onclick="saveWeeklyReview()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition">
+                Save Weekly Self-Review
+            </button>
+        </div>
+
+        <!-- Key Reminders Card -->
+        <div class="card p-5 space-y-3 bg-slate-900/80 border-amber-500/30">
+            <h3 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-lightbulb"></i> KEY REMINDERS
+            </h3>
+            <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+                <li>Progress over perfection.</li>
+                <li>Small steps create big results.</li>
+                <li>Don't miss twice in a row.</li>
+                <li>Protect your mental health & sleep.</li>
+                <li>You are doing better than you think!</li>
+            </ul>
+            <div class="text-center font-bold text-amber-400 italic pt-2">You got this! 👑</div>
         </div>
     </div>
 
     <!-- SETTINGS MODAL DIALOG -->
-    <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="card p-6 w-full max-w-md space-y-5 border-slate-600 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
-                <h3 class="text-lg font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-amber-400 icon-3d"></i> App Themes & Customization
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-amber-400"></i> App Customization
                 </h3>
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
             </div>
 
             <!-- Theme Picker -->
             <div class="space-y-2">
-                <label class="text-xs font-semibold uppercase tracking-wider block">Theme Aesthetic</label>
-                <select id="setting-theme" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none">
-                    <option value="theme-pastel">🌸 Soft Pastel Aesthetic (ADHD Friendly)</option>
-                    <option value="theme-ocean">🌊 Deep Ocean (Dark Blue)</option>
-                    <option value="theme-midnight">🌌 Midnight Cyber (Pitch Black)</option>
-                    <option value="theme-forest">🌿 Forest Growth (Emerald Dark)</option>
+                <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider block">Background Theme</label>
+                <select id="setting-theme" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none">
+                    <option value="theme-ocean">Deep Ocean (Dark Blue)</option>
+                    <option value="theme-midnight">Midnight Cyber (Pitch Black)</option>
+                    <option value="theme-forest">Forest Growth (Deep Green)</option>
+                    <option value="theme-gold">Luxury Dark (Warm Slate)</option>
                 </select>
             </div>
 
             <!-- Font Picker -->
             <div class="space-y-2">
-                <label class="text-xs font-semibold uppercase tracking-wider block">Font Style</label>
-                <select id="setting-font" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none">
-                    <option value="font-outfit">Outfit (Modern Aesthetic)</option>
-                    <option value="font-inter">Inter (Clean Minimal)</option>
-                    <option value="font-poppins">Poppins (Rounded)</option>
+                <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider block">Font Style</label>
+                <select id="setting-font" onchange="applyCustomization()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none">
+                    <option value="font-segoe">Segoe UI (Default Modern)</option>
+                    <option value="font-inter">Inter (Clean & Minimal)</option>
+                    <option value="font-poppins">Poppins (Stylish & Round)</option>
                     <option value="font-mono">Roboto Mono (Techy)</option>
                 </select>
             </div>
 
-            <div class="pt-3 border-t border-slate-700/60 flex justify-end">
-                <button onclick="closeSettingsModal()" class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-2 rounded-xl text-sm transition hover:scale-105">
+            <div class="pt-3 border-t border-slate-700 flex justify-end gap-2">
+                <button onclick="closeSettingsModal()" class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-5 py-2 rounded-lg text-sm">
                     Done
                 </button>
             </div>
@@ -328,10 +343,11 @@
 
         const days = ["M", "T", "W", "T", "F", "S", "S"];
 
-        const STORAGE_KEY_CHECKLIST = "life_transform_checklist_v2";
-        const STORAGE_KEY_MATRIX = "life_transform_matrix_v2";
-        const STORAGE_KEY_NOTES = "life_transform_notes_v2";
-        const STORAGE_KEY_SETTINGS = "life_transform_settings_v2";
+        const STORAGE_KEY_CHECKLIST = "life_transform_checklist_v1";
+        const STORAGE_KEY_MATRIX = "life_transform_matrix_v1";
+        const STORAGE_KEY_NOTES = "life_transform_notes_v1";
+        const STORAGE_KEY_REVIEW = "life_transform_review_v1";
+        const STORAGE_KEY_SETTINGS = "life_transform_settings_v1";
 
         let habitChartInstance = null;
         let balanceChartInstance = null;
@@ -354,19 +370,25 @@
             if (tab === 'daily') {
                 dailyView.classList.remove("hidden");
                 weeklyView.classList.add("hidden");
-                btnDaily.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
-                btnWeekly.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                btnDaily.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
+                btnWeekly.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
             } else {
                 dailyView.classList.add("hidden");
                 weeklyView.classList.remove("hidden");
-                btnWeekly.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
-                btnDaily.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                btnWeekly.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-sky-500 text-white shadow-lg shadow-sky-500/30";
+                btnDaily.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
                 updateCharts();
             }
         }
 
-        function openSettingsModal() { document.getElementById("settings-modal").classList.remove("hidden"); }
-        function closeSettingsModal() { document.getElementById("settings-modal").classList.add("hidden"); }
+        /* Settings Modal Logic */
+        function openSettingsModal() {
+            document.getElementById("settings-modal").classList.remove("hidden");
+        }
+
+        function closeSettingsModal() {
+            document.getElementById("settings-modal").classList.add("hidden");
+        }
 
         function applyCustomization() {
             const theme = document.getElementById("setting-theme").value;
@@ -379,7 +401,7 @@
         }
 
         function loadCustomization() {
-            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{"theme":"theme-pastel","font":"font-outfit"}');
+            const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{"theme":"theme-ocean","font":"font-segoe"}');
             document.getElementById("setting-theme").value = settings.theme;
             document.getElementById("setting-font").value = settings.font;
             applyCustomization();
@@ -388,11 +410,11 @@
         function renderSchedule() {
             const container = document.getElementById("schedule-container");
             container.innerHTML = scheduleData.map(item => `
-                <div class="p-3 rounded-xl border border-slate-700/40 flex items-start gap-3 hover:scale-[1.01] transition">
-                    <div class="mt-1 ${item.color} text-lg icon-3d"><i class="fa-solid ${item.icon}"></i></div>
+                <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-800/80 flex items-start gap-3">
+                    <div class="mt-1 ${item.color}"><i class="fa-solid ${item.icon}"></i></div>
                     <div class="flex-1">
-                        <div class="text-xs font-mono text-slate-400">${item.time}</div>
-                        <div class="text-sm font-semibold">${item.title}</div>
+                        <div class="text-xs text-slate-400 font-mono">${item.time}</div>
+                        <div class="text-sm font-semibold text-slate-200">${item.title}</div>
                         <div class="text-xs text-slate-400">${item.desc}</div>
                     </div>
                 </div>
@@ -405,11 +427,11 @@
 
             container.innerHTML = habitList.map(habit => {
                 const checked = savedState[habit.id] ? "checked" : "";
-                const isDone = savedState[habit.id] ? "line-through opacity-50" : "";
+                const isDone = savedState[habit.id] ? "line-through text-slate-500" : "text-slate-200";
                 return `
-                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-700/40 cursor-pointer hover:scale-[1.01] transition">
+                    <label class="flex items-center gap-3 p-3 bg-slate-900/80 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
                         <input type="checkbox" onchange="toggleChecklist('${habit.id}')" ${checked} class="w-4 h-4 accent-sky-500 rounded cursor-pointer">
-                        <span class="text-sm font-medium ${isDone}">${habit.name}</span>
+                        <span class="text-sm font-medium ${isDone}" id="checklist-text-${habit.id}">${habit.name}</span>
                     </label>
                 `;
             }).join("");
@@ -445,14 +467,14 @@
 
                     return `
                         <td class="p-1 text-center">
-                            <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="w-6 h-6 rounded-full ${colorClass} transition-all hover:scale-125 active:scale-90 border border-slate-700/30 inline-block icon-3d"></button>
+                            <button onclick="cycleMatrixState('${habit.id}', ${idx})" class="w-6 h-6 rounded-full ${colorClass} transition-transform active:scale-95 border border-slate-700/50 inline-block"></button>
                         </td>
                     `;
                 }).join("");
 
                 return `
                     <tr>
-                        <td class="p-2 font-medium text-xs">${habit.name}</td>
+                        <td class="p-2 font-medium text-slate-300 text-xs">${habit.name}</td>
                         ${dotsHtml}
                     </tr>
                 `;
@@ -461,7 +483,9 @@
 
         function cycleMatrixState(habitId, dayIndex) {
             const matrixData = JSON.parse(localStorage.getItem(STORAGE_KEY_MATRIX) || "{}");
-            if (!matrixData[habitId]) matrixData[habitId] = [0, 0, 0, 0, 0, 0, 0];
+            if (!matrixData[habitId]) {
+                matrixData[habitId] = [0, 0, 0, 0, 0, 0, 0];
+            }
             matrixData[habitId][dayIndex] = (matrixData[habitId][dayIndex] + 1) % 4;
             localStorage.setItem(STORAGE_KEY_MATRIX, JSON.stringify(matrixData));
             renderMatrix();
@@ -471,12 +495,27 @@
         function saveNotes() {
             const text = document.getElementById("daily-notes").value;
             localStorage.setItem(STORAGE_KEY_NOTES, text);
-            alert("Journal Note Saved Successfully!");
+            alert("Daily Journal Note Saved!");
+        }
+
+        function saveWeeklyReview() {
+            const review = {
+                well: document.getElementById("review-well").value,
+                mistake: document.getElementById("review-mistake").value,
+                improve: document.getElementById("review-improve").value
+            };
+            localStorage.setItem(STORAGE_KEY_REVIEW, JSON.stringify(review));
+            alert("Weekly Review Saved!");
         }
 
         function loadSavedData() {
             const notes = localStorage.getItem(STORAGE_KEY_NOTES) || "";
             document.getElementById("daily-notes").value = notes;
+
+            const review = JSON.parse(localStorage.getItem(STORAGE_KEY_REVIEW) || "{}");
+            if (review.well) document.getElementById("review-well").value = review.well;
+            if (review.mistake) document.getElementById("review-mistake").value = review.mistake;
+            if (review.improve) document.getElementById("review-improve").value = review.improve;
         }
 
         function initCharts() {
@@ -491,13 +530,16 @@
                         label: 'Completion Score (%)',
                         data: calculateScores(),
                         backgroundColor: '#38bdf8',
-                        borderRadius: 8
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true, max: 100 } },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                    },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -508,13 +550,14 @@
                     labels: ['Workout', 'Books', 'English', 'Skill', 'Money Save', 'Phone Control'],
                     datasets: [{
                         data: [70, 60, 55, 50, 45, 80],
-                        backgroundColor: ['#10b981', '#38bdf8', '#c084fc', '#f59e0b', '#a855f7', '#f43f5e']
+                        backgroundColor: ['#4ade80', '#38bdf8', '#c084fc', '#fbbf24', '#a855f7', '#f43f5e'],
+                        borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } }
                 }
             });
         }
@@ -540,4 +583,4 @@
         }
     </script>
 </body>
-                         </html>
+                 </html>
