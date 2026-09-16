@@ -216,8 +216,8 @@
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
             </div>
             <div class="space-y-2">
-                <label class="text-xs text-slate-300">Gemini API Key (AI Chat එක සඳහා)</label>
-                <input type="password" id="setting-apikey" placeholder="Enter Gemini API Key..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:outline-none">
+                <label class="text-xs text-slate-300">Groq API Key (Llama 3 AI Chat සඳහා)</label>
+                <input type="password" id="setting-apikey" placeholder="Enter Groq API Key (gsk_...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:outline-none">
             </div>
             <div class="space-y-2">
                 <label class="text-xs text-slate-300">Theme</label>
@@ -242,29 +242,29 @@
     </div>
 
     <!-- AI CHAT FLOATING BUTTON & MODAL -->
-    <button onclick="toggleAiChat()" class="fixed bottom-6 right-6 bg-gradient-to-r from-sky-500 to-indigo-600 text-white p-4 rounded-full shadow-2xl hover:scale-105 transition-all z-40 flex items-center gap-2">
-        <i class="fa-solid fa-robot text-xl"></i>
-        <span class="font-semibold text-sm hidden md:inline">AI Coach</span>
+    <button onclick="toggleAiChat()" class="fixed bottom-6 right-6 bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-full shadow-2xl hover:scale-105 transition-all z-40 flex items-center gap-2">
+        <i class="fa-solid fa-bolt text-xl"></i>
+        <span class="font-semibold text-sm hidden md:inline">Groq AI Coach</span>
     </button>
 
     <div id="ai-chat-modal" class="fixed bottom-20 right-4 md:right-6 w-[92vw] md:w-[400px] h-[500px] card border border-slate-700 shadow-2xl flex flex-col z-50 hidden overflow-hidden">
         <div class="bg-slate-800/90 p-3 border-b border-slate-700 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-brain text-sky-400"></i>
-                <span class="font-bold text-sm text-white">Life Transformation AI</span>
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span class="font-bold text-sm text-white">Groq AI (Llama 3.3)</span>
             </div>
             <button onclick="toggleAiChat()" class="text-slate-400 hover:text-white">&times;</button>
         </div>
 
         <div id="ai-messages" class="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
             <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300">
-                👋 <b>හලෝ!</b> මම ඔයාගේ AI Life Coach. ඔයාගේ Daily Habit Progress එක පදනම් කරගෙන වැරදි හදාගන්න සහ Routine එක සාර්ථක කරගන්න ඕනෑම දෙයක් මගෙන් අහන්න!
+                ⚡ <b>හලෝ!</b> මම AI Life Coach (Llama 3.3). ඔයාගේ Daily Habit Progress එක අනුව වැරදි හදාගෙන Discipline වෙන හැටි ඕනෑම දෙයක් මගෙන් අහන්න!
             </div>
         </div>
 
         <div class="p-2 border-t border-slate-700 bg-slate-900 flex gap-2">
-            <input type="text" id="ai-input" onkeypress="handleKeyPress(event)" placeholder="Ask AI Coach..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
-            <button onclick="sendAiMessage()" class="bg-sky-500 hover:bg-sky-400 text-white px-3 py-2 rounded-lg text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="text" id="ai-input" onkeypress="handleKeyPress(event)" placeholder="Ask Groq AI..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+            <button onclick="sendAiMessage()" class="bg-amber-500 hover:bg-amber-400 text-white px-3 py-2 rounded-lg text-xs"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -489,7 +489,7 @@
             }
         }
 
-        /* AI CHAT LOGIC */
+        /* GROQ AI CHAT LOGIC */
         function toggleAiChat() {
             const modal = document.getElementById("ai-chat-modal");
             modal.classList.toggle("hidden");
@@ -505,50 +505,59 @@
             if (!message) return;
 
             const chatContainer = document.getElementById("ai-messages");
-            chatContainer.innerHTML += `<div class="bg-sky-600/30 p-2.5 rounded-lg border border-sky-500/40 text-slate-100 text-right ml-6">${message}</div>`;
+            chatContainer.innerHTML += `<div class="bg-amber-600/30 p-2.5 rounded-lg border border-amber-500/40 text-slate-100 text-right ml-6">${message}</div>`;
             inputField.value = "";
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
-            const apiKey = settings.apiKey;
+            const apiKey = settings.apiKey ? settings.apiKey.trim() : "";
 
             if (!apiKey) {
-                chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg border border-rose-500/40 text-rose-300">⚠️ කරුණාකර Settings වෙත ගොස් නොමිලේ ලබාගත් pin එක ඇතුළත් කරන්න.</div>`;
+                chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg border border-rose-500/40 text-rose-300">⚠️ කරුණාකර Settings වෙත ගොස් Groq API Key එක ඇතුළත් කරන්න (gsk_...).</div>`;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
                 return;
             }
 
-            // Fetch app status for context
             const notes = localStorage.getItem(STORAGE_KEY_NOTES) || "No notes today";
             const progress = document.getElementById("daily-progress-pct").innerText;
-            const promptContext = `You are a helpful Life Transformation Coach. User's current daily completion rate is ${progress}%. User notes: "${notes}". Respond concisely, friendly, in Sinhala (or Sinhala-English mixture). User message: ${message}`;
+            const promptContext = `You are a supportive Life Transformation Coach. The user's current daily checklist progress is ${progress}%. User journal notes: "${notes}". Help the user fix mistakes, stay consistent, and maintain discipline. Answer concisely in natural Sinhala mixed with simple English. Question: ${message}`;
 
-            chatContainer.innerHTML += `<div id="loading-msg" class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-400 italic">AI හිතමින් පවතී...</div>`;
+            chatContainer.innerHTML += `<div id="loading-msg" class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-400 italic">Groq AI හිතමින් පවතී...</div>`;
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                 const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${apiKey}`,
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: promptContext }] }]
+                        model: "llama-3.3-70b-versatile",
+                        messages: [
+                            { role: "system", content: "You are an encouraging life coach." },
+                            { role: "user", content: promptContext }
+                        ],
+                        temperature: 0.7
                     })
                 });
 
                 const data = await response.json();
-                document.getElementById("loading-msg").remove();
+                document.getElementById("loading-msg")?.remove();
 
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    const aiReply = data.candidates[0].content.parts[0].text;
+                if (response.ok && data.choices && data.choices[0].message) {
+                    const aiReply = data.choices[0].message.content;
                     chatContainer.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-200">${aiReply.replace(/\n/g, '<br>')}</div>`;
                 } else {
-                    chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg text-rose-300">error: පිළිතුරක් ලබාගැනීමට නොහැකි විය.</div>`;
+                    const errMsg = data.error ? data.error.message : "API Error occurred";
+                    chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg text-rose-300">⚠️ Error: ${errMsg}</div>`;
                 }
             } catch (err) {
                 document.getElementById("loading-msg")?.remove();
-                chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg text-rose-300">Connection Error! API key එක නිවැරදිදැයි බලන්න.</div>`;
+                chatContainer.innerHTML += `<div class="bg-rose-900/40 p-2.5 rounded-lg text-rose-300">⚠️ Network Error! Internet Connection එක පරීක්ෂා කරන්න.</div>`;
             }
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     </script>
 </body>
-</html>
+ </html>
