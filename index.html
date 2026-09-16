@@ -89,10 +89,7 @@
   .matrix-table tbody tr:hover { background: var(--surface); }
   #confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
   @media (max-width: 640px) { .hide-sm { display:none; } }
-  #g_id_onload { display:none; }
   .avatar-ring { box-shadow: 0 0 0 2px var(--accent), 0 0 20px var(--accent-glow); }
-
-  /* User menu dropdown */
   .user-menu { position:absolute; top:calc(100% + 8px); right:0; min-width:220px; z-index:200;
     background: var(--card); border:1px solid var(--border); border-radius:12px; box-shadow: var(--shadow);
     padding:8px; opacity:0; transform: translateY(-8px) scale(0.96); pointer-events:none;
@@ -120,11 +117,11 @@
       <p class="text-muted text-sm mt-1">Better than yesterday. That's the goal.</p>
     </div>
     <div class="flex items-center gap-3 flex-wrap">
-      <!-- Google Sign In Button (when signed out) -->
       <div id="auth-container">
-        <div id="google-signin-btn" class="google-btn-container"></div>
+        <button onclick="requestToken()" class="btn-accent px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2">
+          <i class="fa-brands fa-google"></i> Sign in with Google
+        </button>
       </div>
-      <!-- User Info (when signed in) -->
       <div id="user-info" class="hidden items-center gap-2 relative">
         <button onclick="toggleUserMenu(event)" class="surface px-2 py-1.5 flex items-center gap-2 hover:border-accent transition rounded-lg">
           <img id="user-avatar" class="w-8 h-8 rounded-full avatar-ring" alt="">
@@ -154,7 +151,6 @@
           </button>
         </div>
       </div>
-      <!-- Live Clock -->
       <div class="surface px-4 py-2 flex items-center gap-3">
         <i class="fa-solid fa-clock text-accent"></i>
         <div class="leading-tight">
@@ -184,7 +180,7 @@
   </div>
 </header>
 
-<!-- =============== SIGN-IN WALL (only when signed out) =============== -->
+<!-- =============== SIGN-IN WALL =============== -->
 <div id="signin-wall" class="hidden">
   <div class="card p-8 max-w-md mx-auto text-center space-y-5 anim-in">
     <div class="w-20 h-20 rounded-full bg-accent-soft flex items-center justify-center text-4xl text-accent mx-auto">
@@ -196,7 +192,9 @@
       Your data is <span class="text-accent font-semibold">100% private</span> — only you can see it.
     </p>
     <div class="flex justify-center">
-      <div id="google-signin-btn-wall" class="google-btn-container"></div>
+      <button onclick="requestToken()" class="btn-accent px-6 py-3 rounded-lg text-base font-semibold flex items-center gap-2">
+        <i class="fa-brands fa-google"></i> Sign in with Google
+      </button>
     </div>
     <div class="text-[11px] text-dim pt-2 border-t" style="border-color: var(--border);">
       <i class="fa-solid fa-lock mr-1"></i>
@@ -431,9 +429,10 @@
 
 <script>
 /* ============================================================
-   🔑 GOOGLE CLIENT ID — PASTE YOURS HERE
+   🔑 GOOGLE CLIENT ID
    ============================================================ */
- const GOOGLE_CLIENT_ID = "931375707752-6nlkq1vc0mr6cqjca5me44vk1h4klsgg.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "931375707752-6nlkq1vc0mr6cqjca5me44vk1h4klsgg.apps.googleusercontent.com";
+
 const SCOPES = [
   "https://www.googleapis.com/auth/drive.file",
   "https://www.googleapis.com/auth/userinfo.profile",
@@ -514,23 +513,17 @@ const ACCENTS = {
   cyan:{c:"#06b6d4",s:"rgba(6,182,212,0.15)",g:"rgba(6,182,212,0.45)"}
 };
 
-/* ============================================================
-   STORAGE KEYS
-   ============================================================ */
 const K = {
   schedule:"ltt_schedule_v4", checklist:"ltt_checklist_v4", matrix:"ltt_matrix_v4",
-  notes:"ltt_notes_v4", review:"ltt_review_v4", theme:"ltt_theme_v4",
-  accent:"ltt_accent_v4", quote:"ltt_quote_date_v4", streak:"ltt_streak_v4",
+  notes:"ltt_notes_v4", review:"ltt_review_v4",
+  quote:"ltt_quote_date_v4", streak:"ltt_streak_v4",
   lastFull:"ltt_last_full_v4",
   lastBackup:"ltt_last_backup_v4", autoBackup:"ltt_auto_backup_v4",
   driveFileId:"ltt_drive_file_id_v4",
-  // Global (not namespaced)
   themeGlobal:"ltt_theme_global_v4",
   accentGlobal:"ltt_accent_global_v4"
 };
-// Keys that stay GLOBAL (shared across all users on same browser)
 const GLOBAL_KEYS = [K.themeGlobal, K.accentGlobal];
-// Keys that are USER-SPECIFIC (namespaced)
 const USER_KEYS = Object.values(K).filter(k => !GLOBAL_KEYS.includes(k));
 
 let scheduleData = [];
@@ -544,33 +537,23 @@ let currentUser = null;
 let tokenExpiresAt = 0;
 let autoBackupTimer = null;
 let dataDirty = false;
-let currentNamespace = "guest"; // will become user email after sign-in
+let currentNamespace = "guest";
 
-/* ============================================================
-   NAMESPACE HELPERS — per-user data separation
-   ============================================================ */
 function nsKeyFor(user){
   const id = user && user.email ? user.email.toLowerCase() : "guest";
   return "ltt_ns_" + id.replace(/[^a-z0-9]/g, "_");
 }
-
-// Save all current active user-data to current namespace bucket
 function saveToNamespace(){
   const bucket = {};
   USER_KEYS.forEach(k => {
     const v = localStorage.getItem(k);
     if(v !== null) bucket[k] = v;
   });
-  try{
-    localStorage.setItem(nsKeyFor({ email: currentNamespace }), JSON.stringify(bucket));
-  }catch{}
+  try{ localStorage.setItem(nsKeyFor({ email: currentNamespace }), JSON.stringify(bucket)); }catch{}
 }
-
-// Wipe active keys, then load from namespace bucket. Returns true if data existed.
 function loadFromNamespace(nsEmail){
   const ns = nsKeyFor({ email: nsEmail });
   const raw = localStorage.getItem(ns);
-  // Clear active user-data
   USER_KEYS.forEach(k => localStorage.removeItem(k));
   if(!raw) return false;
   try{
@@ -581,8 +564,6 @@ function loadFromNamespace(nsEmail){
     return true;
   }catch{ return false; }
 }
-
-// Snapshot current active keys as plain object (for Drive backup)
 function collectAllData(){
   const data = {};
   USER_KEYS.forEach(key => {
@@ -593,7 +574,6 @@ function collectAllData(){
   data._meta = { version: 4, owner: currentNamespace, exportedAt: new Date().toISOString() };
   return data;
 }
-
 function applyAllData(data){
   if(!data || typeof data !== "object") throw new Error("Invalid data");
   USER_KEYS.forEach(k => localStorage.removeItem(k));
@@ -603,9 +583,6 @@ function applyAllData(data){
   });
 }
 
-/* ============================================================
-   UTILITIES
-   ============================================================ */
 function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function formatTime12(t){
   if(!t) return "";
@@ -627,9 +604,6 @@ function timeAgo(ts){
   return `${Math.floor(s/86400)} days ago`;
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initAccentPicker();
@@ -638,23 +612,26 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(highlightCurrentActivity, 30000);
   renderPomodoro();
 
-  // Try to restore Google session
-  const cachedToken = sessionStorage.getItem("ltt_token");
-  const cachedExp = parseInt(sessionStorage.getItem("ltt_token_exp") || "0", 10);
-  const cachedUser = sessionStorage.getItem("ltt_user");
-  const cachedNs = sessionStorage.getItem("ltt_ns");
+  // Check stored session (localStorage — persists across tabs and reloads)
+  const cachedToken = localStorage.getItem("ltt_token");
+  const cachedExp = parseInt(localStorage.getItem("ltt_token_exp") || "0", 10);
+  const cachedUser = localStorage.getItem("ltt_user");
+  const cachedNs = localStorage.getItem("ltt_ns");
 
   if(cachedToken && cachedExp > Date.now() && cachedUser && cachedNs){
     accessToken = cachedToken;
     tokenExpiresAt = cachedExp;
     currentUser = JSON.parse(cachedUser);
     currentNamespace = cachedNs;
-    // Data should already be in localStorage from last session
     loadAllViews();
     updateAuthUI();
-    showToast("👋 Welcome back, " + (currentUser.given_name || "friend"), "success");
+    setTimeout(() => showToast("👋 Welcome back, " + (currentUser.given_name || "friend"), "success"), 400);
   } else {
-    // Show sign-in wall
+    // Clear any stale session data
+    if(cachedToken && cachedExp <= Date.now()){
+      localStorage.removeItem("ltt_token");
+      localStorage.removeItem("ltt_token_exp");
+    }
     showSigninWall();
   }
 
@@ -678,18 +655,15 @@ function loadAllViews(){
     autoBackupTimer = setInterval(() => { if(dataDirty && accessToken) backupToDrive(true); }, 5*60*1000);
   }
 }
-
 function showSigninWall(){
   document.getElementById("signin-wall").classList.remove("hidden");
   document.getElementById("view-daily").classList.add("hidden");
   document.getElementById("view-weekly").classList.add("hidden");
 }
-
 function hideSigninWall(){
   document.getElementById("signin-wall").classList.add("hidden");
   document.getElementById("view-daily").classList.remove("hidden");
 }
-
 function waitForGoogleAndInit(){
   if(window.google && google.accounts && google.accounts.oauth2){
     initGoogleAuth();
@@ -697,10 +671,6 @@ function waitForGoogleAndInit(){
     setTimeout(waitForGoogleAndInit, 200);
   }
 }
-
-/* ============================================================
-   🌐 GOOGLE AUTH
-   ============================================================ */
 function initGoogleAuth(){
   try {
     tokenClient = google.accounts.oauth2.initTokenClient({
@@ -710,8 +680,8 @@ function initGoogleAuth(){
         if(resp.error){ showToast("❌ Sign-in failed: " + resp.error, "error"); return; }
         accessToken = resp.access_token;
         tokenExpiresAt = Date.now() + (resp.expires_in || 3600) * 1000;
-        sessionStorage.setItem("ltt_token", accessToken);
-        sessionStorage.setItem("ltt_token_exp", tokenExpiresAt);
+        localStorage.setItem("ltt_token", accessToken);
+        localStorage.setItem("ltt_token_exp", tokenExpiresAt);
         await fetchUserInfo();
         await afterSignIn();
       },
@@ -720,35 +690,14 @@ function initGoogleAuth(){
         showToast("⚠️ Google auth error. Check Client ID and origins.", "error");
       }
     });
-
-    // Render official buttons in BOTH locations
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: () => {}
-    });
-
-    const renderOpts = { type:"standard", theme:"filled_black", size:"large", shape:"pill",
-      text:"signin_with", logo_alignment:"left", width:220 };
-
-    google.accounts.id.renderButton(document.getElementById("google-signin-btn"), renderOpts);
-    google.accounts.id.renderButton(document.getElementById("google-signin-btn-wall"), renderOpts);
-
-    document.getElementById("google-signin-btn").addEventListener("click", () => {
-      if(!accessToken) requestToken();
-    });
-    document.getElementById("google-signin-btn-wall").addEventListener("click", () => {
-      requestToken();
-    });
   } catch(e){
     console.warn("Google init failed", e);
   }
 }
-
 function requestToken(prompt=""){
-  if(!tokenClient){ showToast("⚠️ Google auth not ready yet.", "warn"); return; }
+  if(!tokenClient){ showToast("⚠️ Google auth not ready yet. Please wait...", "warn"); return; }
   tokenClient.requestAccessToken({ prompt });
 }
-
 async function fetchUserInfo(){
   try {
     const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
@@ -756,28 +705,24 @@ async function fetchUserInfo(){
     });
     if(!r.ok) throw new Error("userinfo failed");
     currentUser = await r.json();
-    sessionStorage.setItem("ltt_user", JSON.stringify(currentUser));
+    localStorage.setItem("ltt_user", JSON.stringify(currentUser));
   } catch(e){
     console.warn(e);
     currentUser = { name:"User", email:"unknown@user", picture:"", given_name:"User" };
   }
 }
-
 async function afterSignIn(){
   const newNs = currentUser.email.toLowerCase();
   const previousNs = currentNamespace;
 
-  // Step 1: Save current active data to its namespace (if switching from another user)
-  if(previousNs && previousNs !== newNs){
+  if(previousNs && previousNs !== "guest" && previousNs !== newNs){
     saveToNamespace();
   }
 
-  // Step 2: Check if this user has data on this browser
   const hasLocalData = localStorage.getItem(nsKeyFor(currentUser)) !== null;
 
-  // Step 3: Switch namespace and load
   currentNamespace = newNs;
-  sessionStorage.setItem("ltt_ns", newNs);
+  localStorage.setItem("ltt_ns", newNs);
 
   if(hasLocalData){
     loadFromNamespace(newNs);
@@ -786,36 +731,26 @@ async function afterSignIn(){
     updateAuthUI();
     showToast("✅ Welcome back, " + (currentUser.given_name || "friend") + "!", "success");
   } else {
-    // First time on this device for this user → check Drive for existing backup
     hideSigninWall();
-    // Load blank/guest state temporarily
     USER_KEYS.forEach(k => localStorage.removeItem(k));
     loadAllViews();
     updateAuthUI();
     showToast("👋 Signed in as " + (currentUser.given_name || "friend"), "success");
-
-    // Try to auto-restore from Drive
     setTimeout(() => autoRestoreFromDrive(), 500);
   }
 }
-
 async function autoRestoreFromDrive(){
   try {
-    // Search for this user's backup file
     const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
     const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
     if(!r.ok) return;
     const found = await r.json();
     if(!found.files || !found.files.length){
-      // No backup found → this is truly a new user
-      setTimeout(() => {
-        showToast("🎉 Welcome! Your data will sync to your Drive.", "success");
-      }, 600);
+      setTimeout(() => showToast("🎉 Welcome! Your data will sync to your Drive.", "success"), 600);
       return;
     }
     const fileId = found.files[0].id;
     localStorage.setItem(K.driveFileId, fileId);
-    // Ask user
     setTimeout(() => {
       if(confirm("☁️ We found an existing backup in your Google Drive.\n\nDo you want to restore it to this device?")){
         restoreFromDrive();
@@ -825,7 +760,6 @@ async function autoRestoreFromDrive(){
     console.warn("Auto-restore check failed:", e);
   }
 }
-
 async function updateAuthUI(){
   const authC = document.getElementById("auth-container");
   const userI = document.getElementById("user-info");
@@ -844,7 +778,6 @@ async function updateAuthUI(){
     userI.classList.remove("flex");
   }
 }
-
 function toggleUserMenu(e){
   e.stopPropagation();
   document.getElementById("user-menu").classList.toggle("open");
@@ -853,61 +786,45 @@ document.addEventListener("click", () => {
   const m = document.getElementById("user-menu");
   if(m) m.classList.remove("open");
 });
-
 function switchAccount(){
   document.getElementById("user-menu").classList.remove("open");
-  // Save current first
   saveToNamespace();
-  // Revoke token
   if(accessToken && window.google){
     google.accounts.oauth2.revoke(accessToken, () => {});
   }
   accessToken = null; currentUser = null; tokenExpiresAt = 0;
-  sessionStorage.removeItem("ltt_token");
-  sessionStorage.removeItem("ltt_token_exp");
-  sessionStorage.removeItem("ltt_user");
-  sessionStorage.removeItem("ltt_ns");
-  // Request token with account chooser
+  localStorage.removeItem("ltt_token");
+  localStorage.removeItem("ltt_token_exp");
+  localStorage.removeItem("ltt_user");
+  localStorage.removeItem("ltt_ns");
   setTimeout(() => requestToken("select_account"), 300);
 }
-
 function signOut(){
   document.getElementById("user-menu").classList.remove("open");
-  // Save current data to this user's namespace before exiting
   saveToNamespace();
-
   if(accessToken && window.google){
     google.accounts.oauth2.revoke(accessToken, () => {});
   }
   accessToken = null; currentUser = null; tokenExpiresAt = 0;
-  sessionStorage.removeItem("ltt_token");
-  sessionStorage.removeItem("ltt_token_exp");
-  sessionStorage.removeItem("ltt_user");
-  sessionStorage.removeItem("ltt_ns");
-
+  localStorage.removeItem("ltt_token");
+  localStorage.removeItem("ltt_token_exp");
+  localStorage.removeItem("ltt_user");
+  localStorage.removeItem("ltt_ns");
   if(autoBackupTimer){ clearInterval(autoBackupTimer); autoBackupTimer = null; }
-
-  // Clear active data view
   USER_KEYS.forEach(k => localStorage.removeItem(k));
   currentNamespace = "guest";
-
   updateAuthUI();
   showSigninWall();
   showToast("👋 Signed out. Your data is safe.", "warn");
 }
 
-/* ============================================================
-   ☁️ GOOGLE DRIVE BACKUP / RESTORE
-   ============================================================ */
 async function backupToDrive(silent = false){
   if(!accessToken){ if(!silent) showToast("Please sign in first.", "warn"); return; }
   try {
     if(!silent) showToast("☁️ Backing up to Google Drive...", "info");
     const data = collectAllData();
     const content = JSON.stringify(data, null, 2);
-
     let fileId = localStorage.getItem(K.driveFileId);
-
     if(!fileId){
       const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
       const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
@@ -918,7 +835,6 @@ async function backupToDrive(silent = false){
         localStorage.setItem(K.driveFileId, fileId);
       }
     }
-
     const metadata = { name: BACKUP_FILENAME, description: BACKUP_DESCRIPTION, mimeType:"application/json" };
     const boundary = "-------LTT_BOUNDARY_" + Date.now();
     const body =
@@ -929,7 +845,6 @@ async function backupToDrive(silent = false){
       `Content-Type: application/json\r\n\r\n` +
       content + `\r\n` +
       `--${boundary}--`;
-
     let fileResponse;
     if(fileId){
       fileResponse = await fetch(
@@ -944,15 +859,9 @@ async function backupToDrive(silent = false){
           headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary },
           body });
     }
-
-    if(!fileResponse.ok){
-      const errTxt = await fileResponse.text();
-      throw new Error("Upload failed: " + fileResponse.status);
-    }
-
+    if(!fileResponse.ok){ throw new Error("Upload failed: " + fileResponse.status); }
     const file = await fileResponse.json();
     if(!fileId && file.id) localStorage.setItem(K.driveFileId, file.id);
-
     const now = Date.now();
     localStorage.setItem(K.lastBackup, now);
     dataDirty = false;
@@ -963,13 +872,11 @@ async function backupToDrive(silent = false){
     if(!silent) showToast("❌ Backup failed: " + err.message, "error");
   }
 }
-
 async function restoreFromDrive(){
   if(!accessToken){ showToast("Please sign in first.", "warn"); return; }
   try {
     showToast("🔎 Searching Drive...", "info");
     let fileId = localStorage.getItem(K.driveFileId);
-
     if(!fileId){
       const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
       const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
@@ -981,13 +888,11 @@ async function restoreFromDrive(){
       }
     }
     if(!fileId){ showToast("📭 No backup found in your Drive.", "warn"); return; }
-
     const r = await fetch(
       `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
       { headers:{ Authorization:"Bearer " + accessToken }});
     if(!r.ok) throw new Error("Download failed: " + r.status);
     const data = await r.json();
-
     if(!confirm("⚠️ This will overwrite ALL current data with the Drive backup. Continue?")) return;
     applyAllData(data);
     saveToNamespace();
@@ -998,7 +903,6 @@ async function restoreFromDrive(){
     showToast("❌ Restore failed: " + err.message, "error");
   }
 }
-
 function manualBackup(){
   document.getElementById("user-menu").classList.remove("open");
   backupToDrive(false);
@@ -1007,7 +911,6 @@ function manualRestore(){
   document.getElementById("user-menu").classList.remove("open");
   restoreFromDrive();
 }
-
 function updateBackupStatus(ts){
   const textEl = document.getElementById("backup-status-text");
   const timeEl = document.getElementById("backup-status-time");
@@ -1027,7 +930,6 @@ function updateBackupStatus(ts){
     iconEl.classList.add("text-emerald-400");
   }
 }
-
 function toggleAutoBackup(on){
   localStorage.setItem(K.autoBackup, on ? "true" : "false");
   if(autoBackupTimer){ clearInterval(autoBackupTimer); autoBackupTimer = null; }
@@ -1037,12 +939,8 @@ function toggleAutoBackup(on){
   } else if(on){ showToast("Sign in to enable auto-backup", "warn"); }
   else { showToast("Auto-backup disabled", "warn"); }
 }
-
 function markDirty(){ dataDirty = true; }
 
-/* ============================================================
-   THEME (global — same for all users on this browser)
-   ============================================================ */
 function initTheme(){
   const saved = localStorage.getItem(K.themeGlobal) || "dark";
   document.body.classList.toggle("light", saved === "light");
@@ -1060,10 +958,6 @@ function updateThemeIcon(){
   const icon = document.getElementById("theme-icon");
   if(icon) icon.className = light ? "fa-solid fa-sun" : "fa-solid fa-moon";
 }
-
-/* ============================================================
-   ACCENT PICKER (global)
-   ============================================================ */
 function initAccentPicker(){
   const picker = document.getElementById("accent-picker");
   picker.innerHTML = Object.entries(ACCENTS).map(([name, a]) =>
@@ -1081,10 +975,6 @@ function applyAccent(name, silent){
   document.querySelectorAll("[data-accent]").forEach(el => el.classList.toggle("active", el.dataset.accent === name));
   if(!silent) showToast(`🎨 Accent: ${name}`, "success");
 }
-
-/* ============================================================
-   TOAST
-   ============================================================ */
 function showToast(msg, type="info"){
   const t = document.createElement("div");
   t.className = "toast " + type;
@@ -1093,10 +983,6 @@ function showToast(msg, type="info"){
   requestAnimationFrame(() => t.classList.add("show"));
   setTimeout(() => { t.classList.remove("show"); setTimeout(() => t.remove(), 400); }, 2800);
 }
-
-/* ============================================================
-   LIVE CLOCK
-   ============================================================ */
 function updateLiveClock(){
   const now = new Date();
   const t = document.getElementById("live-time");
@@ -1106,9 +992,6 @@ function updateLiveClock(){
   d.textContent = now.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"numeric" });
 }
 
-/* ============================================================
-   SCHEDULE
-   ============================================================ */
 function loadSchedule(){
   try{
     const raw = localStorage.getItem(K.schedule);
@@ -1119,7 +1002,6 @@ function loadSchedule(){
 function saveSchedule(){
   try{ localStorage.setItem(K.schedule, JSON.stringify(scheduleData)); markDirty(); saveToNamespace(); }catch{}
 }
-
 function renderSchedule(){
   const c = document.getElementById("schedule-container");
   if(!c) return;
@@ -1221,9 +1103,6 @@ function highlightCurrentActivity(){
   });
 }
 
-/* ============================================================
-   CHECKLIST
-   ============================================================ */
 function renderChecklist(){
   const c = document.getElementById("checklist-container");
   if(!c) return;
@@ -1260,10 +1139,6 @@ function calculateDailyProgress(){
     }
   }
 }
-
-/* ============================================================
-   STREAK
-   ============================================================ */
 function updateStreak(){
   const lastFull = localStorage.getItem(K.lastFull);
   const today = todayKey();
@@ -1276,10 +1151,6 @@ function updateStreak(){
   const el = document.getElementById("streak-count");
   if(el) el.innerText = streak;
 }
-
-/* ============================================================
-   MATRIX
-   ============================================================ */
 function renderMatrix(){
   const c = document.getElementById("matrix-container");
   if(!c) return;
@@ -1301,10 +1172,6 @@ function cycleMatrixState(id, di){
   markDirty(); saveToNamespace(); renderMatrix();
   if(habitChartInstance) updateCharts();
 }
-
-/* ============================================================
-   NOTES / REVIEWS
-   ============================================================ */
 function saveNotes(){
   localStorage.setItem(K.notes, document.getElementById("daily-notes").value);
   markDirty(); saveToNamespace(); showToast("📝 Journal note saved", "success");
@@ -1330,10 +1197,6 @@ function loadSavedData(){
     if(ri && r.improve) ri.value = r.improve;
   } catch{}
 }
-
-/* ============================================================
-   QUOTE
-   ============================================================ */
 function initQuote(){
   const stored = JSON.parse(localStorage.getItem(K.quote) || "{}");
   const today = todayKey();
@@ -1351,9 +1214,6 @@ function newQuote(){
   setTimeout(() => { el.textContent = QUOTES[idx]; el.style.opacity = "1"; }, 200);
 }
 
-/* ============================================================
-   POMODORO
-   ============================================================ */
 let pomo = { total:25*60, left:25*60, running:false, mode:"work", timer:null };
 function renderPomodoro(){
   const m = Math.floor(pomo.left / 60), s = pomo.left % 60;
@@ -1392,10 +1252,6 @@ function setPomoMode(mode){
   if(b) b.className = (mode==="break" ? "flex-1 py-1.5 rounded btn-accent font-semibold text-xs" : "flex-1 py-1.5 rounded btn-ghost font-semibold text-xs");
   renderPomodoro();
 }
-
-/* ============================================================
-   CONFETTI
-   ============================================================ */
 function fireConfetti(){
   const canvas = document.getElementById("confetti-canvas");
   const ctx = canvas.getContext("2d");
@@ -1422,10 +1278,6 @@ function fireConfetti(){
     else ctx.clearRect(0,0,canvas.width,canvas.height);
   })();
 }
-
-/* ============================================================
-   TABS & CHARTS
-   ============================================================ */
 function switchTab(tab){
   const dv=document.getElementById("view-daily"), wv=document.getElementById("view-weekly"),
         bd=document.getElementById("tab-daily"), bw=document.getElementById("tab-weekly");
@@ -1489,10 +1341,6 @@ function calculateScores(){
     return Math.round((pts / 7) * 100);
   });
 }
-
-/* ============================================================
-   LOCAL EXPORT / IMPORT
-   ============================================================ */
 function exportData(){
   const data = collectAllData();
   const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
@@ -1516,10 +1364,6 @@ function importData(event){
   };
   reader.readAsText(file);
 }
-
-/* ============================================================
-   KEYBOARD SHORTCUTS
-   ============================================================ */
 document.addEventListener("keydown", e => {
   if(e.target.matches("input, textarea, select")) return;
   if(e.key === "t" || e.key === "T") toggleTheme();
@@ -1527,13 +1371,9 @@ document.addEventListener("keydown", e => {
   if(e.key === "2") switchTab("weekly");
   if(e.key === " " && e.target === document.body){ e.preventDefault(); togglePomodoro(); }
 });
-
-/* ============================================================
-   AUTO-SAVE TO NAMESPACE ON EXIT
-   ============================================================ */
 window.addEventListener("beforeunload", () => {
   if(currentNamespace && currentNamespace !== "guest") saveToNamespace();
 });
 </script>
 </body>
-                                     </html>
+ </html>
