@@ -1,0 +1,521 @@
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Transformation & Routine Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b1329; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #131c35; border: 1px solid #1e293b; border-radius: 12px; }
+        .accent-blue { color: #38bdf8; }
+        .accent-green { color: #4ade80; }
+        .accent-amber { color: #fbbf24; }
+        .accent-purple { color: #c084fc; }
+        .status-done { background-color: #16a34a; }
+        .status-partial { background-color: #ca8a04; }
+        .status-missed { background-color: #dc2626; }
+        .status-unset { background-color: #334155; }
+    </style>
+</head>
+<body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-700 pb-4">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold tracking-wide text-white">
+                <i class="fa-solid fa-chart-line text-sky-400 mr-2"></i>LIFE TRANSFORMATION TRACKER
+            </h1>
+            <p class="text-slate-400 text-sm mt-1">"Better than yesterday. That's the goal."</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="switchTab('daily')" id="tab-daily" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-sky-600 text-white shadow-lg">
+                <i class="fa-solid fa-calendar-day mr-2"></i>Daily Routine & Checklist
+            </button>
+            <button onclick="switchTab('weekly')" id="tab-weekly" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-chart-pie mr-2"></i>Weekly Review & Analytics
+            </button>
+        </div>
+    </header>
+
+    <!-- TAB 1: DAILY ROUTINE & CHECKLIST -->
+    <div id="view-daily" class="space-y-6">
+        
+        <!-- Top Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="text-slate-400 text-xs font-medium">Daily Completion Rate</div>
+                    <div class="text-2xl font-bold text-white"><span id="daily-progress-pct">0</span>%</div>
+                </div>
+            </div>
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div>
+                    <div class="text-slate-400 text-xs font-medium">Monthly Goal Focus</div>
+                    <div class="text-sm font-semibold text-sky-300">Month 1: Control & Routine</div>
+                </div>
+            </div>
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <div>
+                    <div class="text-slate-400 text-xs font-medium">Consistency Mindset</div>
+                    <div class="text-sm font-semibold text-purple-300">Discipline Today • Freedom Tomorrow</div>
+                </div>
+            </div>
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                    <div class="text-slate-400 text-xs font-medium">Main Target</div>
+                    <div class="text-sm font-semibold text-amber-300">Phone Usage &le; 2 hrs/day</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Daily Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Daily Schedule Column -->
+            <div class="card p-5 lg:col-span-1 space-y-4">
+                <h2 class="text-lg font-bold text-white flex items-center justify-between">
+                    <span><i class="fa-regular fa-clock text-sky-400 mr-2"></i>Daily Schedule</span>
+                    <span class="text-xs font-normal text-slate-400">Timeline</span>
+                </h2>
+                <div class="space-y-2 max-h-[600px] overflow-y-auto pr-2" id="schedule-container">
+                    <!-- Dynamic Schedule Content -->
+                </div>
+            </div>
+
+            <!-- Middle Column: Checklist & Weekly Dot Matrix -->
+            <div class="space-y-6 lg:col-span-1">
+                
+                <!-- Daily Checklist -->
+                <div class="card p-5 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-white">
+                            <i class="fa-solid fa-list-check text-emerald-400 mr-2"></i>Daily Checklist
+                        </h2>
+                        <span class="text-xs text-slate-400">Tap to tick</span>
+                    </div>
+                    <div class="space-y-2" id="checklist-container">
+                        <!-- Dynamic Checklist Items -->
+                    </div>
+                </div>
+
+                <!-- Weekly Matrix (Dot Toggles) -->
+                <div class="card p-5 space-y-4">
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-calendar-week text-amber-400 mr-2"></i>Weekly Habit Overview
+                    </h2>
+                    <p class="text-xs text-slate-400">Tap status dots to change: Green (Done), Yellow (Partial), Red (Missed)</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs uppercase bg-slate-800 text-slate-400">
+                                <tr>
+                                    <th class="p-2">Habit</th>
+                                    <th class="p-1 text-center">M</th>
+                                    <th class="p-1 text-center">T</th>
+                                    <th class="p-1 text-center">W</th>
+                                    <th class="p-1 text-center">T</th>
+                                    <th class="p-1 text-center">F</th>
+                                    <th class="p-1 text-center">S</th>
+                                    <th class="p-1 text-center">S</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-body" class="divide-y divide-slate-800">
+                                <!-- Dynamic Habit Matrix Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Goals, Monthly Progress & Reminders -->
+            <div class="space-y-6 lg:col-span-1">
+                
+                <!-- 6-Month Plan Preview -->
+                <div class="card p-5 space-y-3">
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-mountain text-purple-400 mr-2"></i>6-Month Plan
+                    </h2>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+                            <div class="text-sky-400 font-bold">Month 1</div>
+                            <div class="text-slate-300">Control & Routine</div>
+                        </div>
+                        <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+                            <div class="text-emerald-400 font-bold">Month 2</div>
+                            <div class="text-slate-300">Consistency</div>
+                        </div>
+                        <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+                            <div class="text-purple-400 font-bold">Month 3</div>
+                            <div class="text-slate-300">Strength & Skill</div>
+                        </div>
+                        <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+                            <div class="text-amber-400 font-bold">Month 4</div>
+                            <div class="text-slate-300">Discipline</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Reminders -->
+                <div class="card p-5 space-y-3">
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i>Key Reminders
+                    </h2>
+                    <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+                        <li>Progress over perfection.</li>
+                        <li>Small steps create big results.</li>
+                        <li>Don't miss twice in a row.</li>
+                        <li>Take care of your mental health.</li>
+                        <li>You are doing better than you think!</li>
+                    </ul>
+                </div>
+
+                <!-- Monthly Progress Status Bars -->
+                <div class="card p-5 space-y-3">
+                    <h2 class="text-lg font-bold text-white">
+                        <i class="fa-solid fa-chart-simple text-sky-400 mr-2"></i>Monthly Progress
+                    </h2>
+                    <div class="space-y-3" id="progress-bars-container">
+                        <!-- Dynamic Monthly Progress -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TAB 2: WEEKLY REVIEW & ANALYTICS -->
+    <div id="view-weekly" class="space-y-6 hidden">
+        
+        <!-- Header Banner -->
+        <div class="card p-6 bg-gradient-to-r from-slate-900 to-sky-950 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Self-Review Dashboard</span>
+                <h2 class="text-2xl font-bold text-white">Weekly Performance & Analytics</h2>
+            </div>
+            <div class="text-right">
+                <div class="text-sm font-semibold text-emerald-400">Overall Weekly Score</div>
+                <div class="text-3xl font-extrabold text-white">69%</div>
+            </div>
+        </div>
+
+        <!-- Visual Analytics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Time Distribution Chart -->
+            <div class="card p-5">
+                <h3 class="text-md font-bold text-white mb-4">
+                    <i class="fa-solid fa-chart-pie text-sky-400 mr-2"></i>Daily Time Distribution (24h Average)
+                </h3>
+                <div class="relative h-64">
+                    <canvas id="donutChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Daily Breakdown Bar Chart -->
+            <div class="card p-5">
+                <h3 class="text-md font-bold text-white mb-4">
+                    <i class="fa-solid fa-chart-column text-emerald-400 mr-2"></i>Habit Time Spent (Minutes/Hours)
+                </h3>
+                <div class="relative h-64">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Weekly Reflection Form -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card p-5 space-y-2">
+                <h4 class="font-bold text-emerald-400 text-sm">1. What did I do well this week?</h4>
+                <textarea id="ref-1" class="w-full h-24 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500" placeholder="Type your response..."></textarea>
+            </div>
+            <div class="card p-5 space-y-2">
+                <h4 class="font-bold text-amber-400 text-sm">2. What was my biggest mistake?</h4>
+                <textarea id="ref-2" class="w-full h-24 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500" placeholder="Type your response..."></textarea>
+            </div>
+            <div class="card p-5 space-y-2">
+                <h4 class="font-bold text-sky-400 text-sm">3. What can I improve next week?</h4>
+                <textarea id="ref-3" class="w-full h-24 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500" placeholder="Type your response..."></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        // Default Data Structures
+        const scheduleData = [
+            { time: "06:30 - 07:00", icon: "fa-bed", title: "Wake Up & Freshen Up", desc: "Drink water, Make bed, Wash face" },
+            { time: "07:00 - 07:20", icon: "fa-book-open", title: "Morning Reading", desc: "Read 20 min, Take notes / key points" },
+            { time: "07:20 - 07:35", icon: "fa-child-reaching", title: "Stretching", desc: "10-15 min full body mobility" },
+            { time: "07:45 - 08:30", icon: "fa-utensils", title: "Breakfast", desc: "Healthy & protein rich" },
+            { time: "08:30 - 10:30", icon: "fa-comments", title: "English Practice", desc: "Listening, Speaking, Vocabulary, Reading/Writing" },
+            { time: "10:30 - 11:00", icon: "fa-mug-hot", title: "Break", desc: "Relax, Short walk, Hydrate" },
+            { time: "11:00 - 13:00", icon: "fa-laptop-code", title: "Career / Skill Learning", desc: "Study, Practice, Online course/project" },
+            { time: "13:00 - 14:00", icon: "fa-utensils", title: "Lunch & Rest", desc: "Eat well, Short nap / relax" },
+            { time: "14:00 - 15:30", icon: "fa-laptop", title: "Skill / Work / Study", desc: "Apply what you learned, Assignments" },
+            { time: "15:30 - 16:00", icon: "fa-envelope", title: "Free Time / Personal Tasks", desc: "Emails, Room cleaning, Plan next task" },
+            { time: "16:00 - 17:30", icon: "fa-dumbbell", title: "Workout (1.5 hours)", desc: "Warm up, Main workout, Cool down" },
+            { time: "17:45 - 18:30", icon: "fa-shower", title: "Shower & Dinner", desc: "Freshen up, Family time" },
+            { time: "18:30 - 20:00", icon: "fa-gamepad", title: "Free Time", desc: "Gaming / Series, Friends" },
+            { time: "20:30 - 20:45", icon: "fa-brain", title: "Meditation", desc: "10-15 min calm mind" },
+            { time: "20:45 - 21:00", icon: "fa-clipboard-check", title: "Daily Review & Plan", desc: "What went well? Plan tomorrow" },
+            { time: "21:00 - 22:30", icon: "fa-moon", title: "Sleep Prep & Sleep", desc: "7-8 hours minimum" }
+        ];
+
+        const checklistItems = [
+            { id: "c1", title: "Workout (1.5h)", icon: "fa-dumbbell" },
+            { id: "c2", title: "Read (Morning + Night)", icon: "fa-book" },
+            { id: "c3", title: "English Practice", icon: "fa-comments" },
+            { id: "c4", title: "Skill / Career Study", icon: "fa-laptop-code" },
+            { id: "c5", title: "Meditation (10-15 min)", icon: "fa-brain" },
+            { id: "c6", title: "Good Food & Water", icon: "fa-apple-whole" },
+            { id: "c7", title: "No Excessive Phone Use", icon: "fa-mobile-screen-button" },
+            { id: "c8", title: "7-8 Hours Sleep", icon: "fa-moon" },
+            { id: "c9", title: "Be Kind & Positive", icon: "fa-heart" }
+        ];
+
+        const habitsMatrix = [
+            "Workout", "Reading", "English", "Skill", "Money Save", "Phone ≤ 2h"
+        ];
+
+        const monthlyBars = [
+            { label: "Workout", pct: 70, color: "bg-emerald-500" },
+            { label: "Books", pct: 60, color: "bg-sky-500" },
+            { label: "English", pct: 55, color: "bg-indigo-500" },
+            { label: "Skill", pct: 50, color: "bg-amber-500" },
+            { label: "Money Save", pct: 45, color: "bg-purple-500" },
+            { label: "Phone Control", pct: 80, color: "bg-rose-500" }
+        ];
+
+        // State Store
+        let checkedState = JSON.parse(localStorage.getItem('checkedState')) || {};
+        let matrixState = JSON.parse(localStorage.getItem('matrixState')) || {};
+
+        // Switch View Tabs
+        function switchTab(tab) {
+            document.getElementById('view-daily').classList.toggle('hidden', tab !== 'daily');
+            document.getElementById('view-weekly').classList.toggle('hidden', tab !== 'weekly');
+            
+            document.getElementById('tab-daily').className = tab === 'daily' 
+                ? "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-sky-600 text-white shadow-lg" 
+                : "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+            
+            document.getElementById('tab-weekly').className = tab === 'weekly' 
+                ? "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-sky-600 text-white shadow-lg" 
+                : "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+
+            if (tab === 'weekly') {
+                renderCharts();
+            }
+        }
+
+        // Render Schedule
+        function renderSchedule() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = scheduleData.map((item, idx) => {
+                const key = `sched_${idx}`;
+                const isChecked = checkedState[key] || false;
+                return `
+                    <div onclick="toggleCheck('${key}')" class="p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-between ${isChecked ? 'bg-slate-800/40 border-slate-800 opacity-60' : 'bg-slate-900 border-slate-700 hover:border-slate-600'}">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid ${item.icon} text-sky-400 w-5 text-center"></i>
+                            <div>
+                                <div class="text-xs font-semibold ${isChecked ? 'line-through text-slate-400' : 'text-slate-200'}">${item.title}</div>
+                                <div class="text-[10px] text-slate-400">${item.desc}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-mono text-slate-400 block">${item.time}</span>
+                            <i class="fa-regular ${isChecked ? 'fa-square-check text-emerald-400' : 'fa-square text-slate-600'} text-base"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Checklist
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            let completed = 0;
+
+            container.innerHTML = checklistItems.map(item => {
+                const isChecked = checkedState[item.id] || false;
+                if (isChecked) completed++;
+                return `
+                    <div onclick="toggleCheck('${item.id}')" class="p-3 rounded-lg border flex items-center justify-between cursor-pointer transition-all ${isChecked ? 'bg-emerald-950/30 border-emerald-800/50' : 'bg-slate-900 border-slate-800 hover:border-slate-700'}">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid ${item.icon} text-slate-400"></i>
+                            <span class="text-sm font-medium ${isChecked ? 'line-through text-emerald-300' : 'text-slate-200'}">${item.title}</span>
+                        </div>
+                        <i class="fa-solid ${isChecked ? 'fa-circle-check text-emerald-400' : 'fa-circle-notch text-slate-600'} text-lg"></i>
+                    </div>
+                `;
+            }).join('');
+
+            const pct = Math.round((completed / checklistItems.length) * 100);
+            document.getElementById('daily-progress-pct').innerText = pct;
+        }
+
+        // Render Matrix
+        function renderMatrix() {
+            const body = document.getElementById('matrix-body');
+            const states = ['unset', 'done', 'partial', 'missed'];
+            const stateClasses = {
+                unset: 'bg-slate-700',
+                done: 'bg-emerald-500',
+                partial: 'bg-amber-500',
+                missed: 'bg-rose-500'
+            };
+
+            body.innerHTML = habitsMatrix.map((habit, hIdx) => {
+                let dots = '';
+                for (let dIdx = 0; dIdx < 7; dIdx++) {
+                    const key = `m_${hIdx}_${dIdx}`;
+                    const currentState = matrixState[key] || 'unset';
+                    dots += `
+                        <td class="p-1 text-center">
+                            <button onclick="cycleMatrixState('${key}')" class="w-5 h-5 rounded-full ${stateClasses[currentState]} transition-all focus:outline-none hover:scale-110 inline-block"></button>
+                        </td>
+                    `;
+                }
+                return `
+                    <tr>
+                        <td class="p-2 text-xs font-medium text-slate-300">${habit}</td>
+                        ${dots}
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render Monthly Progress Bars
+        function renderProgressBars() {
+            const container = document.getElementById('progress-bars-container');
+            container.innerHTML = monthlyBars.map(bar => `
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300">${bar.label}</span>
+                        <span class="text-slate-400 font-semibold">${bar.pct}%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-2">
+                        <div class="${bar.color} h-2 rounded-full" style="width: ${bar.pct}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cycle Matrix Dot State
+        function cycleMatrixState(key) {
+            const states = ['unset', 'done', 'partial', 'missed'];
+            const current = matrixState[key] || 'unset';
+            const nextIndex = (states.indexOf(current) + 1) % states.length;
+            matrixState[key] = states[nextIndex];
+            localStorage.setItem('matrixState', JSON.stringify(matrixState));
+            renderMatrix();
+        }
+
+        // Toggle Generic Check State
+        function toggleCheck(id) {
+            checkedState[id] = !checkedState[id];
+            localStorage.setItem('checkedState', JSON.stringify(checkedState));
+            renderSchedule();
+            renderChecklist();
+        }
+
+        // Render Analytics Charts
+        let donutChartInstance = null;
+        let barChartInstance = null;
+
+        function renderCharts() {
+            if (donutChartInstance) donutChartInstance.destroy();
+            if (barChartInstance) barChartInstance.destroy();
+
+            // Donut Chart
+            const ctxDonut = document.getElementById('donutChart').getContext('2d');
+            donutChartInstance = new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sleep', 'Workout', 'Study', 'Phone/Entertainment', 'Meals', 'Other'],
+                    datasets: [{
+                        data: [7.5, 1.5, 3.75, 3.5, 2, 5.75],
+                        backgroundColor: ['#38bdf8', '#4ade80', '#c084fc', '#f43f5e', '#fbbf24', '#64748b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // Bar Chart
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Workout', 'Books', 'English', 'Skill', 'Money', 'Phone'],
+                    datasets: [{
+                        label: 'Time Spent (Mins/Hours)',
+                        data: [90, 40, 45, 60, 20, 210],
+                        backgroundColor: ['#4ade80', '#38bdf8', '#c084fc', '#fbbf24', '#2dd4bf', '#f43f5e'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Initialize App
+        window.onload = () => {
+            renderSchedule();
+            renderChecklist();
+            renderMatrix();
+            renderProgressBars();
+
+            // Auto-save textareas
+            ['ref-1', 'ref-2', 'ref-3'].forEach(id => {
+                const el = document.getElementById(id);
+                el.value = localStorage.getItem(id) || '';
+                el.oninput = () => localStorage.setItem(id, el.value);
+            });
+        };
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("index.html created successfully!")
