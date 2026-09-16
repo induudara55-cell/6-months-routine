@@ -6,224 +6,103 @@
 <title>Life Transformation Tracker · Pro</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  /* ============ THEME VARIABLES ============ */
   :root {
-    --accent: #38bdf8;
-    --accent-soft: rgba(56,189,248,0.15);
-    --accent-glow: rgba(56,189,248,0.45);
-    --bg: #0b1329;
-    --card: #131c35;
-    --card-hi: #1a2542;
-    --surface: rgba(15,23,42,0.6);
-    --surface-2: rgba(30,41,59,0.55);
-    --border: #1e293b;
-    --border-strong: #334155;
-    --text: #e2e8f0;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
-    --shadow: 0 4px 24px rgba(0,0,0,0.35);
+    --accent: #38bdf8; --accent-soft: rgba(56,189,248,0.15); --accent-glow: rgba(56,189,248,0.45);
+    --bg: #0b1329; --card: #131c35; --surface: rgba(15,23,42,0.6);
+    --surface-2: rgba(30,41,59,0.55); --border: #1e293b;
+    --border-strong: #334155; --text: #e2e8f0; --text-muted: #94a3b8;
+    --text-dim: #64748b; --shadow: 0 4px 24px rgba(0,0,0,0.35);
   }
   body.light {
-    --bg: #eef3f9;
-    --card: #ffffff;
-    --card-hi: #f8fafc;
-    --surface: rgba(241,245,249,0.9);
-    --surface-2: rgba(226,232,240,0.7);
-    --border: #e2e8f0;
-    --border-strong: #cbd5e1;
-    --text: #0f172a;
-    --text-muted: #475569;
-    --text-dim: #94a3b8;
-    --shadow: 0 4px 24px rgba(15,23,42,0.08);
+    --bg: #eef3f9; --card: #fff; --surface: rgba(241,245,249,0.9);
+    --surface-2: rgba(226,232,240,0.7); --border: #e2e8f0;
+    --border-strong: #cbd5e1; --text: #0f172a; --text-muted: #475569;
+    --text-dim: #94a3b8; --shadow: 0 4px 24px rgba(15,23,42,0.08);
   }
-
   * { transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease; }
-
   html, body { min-height: 100%; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-x: hidden;
-  }
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: -1;
-    background:
-      radial-gradient(900px 500px at 10% -10%, var(--accent-soft), transparent 60%),
-      radial-gradient(700px 400px at 110% 10%, var(--accent-soft), transparent 60%);
-    opacity: 0.7; pointer-events: none;
-    transition: opacity 0.5s ease;
-  }
-
-  /* ============ SURFACES ============ */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-  }
-  .card::after {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
-    opacity: 0.4;
-  }
-  .surface { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+  body::before { content:''; position:fixed; inset:0; z-index:-1;
+    background: radial-gradient(900px 500px at 10% -10%, var(--accent-soft), transparent 60%),
+                radial-gradient(700px 400px at 110% 10%, var(--accent-soft), transparent 60%);
+    opacity:0.7; pointer-events:none; }
+  .card { background: var(--card); border:1px solid var(--border); border-radius:14px; box-shadow: var(--shadow); position:relative; overflow:hidden; }
+  .card::after { content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--accent-glow), transparent); opacity:0.4; }
+  .surface { background: var(--surface); border:1px solid var(--border); border-radius:10px; }
   .surface-2 { background: var(--surface-2); }
-
-  /* ============ TEXT ============ */
-  .text-primary { color: var(--text); }
-  .text-muted { color: var(--text-muted); }
-  .text-dim { color: var(--text-dim); }
-  .text-accent { color: var(--accent); }
-
-  /* ============ ACCENT ============ */
-  .bg-accent { background: var(--accent); }
-  .bg-accent-soft { background: var(--accent-soft); }
-  .border-accent { border-color: var(--accent); }
-  .glow-accent { box-shadow: 0 0 24px var(--accent-glow); }
-
-  .btn-accent {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 4px 16px var(--accent-glow);
-    transition: transform 0.2s ease, box-shadow 0.3s ease, filter 0.2s ease;
-  }
-  .btn-accent:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 6px 22px var(--accent-glow); }
+  .text-primary { color: var(--text); } .text-muted { color: var(--text-muted); }
+  .text-dim { color: var(--text-dim); } .text-accent { color: var(--accent); }
+  .bg-accent { background: var(--accent); } .bg-accent-soft { background: var(--accent-soft); }
+  .btn-accent { background: var(--accent); color:#fff; box-shadow: 0 4px 16px var(--accent-glow);
+    transition: transform .2s ease, box-shadow .3s ease, filter .2s ease; }
+  .btn-accent:hover { filter: brightness(1.1); transform: translateY(-1px); }
   .btn-accent:active { transform: translateY(0) scale(0.98); }
-
-  .btn-ghost {
-    background: var(--surface-2);
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    transition: all 0.2s ease;
-  }
+  .btn-ghost { background: var(--surface-2); color: var(--text-muted); border:1px solid var(--border); transition: all .2s ease; }
   .btn-ghost:hover { color: var(--text); border-color: var(--accent); }
-
-  /* ============ INPUTS ============ */
-  input[type="text"], input[type="time"], textarea, select {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
-  }
-  input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
-  body.light input[type="time"]::-webkit-calendar-picker-indicator { filter: none; }
+  input[type=text], input[type=time], textarea, select {
+    background: var(--surface); border:1px solid var(--border); color: var(--text); transition: border-color .2s, box-shadow .2s; }
+  input:focus, textarea:focus, select:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  input[type=time]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor:pointer; }
+  body.light input[type=time]::-webkit-calendar-picker-indicator { filter:none; }
   select option { background: var(--card); color: var(--text); }
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+  ::-webkit-scrollbar { width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius:4px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-  /* ============ STATUS DOTS ============ */
-  .status-done     { background-color: #16a34a; box-shadow: 0 0 10px rgba(22,163,74,0.6); }
-  .status-partial  { background-color: #ca8a04; box-shadow: 0 0 10px rgba(202,138,4,0.6); }
-  .status-missed   { background-color: #dc2626; box-shadow: 0 0 10px rgba(220,38,38,0.6); }
-  .status-unset    { background-color: var(--border-strong); }
-
-  /* ============ ANIMATIONS ============ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .anim-in { animation: fadeUp 0.5s ease both; }
-  .anim-in-1 { animation-delay: 0.05s; }
-  .anim-in-2 { animation-delay: 0.12s; }
-  .anim-in-3 { animation-delay: 0.19s; }
-  .anim-in-4 { animation-delay: 0.26s; }
-
-  @keyframes pulse-ring {
-    0%,100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-    50%     { box-shadow: 0 0 0 8px transparent; }
-  }
-  .current-activity {
-    border-color: var(--accent) !important;
-    background: var(--accent-soft) !important;
-    animation: pulse-ring 2s infinite;
-  }
-
-  @keyframes pop {
-    0% { transform: scale(0.6); opacity: 0; }
-    60% { transform: scale(1.15); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .pop { animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
-
-  @keyframes shine {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
-  }
-  .shine-text {
-    background: linear-gradient(90deg, var(--text) 40%, var(--accent) 50%, var(--text) 60%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 4s linear infinite;
-  }
-
-  /* ============ PROGRESS BAR ============ */
-  .progress-track { background: var(--surface-2); border-radius: 999px; overflow: hidden; height: 8px; }
-  .progress-fill {
-    height: 100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #fff));
-    border-radius: 999px;
-    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 12px var(--accent-glow);
-  }
-
-  /* ============ TOAST ============ */
-  #toast-container { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
-  .toast {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
-    color: var(--text);
-    padding: 12px 18px;
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    font-size: 14px; font-weight: 500;
-    transform: translateX(120%); opacity: 0;
-    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-    max-width: 320px;
-  }
-  .toast.show { transform: translateX(0); opacity: 1; }
-  .toast.success { border-left-color: #16a34a; }
-  .toast.warn    { border-left-color: #f59e0b; }
-  .toast.error   { border-left-color: #dc2626; }
-
-  /* ============ ACCENT PICKER ============ */
-  .accent-dot {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    position: relative;
-  }
+  .status-done { background:#16a34a; box-shadow:0 0 10px rgba(22,163,74,.6); }
+  .status-partial { background:#ca8a04; box-shadow:0 0 10px rgba(202,138,4,.6); }
+  .status-missed { background:#dc2626; box-shadow:0 0 10px rgba(220,38,38,.6); }
+  .status-unset { background: var(--border-strong); }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
+  .anim-in { animation: fadeUp .5s ease both; }
+  .anim-in-1{animation-delay:.05s} .anim-in-2{animation-delay:.12s}
+  .anim-in-3{animation-delay:.19s} .anim-in-4{animation-delay:.26s}
+  @keyframes pulse-ring { 0%,100%{box-shadow:0 0 0 0 var(--accent-glow);} 50%{box-shadow:0 0 0 8px transparent;} }
+  .current-activity { border-color: var(--accent) !important; background: var(--accent-soft) !important; animation: pulse-ring 2s infinite; }
+  @keyframes pop { 0%{transform:scale(.6); opacity:0;} 60%{transform:scale(1.15);} 100%{transform:scale(1); opacity:1;} }
+  .pop { animation: pop .4s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes shine { 0%{background-position:-200% center;} 100%{background-position:200% center;} }
+  .shine-text { background: linear-gradient(90deg, var(--text) 40%, var(--accent) 50%, var(--text) 60%);
+    background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; animation: shine 4s linear infinite; }
+  .progress-track { background: var(--surface-2); border-radius:999px; overflow:hidden; height:8px; }
+  .progress-fill { height:100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #fff));
+    border-radius:999px; transition: width .8s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 12px var(--accent-glow); }
+  #toast-container { position:fixed; top:20px; right:20px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+  .toast { background: var(--card); border:1px solid var(--border); border-left:4px solid var(--accent);
+    color: var(--text); padding:12px 18px; border-radius:10px; box-shadow: var(--shadow);
+    font-size:14px; font-weight:500; transform: translateX(120%); opacity:0;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s; max-width:320px; }
+  .toast.show { transform: translateX(0); opacity:1; }
+  .toast.success { border-left-color:#16a34a; }
+  .toast.warn { border-left-color:#f59e0b; }
+  .toast.error { border-left-color:#dc2626; }
+  .accent-dot { width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer;
+    transition: transform .2s, border-color .2s, box-shadow .2s; }
   .accent-dot:hover { transform: scale(1.15); }
-  .accent-dot.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.4); transform: scale(1.15); }
-  body.light .accent-dot.active { border-color: #0f172a; box-shadow: 0 0 0 2px rgba(15,23,42,0.25); }
-
-  /* ============ TABLES ============ */
+  .accent-dot.active { border-color:#fff; box-shadow:0 0 0 2px rgba(255,255,255,.4); transform: scale(1.15); }
+  body.light .accent-dot.active { border-color:#0f172a; box-shadow:0 0 0 2px rgba(15,23,42,.25); }
   .matrix-table th { background: var(--surface-2); color: var(--text-muted); }
-  .matrix-table tr { border-color: var(--border); }
   .matrix-table tbody tr:hover { background: var(--surface); }
+  #confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
+  @media (max-width: 640px) { .hide-sm { display:none; } }
+  #g_id_onload { display:none; }
+  .avatar-ring { box-shadow: 0 0 0 2px var(--accent), 0 0 20px var(--accent-glow); }
 
-  /* ============ FLOATING ============ */
-  #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
-
-  /* ============ RESPONSIVE ============ */
-  @media (max-width: 640px) {
-    .hide-sm { display: none; }
-  }
+  /* User menu dropdown */
+  .user-menu { position:absolute; top:calc(100% + 8px); right:0; min-width:220px; z-index:200;
+    background: var(--card); border:1px solid var(--border); border-radius:12px; box-shadow: var(--shadow);
+    padding:8px; opacity:0; transform: translateY(-8px) scale(0.96); pointer-events:none;
+    transition: opacity .2s, transform .2s; }
+  .user-menu.open { opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+  .user-menu button { width:100%; text-align:left; padding:9px 12px; border-radius:8px;
+    color: var(--text); font-size:13px; font-weight:500; display:flex; align-items:center; gap:10px;
+    transition: background .15s; }
+  .user-menu button:hover { background: var(--surface-2); }
+  .user-menu .divider { height:1px; background: var(--border); margin:6px 0; }
 </style>
 </head>
 <body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
@@ -231,7 +110,7 @@
 <canvas id="confetti-canvas"></canvas>
 <div id="toast-container"></div>
 
-<!-- ================= HEADER ================= -->
+<!-- =============== HEADER =============== -->
 <header class="mb-6 pb-4 border-b anim-in" style="border-color: var(--border);">
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
@@ -241,6 +120,40 @@
       <p class="text-muted text-sm mt-1">Better than yesterday. That's the goal.</p>
     </div>
     <div class="flex items-center gap-3 flex-wrap">
+      <!-- Google Sign In Button (when signed out) -->
+      <div id="auth-container">
+        <div id="google-signin-btn" class="google-btn-container"></div>
+      </div>
+      <!-- User Info (when signed in) -->
+      <div id="user-info" class="hidden items-center gap-2 relative">
+        <button onclick="toggleUserMenu(event)" class="surface px-2 py-1.5 flex items-center gap-2 hover:border-accent transition rounded-lg">
+          <img id="user-avatar" class="w-8 h-8 rounded-full avatar-ring" alt="">
+          <div class="leading-tight text-left hide-sm">
+            <div id="user-name" class="text-xs font-bold text-primary truncate max-w-[100px]">--</div>
+            <div id="user-email" class="text-[10px] text-muted truncate max-w-[100px]">--</div>
+          </div>
+          <i class="fa-solid fa-chevron-down text-muted text-xs"></i>
+        </button>
+        <div id="user-menu" class="user-menu">
+          <div class="px-3 py-2 border-b" style="border-color: var(--border);">
+            <div id="menu-user-name" class="text-sm font-bold text-primary truncate">--</div>
+            <div id="menu-user-email" class="text-[11px] text-muted truncate">--</div>
+          </div>
+          <button onclick="manualBackup()">
+            <i class="fa-solid fa-cloud-arrow-up text-accent w-4"></i>Backup now
+          </button>
+          <button onclick="manualRestore()">
+            <i class="fa-solid fa-cloud-arrow-down text-accent w-4"></i>Restore from Drive
+          </button>
+          <div class="divider"></div>
+          <button onclick="switchAccount()">
+            <i class="fa-solid fa-user-plus text-accent w-4"></i>Switch account
+          </button>
+          <button onclick="signOut()" style="color: #f43f5e;">
+            <i class="fa-solid fa-right-from-bracket w-4"></i>Sign out
+          </button>
+        </div>
+      </div>
       <!-- Live Clock -->
       <div class="surface px-4 py-2 flex items-center gap-3">
         <i class="fa-solid fa-clock text-accent"></i>
@@ -249,15 +162,12 @@
           <div id="live-date" class="text-[10px] text-muted uppercase tracking-wider">--</div>
         </div>
       </div>
-      <!-- Theme Toggle -->
-      <button onclick="toggleTheme()" id="theme-btn" title="Toggle theme"
-              class="w-11 h-11 rounded-xl btn-ghost flex items-center justify-center text-lg">
+      <button onclick="toggleTheme()" class="btn-ghost w-11 h-11 rounded-xl flex items-center justify-center text-lg">
         <i id="theme-icon" class="fa-solid fa-moon"></i>
       </button>
     </div>
   </div>
 
-  <!-- Tabs + Accent Picker Row -->
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mt-4">
     <div class="flex gap-2 flex-wrap">
       <button onclick="switchTab('daily')" id="tab-daily" class="btn-accent px-5 py-2.5 rounded-lg text-sm font-semibold">
@@ -274,10 +184,30 @@
   </div>
 </header>
 
-<!-- ================= TAB 1: DAILY ================= -->
-<div id="view-daily" class="space-y-6">
+<!-- =============== SIGN-IN WALL (only when signed out) =============== -->
+<div id="signin-wall" class="hidden">
+  <div class="card p-8 max-w-md mx-auto text-center space-y-5 anim-in">
+    <div class="w-20 h-20 rounded-full bg-accent-soft flex items-center justify-center text-4xl text-accent mx-auto">
+      <i class="fa-solid fa-user-astronaut"></i>
+    </div>
+    <h2 class="text-2xl font-bold text-primary">Welcome, Champion 👑</h2>
+    <p class="text-sm text-muted leading-relaxed">
+      Sign in with Google to save your progress privately to your own Drive.<br>
+      Your data is <span class="text-accent font-semibold">100% private</span> — only you can see it.
+    </p>
+    <div class="flex justify-center">
+      <div id="google-signin-btn-wall" class="google-btn-container"></div>
+    </div>
+    <div class="text-[11px] text-dim pt-2 border-t" style="border-color: var(--border);">
+      <i class="fa-solid fa-lock mr-1"></i>
+      Secure OAuth 2.0 · Works with any Google account
+    </div>
+  </div>
+</div>
 
-  <!-- Top Stats -->
+<!-- =============== TAB 1: DAILY =============== -->
+<div id="view-daily" class="space-y-6 hidden">
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <div class="card p-4 anim-in anim-in-1">
       <div class="flex items-center gap-4 mb-3">
@@ -291,97 +221,69 @@
       </div>
       <div class="progress-track"><div id="daily-progress-bar" class="progress-fill" style="width:0%"></div></div>
     </div>
-
     <div class="card p-4 flex items-center gap-4 anim-in anim-in-2">
       <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
-        <i class="fa-solid fa-fire"></i>
-      </div>
-      <div>
-        <div class="text-muted text-xs font-medium">Current Streak</div>
-        <div class="text-2xl font-bold text-primary"><span id="streak-count">0</span> <span class="text-sm text-muted">days</span></div>
-      </div>
+        <i class="fa-solid fa-fire"></i></div>
+      <div><div class="text-muted text-xs font-medium">Current Streak</div>
+        <div class="text-2xl font-bold text-primary"><span id="streak-count">0</span> <span class="text-sm text-muted">days</span></div></div>
     </div>
-
     <div class="card p-4 flex items-center gap-4 anim-in anim-in-3">
       <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
-        <i class="fa-solid fa-bullseye"></i>
-      </div>
-      <div>
-        <div class="text-muted text-xs font-medium">Monthly Focus</div>
-        <div class="text-sm font-semibold text-accent">Month 1: Control & Routine</div>
-      </div>
+        <i class="fa-solid fa-bullseye"></i></div>
+      <div><div class="text-muted text-xs font-medium">Monthly Focus</div>
+        <div class="text-sm font-semibold text-accent">Month 1: Control & Routine</div></div>
     </div>
-
     <div class="card p-4 flex items-center gap-4 anim-in anim-in-4">
       <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
-        <i class="fa-solid fa-crown"></i>
-      </div>
-      <div>
-        <div class="text-muted text-xs font-medium">Ultimate Target</div>
-        <div class="text-sm font-semibold text-accent">Unstoppable You</div>
-      </div>
+        <i class="fa-solid fa-crown"></i></div>
+      <div><div class="text-muted text-xs font-medium">Ultimate Target</div>
+        <div class="text-sm font-semibold text-accent">Unstoppable You</div></div>
     </div>
   </div>
 
-  <!-- Motivational Quote -->
   <div class="card p-5 anim-in anim-in-2">
     <div class="flex items-start gap-4">
       <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent shrink-0">
-        <i class="fa-solid fa-quote-left"></i>
-      </div>
+        <i class="fa-solid fa-quote-left"></i></div>
       <div class="flex-1">
         <div class="text-[10px] uppercase tracking-widest text-muted font-bold mb-1">Today's Fuel</div>
         <p id="daily-quote" class="text-lg md:text-xl font-semibold shine-text italic leading-snug">Loading...</p>
       </div>
-      <button onclick="newQuote()" title="New quote" class="btn-ghost w-10 h-10 rounded-lg shrink-0">
-        <i class="fa-solid fa-rotate"></i>
-      </button>
+      <button onclick="newQuote()" class="btn-ghost w-10 h-10 rounded-lg shrink-0">
+        <i class="fa-solid fa-rotate"></i></button>
     </div>
   </div>
 
-  <!-- Main Grid -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-    <!-- Schedule -->
     <div class="card p-5 lg:col-span-1 space-y-4 anim-in anim-in-1">
       <div class="flex items-center justify-between gap-2">
         <h2 class="text-lg font-bold text-primary">
-          <i class="fa-regular fa-clock text-accent mr-2"></i>Daily Schedule
-        </h2>
+          <i class="fa-regular fa-clock text-accent mr-2"></i>Daily Schedule</h2>
         <div class="flex gap-1.5">
-          <button onclick="addScheduleItem()" title="Add" class="btn-ghost w-8 h-8 rounded-lg flex items-center justify-center text-xs">
-            <i class="fa-solid fa-plus"></i>
-          </button>
-          <button onclick="resetSchedule()" title="Reset" class="btn-ghost w-8 h-8 rounded-lg flex items-center justify-center text-xs">
-            <i class="fa-solid fa-rotate-left"></i>
-          </button>
+          <button onclick="addScheduleItem()" class="btn-ghost w-8 h-8 rounded-lg flex items-center justify-center text-xs">
+            <i class="fa-solid fa-plus"></i></button>
+          <button onclick="resetSchedule()" class="btn-ghost w-8 h-8 rounded-lg flex items-center justify-center text-xs">
+            <i class="fa-solid fa-rotate-left"></i></button>
         </div>
       </div>
       <p class="text-[11px] text-muted -mt-2">
-        <i class="fa-solid fa-wand-magic-sparkles text-accent mr-1"></i>Tap pencil to edit · Current activity pulses
-      </p>
+        <i class="fa-solid fa-wand-magic-sparkles text-accent mr-1"></i>Tap pencil to edit · Current activity pulses</p>
       <div class="space-y-2 max-h-[620px] overflow-y-auto pr-1" id="schedule-container"></div>
     </div>
 
-    <!-- Middle Column -->
     <div class="space-y-6 lg:col-span-1">
-
-      <!-- Checklist -->
       <div class="card p-5 space-y-4 anim-in anim-in-2">
         <div class="flex justify-between items-center">
           <h2 class="text-lg font-bold text-primary">
-            <i class="fa-solid fa-list-check text-accent mr-2"></i>Daily Checklist
-          </h2>
+            <i class="fa-solid fa-list-check text-accent mr-2"></i>Daily Checklist</h2>
           <span class="text-xs text-muted">Tap to toggle</span>
         </div>
         <div class="space-y-2" id="checklist-container"></div>
       </div>
 
-      <!-- Pomodoro -->
       <div class="card p-5 space-y-4 anim-in anim-in-3">
         <h2 class="text-lg font-bold text-primary">
-          <i class="fa-solid fa-stopwatch text-accent mr-2"></i>Focus Timer
-        </h2>
+          <i class="fa-solid fa-stopwatch text-accent mr-2"></i>Focus Timer</h2>
         <div class="text-center py-2">
           <div id="pomo-time" class="text-5xl font-bold tabular-nums text-primary tracking-tight">25:00</div>
           <div id="pomo-label" class="text-xs uppercase tracking-widest text-muted mt-1">Work Session</div>
@@ -389,11 +291,8 @@
         <div class="progress-track"><div id="pomo-bar" class="progress-fill" style="width:0%"></div></div>
         <div class="flex gap-2">
           <button id="pomo-toggle" onclick="togglePomodoro()" class="btn-accent flex-1 py-2.5 rounded-lg text-sm font-semibold">
-            <i class="fa-solid fa-play mr-1"></i>Start
-          </button>
-          <button onclick="resetPomodoro()" class="btn-ghost w-12 py-2.5 rounded-lg">
-            <i class="fa-solid fa-rotate-left"></i>
-          </button>
+            <i class="fa-solid fa-play mr-1"></i>Start</button>
+          <button onclick="resetPomodoro()" class="btn-ghost w-12 py-2.5 rounded-lg"><i class="fa-solid fa-rotate-left"></i></button>
         </div>
         <div class="flex gap-2 text-xs">
           <button onclick="setPomoMode('work')" id="pomo-btn-work" class="flex-1 py-1.5 rounded btn-accent font-semibold">Work 25</button>
@@ -401,22 +300,18 @@
         </div>
       </div>
 
-      <!-- Matrix -->
       <div class="card p-5 space-y-4 anim-in anim-in-4">
         <h2 class="text-lg font-bold text-primary">
-          <i class="fa-solid fa-calendar-week text-accent mr-2"></i>Weekly Habit Matrix
-        </h2>
+          <i class="fa-solid fa-calendar-week text-accent mr-2"></i>Weekly Habit Matrix</h2>
         <p class="text-xs text-muted -mt-2">Tap to cycle: Done · Partial · Missed</p>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left matrix-table">
             <thead class="text-xs uppercase">
-              <tr>
-                <th class="p-2 rounded-l-lg">Habit</th>
+              <tr><th class="p-2 rounded-l-lg">Habit</th>
                 <th class="p-1 text-center">M</th><th class="p-1 text-center">T</th>
                 <th class="p-1 text-center">W</th><th class="p-1 text-center">T</th>
                 <th class="p-1 text-center">F</th><th class="p-1 text-center">S</th>
-                <th class="p-1 text-center rounded-r-lg">S</th>
-              </tr>
+                <th class="p-1 text-center rounded-r-lg">S</th></tr>
             </thead>
             <tbody id="matrix-container"></tbody>
           </table>
@@ -424,54 +319,60 @@
       </div>
     </div>
 
-    <!-- Right Column -->
     <div class="space-y-6 lg:col-span-1">
       <div class="card p-5 space-y-4 anim-in anim-in-1">
         <h2 class="text-lg font-bold text-primary">
-          <i class="fa-solid fa-pen-to-square text-accent mr-2"></i>Daily Reflection
-        </h2>
+          <i class="fa-solid fa-pen-to-square text-accent mr-2"></i>Daily Reflection</h2>
         <textarea id="daily-notes" rows="6" class="w-full rounded-lg p-3 text-sm"
                   placeholder="What went well today? What can be improved tomorrow?"></textarea>
         <button onclick="saveNotes()" class="w-full btn-accent font-semibold py-2 rounded-lg text-sm">
-          <i class="fa-solid fa-floppy-disk mr-2"></i>Save Journal Note
-        </button>
+          <i class="fa-solid fa-floppy-disk mr-2"></i>Save Journal Note</button>
       </div>
 
       <div class="card p-5 space-y-3 anim-in anim-in-2">
         <h2 class="text-lg font-bold text-primary">
-          <i class="fa-solid fa-map text-accent mr-2"></i>6-Month Master Plan
-        </h2>
-        <div class="grid grid-cols-2 gap-2 text-xs">
-          <div class="surface-2 p-2 rounded border border-transparent">
-            <span class="font-bold text-accent block">Month 1</span><span class="text-primary">Control & Routine</span>
-          </div>
-          <div class="surface-2 p-2 rounded">
-            <span class="font-bold text-emerald-500 block">Month 2</span><span class="text-primary">Consistency</span>
-          </div>
-          <div class="surface-2 p-2 rounded">
-            <span class="font-bold text-purple-500 block">Month 3</span><span class="text-primary">Strength & Skill</span>
-          </div>
-          <div class="surface-2 p-2 rounded">
-            <span class="font-bold text-amber-500 block">Month 4</span><span class="text-primary">Discipline</span>
-          </div>
-          <div class="surface-2 p-2 rounded col-span-2">
-            <span class="font-bold text-rose-500 block">Months 5 & 6</span><span class="text-primary">High Performance & Peak Identity</span>
+          <i class="fa-brands fa-google-drive text-accent mr-2"></i>Cloud Backup</h2>
+        <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
+          <div id="backup-status-icon" class="w-9 h-9 rounded-full bg-accent-soft flex items-center justify-center text-accent">
+            <i class="fa-solid fa-cloud"></i></div>
+          <div class="flex-1 min-w-0">
+            <div id="backup-status-text" class="text-xs font-semibold text-primary">Not backed up yet</div>
+            <div id="backup-status-time" class="text-[10px] text-muted">—</div>
           </div>
         </div>
+        <div class="flex gap-2">
+          <button onclick="backupToDrive()" class="flex-1 btn-accent py-2 rounded-lg text-xs font-semibold">
+            <i class="fa-solid fa-cloud-arrow-up mr-1"></i>Backup Now</button>
+          <button onclick="restoreFromDrive()" class="flex-1 btn-ghost py-2 rounded-lg text-xs font-semibold">
+            <i class="fa-solid fa-cloud-arrow-down mr-1"></i>Restore</button>
+        </div>
+        <label class="flex items-center gap-2 cursor-pointer text-xs text-muted">
+          <input type="checkbox" id="auto-backup-toggle" onchange="toggleAutoBackup(this.checked)"
+                 class="w-4 h-4 rounded cursor-pointer" style="accent-color: var(--accent)">
+          Auto-backup every 5 minutes
+        </label>
       </div>
 
       <div class="card p-5 space-y-3 anim-in anim-in-3">
         <h2 class="text-lg font-bold text-primary">
-          <i class="fa-solid fa-database text-accent mr-2"></i>Data Backup
-        </h2>
-        <p class="text-xs text-muted -mt-2">Save your progress before switching devices.</p>
+          <i class="fa-solid fa-map text-accent mr-2"></i>6-Month Master Plan</h2>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="surface-2 p-2 rounded"><span class="font-bold text-accent block">Month 1</span><span class="text-primary">Control & Routine</span></div>
+          <div class="surface-2 p-2 rounded"><span class="font-bold text-emerald-500 block">Month 2</span><span class="text-primary">Consistency</span></div>
+          <div class="surface-2 p-2 rounded"><span class="font-bold text-purple-500 block">Month 3</span><span class="text-primary">Strength & Skill</span></div>
+          <div class="surface-2 p-2 rounded"><span class="font-bold text-amber-500 block">Month 4</span><span class="text-primary">Discipline</span></div>
+          <div class="surface-2 p-2 rounded col-span-2"><span class="font-bold text-rose-500 block">Months 5 & 6</span><span class="text-primary">High Performance & Peak Identity</span></div>
+        </div>
+      </div>
+
+      <div class="card p-5 space-y-3 anim-in anim-in-4">
+        <h2 class="text-lg font-bold text-primary">
+          <i class="fa-solid fa-database text-accent mr-2"></i>Local Backup</h2>
         <div class="flex gap-2">
           <button onclick="exportData()" class="flex-1 btn-ghost py-2 rounded-lg text-xs font-semibold">
-            <i class="fa-solid fa-download mr-1"></i>Export
-          </button>
+            <i class="fa-solid fa-download mr-1"></i>Export</button>
           <button onclick="document.getElementById('import-file').click()" class="flex-1 btn-ghost py-2 rounded-lg text-xs font-semibold">
-            <i class="fa-solid fa-upload mr-1"></i>Import
-          </button>
+            <i class="fa-solid fa-upload mr-1"></i>Import</button>
           <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
         </div>
       </div>
@@ -479,19 +380,17 @@
   </div>
 </div>
 
-<!-- ================= TAB 2: WEEKLY ================= -->
+<!-- =============== TAB 2: WEEKLY =============== -->
 <div id="view-weekly" class="hidden space-y-6">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="card p-5 space-y-4 anim-in">
       <h2 class="text-lg font-bold text-primary">
-        <i class="fa-solid fa-chart-column text-accent mr-2"></i>Weekly Consistency (%)
-      </h2>
+        <i class="fa-solid fa-chart-column text-accent mr-2"></i>Weekly Consistency (%)</h2>
       <div class="h-64"><canvas id="habitChart"></canvas></div>
     </div>
     <div class="card p-5 space-y-4 anim-in">
       <h2 class="text-lg font-bold text-primary">
-        <i class="fa-solid fa-chart-pie text-accent mr-2"></i>Life Balance
-      </h2>
+        <i class="fa-solid fa-chart-pie text-accent mr-2"></i>Life Balance</h2>
       <div class="h-64 flex justify-center"><canvas id="balanceChart"></canvas></div>
     </div>
   </div>
@@ -513,14 +412,12 @@
 
   <div class="flex justify-end">
     <button onclick="saveWeeklyReview()" class="btn-accent font-semibold px-6 py-2.5 rounded-lg text-sm">
-      <i class="fa-solid fa-floppy-disk mr-2"></i>Save Weekly Review
-    </button>
+      <i class="fa-solid fa-floppy-disk mr-2"></i>Save Weekly Review</button>
   </div>
 
   <div class="card p-5 space-y-3 anim-in" style="border-color: var(--accent);">
     <h3 class="font-bold text-accent text-sm flex items-center gap-2">
-      <i class="fa-solid fa-lightbulb"></i> KEY REMINDERS
-    </h3>
+      <i class="fa-solid fa-lightbulb"></i> KEY REMINDERS</h3>
     <ul class="text-sm text-primary space-y-2 list-disc list-inside">
       <li>Progress over perfection.</li>
       <li>Small steps create big results.</li>
@@ -532,8 +429,22 @@
   </div>
 </div>
 
-<!-- ================= SCRIPT ================= -->
 <script>
+/* ============================================================
+   🔑 GOOGLE CLIENT ID — PASTE YOURS HERE
+   ============================================================ */
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID_HERE.apps.googleusercontent.com";
+
+const SCOPES = [
+  "https://www.googleapis.com/auth/drive.file",
+  "https://www.googleapis.com/auth/userinfo.profile",
+  "https://www.googleapis.com/auth/userinfo.email",
+  "openid"
+].join(" ");
+
+const BACKUP_FILENAME = "life-tracker-backup.json";
+const BACKUP_DESCRIPTION = "Life Transformation Tracker auto-backup";
+
 /* ============================================================
    DATA
    ============================================================ */
@@ -549,7 +460,6 @@ const DEFAULT_SCHEDULE = [
   { start:"20:30", end:"21:30", title:"Daily Review & Planning",  desc:"Log habits, plan tomorrow",    icon:"fa-list-check",   color:"text-emerald-300" },
   { start:"22:00", end:"",      title:"Lights Out",               desc:"8 hours high quality sleep",   icon:"fa-moon",         color:"text-slate-400" }
 ];
-
 const ICON_OPTIONS = [
   {v:"fa-sun",l:"Sun"},{v:"fa-moon",l:"Moon"},{v:"fa-dumbbell",l:"Workout"},
   {v:"fa-person-running",l:"Run"},{v:"fa-utensils",l:"Meal"},{v:"fa-mug-hot",l:"Break"},
@@ -558,13 +468,11 @@ const ICON_OPTIONS = [
   {v:"fa-briefcase",l:"Job"},{v:"fa-music",l:"Music"},{v:"fa-spa",l:"Relax"},
   {v:"fa-car",l:"Travel"},{v:"fa-bed",l:"Rest"},{v:"fa-star",l:"Other"}
 ];
-
 const COLOR_OPTIONS = [
   {v:"text-amber-400",l:"Amber"},{v:"text-emerald-400",l:"Green"},{v:"text-sky-400",l:"Blue"},
   {v:"text-purple-400",l:"Purple"},{v:"text-teal-400",l:"Teal"},{v:"text-indigo-400",l:"Indigo"},
   {v:"text-rose-400",l:"Rose"},{v:"text-slate-400",l:"Gray"}
 ];
-
 const habitList = [
   { id:"workout", name:"Workout / Fitness" },
   { id:"books",   name:"Reading (15+ mins)" },
@@ -574,7 +482,6 @@ const habitList = [
   { id:"phone",   name:"Screen Time Controlled" }
 ];
 const days = ["M","T","W","T","F","S","S"];
-
 const QUOTES = [
   "Discipline is choosing between what you want now and what you want most.",
   "Small daily improvements are the key to staggering long-term results.",
@@ -597,39 +504,105 @@ const QUOTES = [
   "Consistency is what transforms average into excellence.",
   "Starve your distractions, feed your focus."
 ];
-
 const ACCENTS = {
-  sky:     { c:"#38bdf8", s:"rgba(56,189,248,0.15)",  g:"rgba(56,189,248,0.45)" },
-  purple:  { c:"#a855f7", s:"rgba(168,85,247,0.15)",  g:"rgba(168,85,247,0.45)" },
-  emerald: { c:"#10b981", s:"rgba(16,185,129,0.15)",  g:"rgba(16,185,129,0.45)" },
-  rose:    { c:"#f43f5e", s:"rgba(244,63,94,0.15)",   g:"rgba(244,63,94,0.45)"  },
-  amber:   { c:"#f59e0b", s:"rgba(245,158,11,0.15)",  g:"rgba(245,158,11,0.45)" },
-  pink:    { c:"#ec4899", s:"rgba(236,72,153,0.15)",  g:"rgba(236,72,153,0.45)" },
-  indigo:  { c:"#6366f1", s:"rgba(99,102,241,0.15)",  g:"rgba(99,102,241,0.45)" },
-  cyan:    { c:"#06b6d4", s:"rgba(6,182,212,0.15)",   g:"rgba(6,182,212,0.45)"  }
+  sky:{c:"#38bdf8",s:"rgba(56,189,248,0.15)",g:"rgba(56,189,248,0.45)"},
+  purple:{c:"#a855f7",s:"rgba(168,85,247,0.15)",g:"rgba(168,85,247,0.45)"},
+  emerald:{c:"#10b981",s:"rgba(16,185,129,0.15)",g:"rgba(16,185,129,0.45)"},
+  rose:{c:"#f43f5e",s:"rgba(244,63,94,0.15)",g:"rgba(244,63,94,0.45)"},
+  amber:{c:"#f59e0b",s:"rgba(245,158,11,0.15)",g:"rgba(245,158,11,0.45)"},
+  pink:{c:"#ec4899",s:"rgba(236,72,153,0.15)",g:"rgba(236,72,153,0.45)"},
+  indigo:{c:"#6366f1",s:"rgba(99,102,241,0.15)",g:"rgba(99,102,241,0.45)"},
+  cyan:{c:"#06b6d4",s:"rgba(6,182,212,0.15)",g:"rgba(6,182,212,0.45)"}
 };
 
 /* ============================================================
-   STORAGE
+   STORAGE KEYS
    ============================================================ */
 const K = {
-  schedule:  "ltt_schedule_v3",
-  checklist: "ltt_checklist_v3",
-  matrix:    "ltt_matrix_v3",
-  notes:     "ltt_notes_v3",
-  review:    "ltt_review_v3",
-  theme:     "ltt_theme_v3",
-  accent:    "ltt_accent_v3",
-  quote:     "ltt_quote_date_v3",
-  streak:    "ltt_streak_v3",
-  lastFull:  "ltt_last_full_v3"
+  schedule:"ltt_schedule_v4", checklist:"ltt_checklist_v4", matrix:"ltt_matrix_v4",
+  notes:"ltt_notes_v4", review:"ltt_review_v4", theme:"ltt_theme_v4",
+  accent:"ltt_accent_v4", quote:"ltt_quote_date_v4", streak:"ltt_streak_v4",
+  lastFull:"ltt_last_full_v4",
+  lastBackup:"ltt_last_backup_v4", autoBackup:"ltt_auto_backup_v4",
+  driveFileId:"ltt_drive_file_id_v4",
+  // Global (not namespaced)
+  themeGlobal:"ltt_theme_global_v4",
+  accentGlobal:"ltt_accent_global_v4"
 };
+// Keys that stay GLOBAL (shared across all users on same browser)
+const GLOBAL_KEYS = [K.themeGlobal, K.accentGlobal];
+// Keys that are USER-SPECIFIC (namespaced)
+const USER_KEYS = Object.values(K).filter(k => !GLOBAL_KEYS.includes(k));
 
 let scheduleData = [];
 let editingIndex = null;
 let habitChartInstance = null;
 let balanceChartInstance = null;
 let chartsInitialized = false;
+let tokenClient = null;
+let accessToken = null;
+let currentUser = null;
+let tokenExpiresAt = 0;
+let autoBackupTimer = null;
+let dataDirty = false;
+let currentNamespace = "guest"; // will become user email after sign-in
+
+/* ============================================================
+   NAMESPACE HELPERS — per-user data separation
+   ============================================================ */
+function nsKeyFor(user){
+  const id = user && user.email ? user.email.toLowerCase() : "guest";
+  return "ltt_ns_" + id.replace(/[^a-z0-9]/g, "_");
+}
+
+// Save all current active user-data to current namespace bucket
+function saveToNamespace(){
+  const bucket = {};
+  USER_KEYS.forEach(k => {
+    const v = localStorage.getItem(k);
+    if(v !== null) bucket[k] = v;
+  });
+  try{
+    localStorage.setItem(nsKeyFor({ email: currentNamespace }), JSON.stringify(bucket));
+  }catch{}
+}
+
+// Wipe active keys, then load from namespace bucket. Returns true if data existed.
+function loadFromNamespace(nsEmail){
+  const ns = nsKeyFor({ email: nsEmail });
+  const raw = localStorage.getItem(ns);
+  // Clear active user-data
+  USER_KEYS.forEach(k => localStorage.removeItem(k));
+  if(!raw) return false;
+  try{
+    const bucket = JSON.parse(raw);
+    Object.entries(bucket).forEach(([k, v]) => {
+      if(USER_KEYS.includes(k) && typeof v === "string") localStorage.setItem(k, v);
+    });
+    return true;
+  }catch{ return false; }
+}
+
+// Snapshot current active keys as plain object (for Drive backup)
+function collectAllData(){
+  const data = {};
+  USER_KEYS.forEach(key => {
+    if(key === K.lastBackup || key === K.driveFileId || key === K.autoBackup) return;
+    const v = localStorage.getItem(key);
+    if(v !== null) data[key] = v;
+  });
+  data._meta = { version: 4, owner: currentNamespace, exportedAt: new Date().toISOString() };
+  return data;
+}
+
+function applyAllData(data){
+  if(!data || typeof data !== "object") throw new Error("Invalid data");
+  USER_KEYS.forEach(k => localStorage.removeItem(k));
+  Object.entries(data).forEach(([k, v]) => {
+    if(k === "_meta") return;
+    if(USER_KEYS.includes(k) && typeof v === "string") localStorage.setItem(k, v);
+  });
+}
 
 /* ============================================================
    UTILITIES
@@ -646,6 +619,14 @@ function formatTime12(t){
 function formatRange(s,e){ return !s ? "Set time" : (e ? `${formatTime12(s)} - ${formatTime12(e)}` : formatTime12(s)); }
 function sortSchedule(){ scheduleData.sort((a,b)=>(a.start||"99:99").localeCompare(b.start||"99:99")); }
 function todayKey(){ return new Date().toISOString().slice(0,10); }
+function timeAgo(ts){
+  if(!ts) return "—";
+  const s = Math.floor((Date.now() - ts)/1000);
+  if(s < 60) return "just now";
+  if(s < 3600) return `${Math.floor(s/60)} min ago`;
+  if(s < 86400) return `${Math.floor(s/3600)} hr ago`;
+  return `${Math.floor(s/86400)} days ago`;
+}
 
 /* ============================================================
    INIT
@@ -653,6 +634,35 @@ function todayKey(){ return new Date().toISOString().slice(0,10); }
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initAccentPicker();
+  updateLiveClock();
+  setInterval(updateLiveClock, 1000);
+  setInterval(highlightCurrentActivity, 30000);
+  renderPomodoro();
+
+  // Try to restore Google session
+  const cachedToken = sessionStorage.getItem("ltt_token");
+  const cachedExp = parseInt(sessionStorage.getItem("ltt_token_exp") || "0", 10);
+  const cachedUser = sessionStorage.getItem("ltt_user");
+  const cachedNs = sessionStorage.getItem("ltt_ns");
+
+  if(cachedToken && cachedExp > Date.now() && cachedUser && cachedNs){
+    accessToken = cachedToken;
+    tokenExpiresAt = cachedExp;
+    currentUser = JSON.parse(cachedUser);
+    currentNamespace = cachedNs;
+    // Data should already be in localStorage from last session
+    loadAllViews();
+    updateAuthUI();
+    showToast("👋 Welcome back, " + (currentUser.given_name || "friend"), "success");
+  } else {
+    // Show sign-in wall
+    showSigninWall();
+  }
+
+  waitForGoogleAndInit();
+});
+
+function loadAllViews(){
   loadSchedule();
   renderSchedule();
   renderChecklist();
@@ -660,57 +670,417 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSavedData();
   initQuote();
   updateStreak();
-  updateLiveClock();
-  setInterval(updateLiveClock, 1000);
-  setInterval(highlightCurrentActivity, 30000);
-  // Welcome toast
-  setTimeout(() => showToast("👑 Welcome back! Let's make today count.", "success"), 400);
-});
+  updateBackupStatus(parseInt(localStorage.getItem(K.lastBackup) || "0", 10));
+  const autoOn = localStorage.getItem(K.autoBackup) === "true";
+  const cb = document.getElementById("auto-backup-toggle");
+  if(cb) cb.checked = autoOn;
+  if(autoOn && accessToken){
+    if(autoBackupTimer) clearInterval(autoBackupTimer);
+    autoBackupTimer = setInterval(() => { if(dataDirty && accessToken) backupToDrive(true); }, 5*60*1000);
+  }
+}
+
+function showSigninWall(){
+  document.getElementById("signin-wall").classList.remove("hidden");
+  document.getElementById("view-daily").classList.add("hidden");
+  document.getElementById("view-weekly").classList.add("hidden");
+}
+
+function hideSigninWall(){
+  document.getElementById("signin-wall").classList.add("hidden");
+  document.getElementById("view-daily").classList.remove("hidden");
+}
+
+function waitForGoogleAndInit(){
+  if(window.google && google.accounts && google.accounts.oauth2){
+    initGoogleAuth();
+  } else {
+    setTimeout(waitForGoogleAndInit, 200);
+  }
+}
 
 /* ============================================================
-   THEME
+   🌐 GOOGLE AUTH
+   ============================================================ */
+function initGoogleAuth(){
+  try {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: SCOPES,
+      callback: async (resp) => {
+        if(resp.error){ showToast("❌ Sign-in failed: " + resp.error, "error"); return; }
+        accessToken = resp.access_token;
+        tokenExpiresAt = Date.now() + (resp.expires_in || 3600) * 1000;
+        sessionStorage.setItem("ltt_token", accessToken);
+        sessionStorage.setItem("ltt_token_exp", tokenExpiresAt);
+        await fetchUserInfo();
+        await afterSignIn();
+      },
+      error_callback: (err) => {
+        console.warn("Google auth error:", err);
+        showToast("⚠️ Google auth error. Check Client ID and origins.", "error");
+      }
+    });
+
+    // Render official buttons in BOTH locations
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: () => {}
+    });
+
+    const renderOpts = { type:"standard", theme:"filled_black", size:"large", shape:"pill",
+      text:"signin_with", logo_alignment:"left", width:220 };
+
+    google.accounts.id.renderButton(document.getElementById("google-signin-btn"), renderOpts);
+    google.accounts.id.renderButton(document.getElementById("google-signin-btn-wall"), renderOpts);
+
+    document.getElementById("google-signin-btn").addEventListener("click", () => {
+      if(!accessToken) requestToken();
+    });
+    document.getElementById("google-signin-btn-wall").addEventListener("click", () => {
+      requestToken();
+    });
+  } catch(e){
+    console.warn("Google init failed", e);
+  }
+}
+
+function requestToken(prompt=""){
+  if(!tokenClient){ showToast("⚠️ Google auth not ready yet.", "warn"); return; }
+  tokenClient.requestAccessToken({ prompt });
+}
+
+async function fetchUserInfo(){
+  try {
+    const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: "Bearer " + accessToken }
+    });
+    if(!r.ok) throw new Error("userinfo failed");
+    currentUser = await r.json();
+    sessionStorage.setItem("ltt_user", JSON.stringify(currentUser));
+  } catch(e){
+    console.warn(e);
+    currentUser = { name:"User", email:"unknown@user", picture:"", given_name:"User" };
+  }
+}
+
+async function afterSignIn(){
+  const newNs = currentUser.email.toLowerCase();
+  const previousNs = currentNamespace;
+
+  // Step 1: Save current active data to its namespace (if switching from another user)
+  if(previousNs && previousNs !== newNs){
+    saveToNamespace();
+  }
+
+  // Step 2: Check if this user has data on this browser
+  const hasLocalData = localStorage.getItem(nsKeyFor(currentUser)) !== null;
+
+  // Step 3: Switch namespace and load
+  currentNamespace = newNs;
+  sessionStorage.setItem("ltt_ns", newNs);
+
+  if(hasLocalData){
+    loadFromNamespace(newNs);
+    hideSigninWall();
+    loadAllViews();
+    updateAuthUI();
+    showToast("✅ Welcome back, " + (currentUser.given_name || "friend") + "!", "success");
+  } else {
+    // First time on this device for this user → check Drive for existing backup
+    hideSigninWall();
+    // Load blank/guest state temporarily
+    USER_KEYS.forEach(k => localStorage.removeItem(k));
+    loadAllViews();
+    updateAuthUI();
+    showToast("👋 Signed in as " + (currentUser.given_name || "friend"), "success");
+
+    // Try to auto-restore from Drive
+    setTimeout(() => autoRestoreFromDrive(), 500);
+  }
+}
+
+async function autoRestoreFromDrive(){
+  try {
+    // Search for this user's backup file
+    const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
+    const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
+    if(!r.ok) return;
+    const found = await r.json();
+    if(!found.files || !found.files.length){
+      // No backup found → this is truly a new user
+      setTimeout(() => {
+        showToast("🎉 Welcome! Your data will sync to your Drive.", "success");
+      }, 600);
+      return;
+    }
+    const fileId = found.files[0].id;
+    localStorage.setItem(K.driveFileId, fileId);
+    // Ask user
+    setTimeout(() => {
+      if(confirm("☁️ We found an existing backup in your Google Drive.\n\nDo you want to restore it to this device?")){
+        restoreFromDrive();
+      }
+    }, 700);
+  } catch(e){
+    console.warn("Auto-restore check failed:", e);
+  }
+}
+
+async function updateAuthUI(){
+  const authC = document.getElementById("auth-container");
+  const userI = document.getElementById("user-info");
+  if(currentUser && accessToken){
+    authC.classList.add("hidden");
+    userI.classList.remove("hidden");
+    userI.classList.add("flex");
+    document.getElementById("user-avatar").src = currentUser.picture || "";
+    document.getElementById("user-name").textContent = currentUser.given_name || currentUser.name || "User";
+    document.getElementById("user-email").textContent = currentUser.email || "";
+    document.getElementById("menu-user-name").textContent = currentUser.name || "User";
+    document.getElementById("menu-user-email").textContent = currentUser.email || "";
+  } else {
+    authC.classList.remove("hidden");
+    userI.classList.add("hidden");
+    userI.classList.remove("flex");
+  }
+}
+
+function toggleUserMenu(e){
+  e.stopPropagation();
+  document.getElementById("user-menu").classList.toggle("open");
+}
+document.addEventListener("click", () => {
+  const m = document.getElementById("user-menu");
+  if(m) m.classList.remove("open");
+});
+
+function switchAccount(){
+  document.getElementById("user-menu").classList.remove("open");
+  // Save current first
+  saveToNamespace();
+  // Revoke token
+  if(accessToken && window.google){
+    google.accounts.oauth2.revoke(accessToken, () => {});
+  }
+  accessToken = null; currentUser = null; tokenExpiresAt = 0;
+  sessionStorage.removeItem("ltt_token");
+  sessionStorage.removeItem("ltt_token_exp");
+  sessionStorage.removeItem("ltt_user");
+  sessionStorage.removeItem("ltt_ns");
+  // Request token with account chooser
+  setTimeout(() => requestToken("select_account"), 300);
+}
+
+function signOut(){
+  document.getElementById("user-menu").classList.remove("open");
+  // Save current data to this user's namespace before exiting
+  saveToNamespace();
+
+  if(accessToken && window.google){
+    google.accounts.oauth2.revoke(accessToken, () => {});
+  }
+  accessToken = null; currentUser = null; tokenExpiresAt = 0;
+  sessionStorage.removeItem("ltt_token");
+  sessionStorage.removeItem("ltt_token_exp");
+  sessionStorage.removeItem("ltt_user");
+  sessionStorage.removeItem("ltt_ns");
+
+  if(autoBackupTimer){ clearInterval(autoBackupTimer); autoBackupTimer = null; }
+
+  // Clear active data view
+  USER_KEYS.forEach(k => localStorage.removeItem(k));
+  currentNamespace = "guest";
+
+  updateAuthUI();
+  showSigninWall();
+  showToast("👋 Signed out. Your data is safe.", "warn");
+}
+
+/* ============================================================
+   ☁️ GOOGLE DRIVE BACKUP / RESTORE
+   ============================================================ */
+async function backupToDrive(silent = false){
+  if(!accessToken){ if(!silent) showToast("Please sign in first.", "warn"); return; }
+  try {
+    if(!silent) showToast("☁️ Backing up to Google Drive...", "info");
+    const data = collectAllData();
+    const content = JSON.stringify(data, null, 2);
+
+    let fileId = localStorage.getItem(K.driveFileId);
+
+    if(!fileId){
+      const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
+      const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
+      if(!r.ok) throw new Error("Search failed: " + r.status);
+      const found = await r.json();
+      if(found.files && found.files.length){
+        fileId = found.files[0].id;
+        localStorage.setItem(K.driveFileId, fileId);
+      }
+    }
+
+    const metadata = { name: BACKUP_FILENAME, description: BACKUP_DESCRIPTION, mimeType:"application/json" };
+    const boundary = "-------LTT_BOUNDARY_" + Date.now();
+    const body =
+      `--${boundary}\r\n` +
+      `Content-Type: application/json; charset=UTF-8\r\n\r\n` +
+      JSON.stringify(metadata) + `\r\n` +
+      `--${boundary}\r\n` +
+      `Content-Type: application/json\r\n\r\n` +
+      content + `\r\n` +
+      `--${boundary}--`;
+
+    let fileResponse;
+    if(fileId){
+      fileResponse = await fetch(
+        `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
+        { method:"PATCH",
+          headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary },
+          body });
+    } else {
+      fileResponse = await fetch(
+        "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+        { method:"POST",
+          headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary },
+          body });
+    }
+
+    if(!fileResponse.ok){
+      const errTxt = await fileResponse.text();
+      throw new Error("Upload failed: " + fileResponse.status);
+    }
+
+    const file = await fileResponse.json();
+    if(!fileId && file.id) localStorage.setItem(K.driveFileId, file.id);
+
+    const now = Date.now();
+    localStorage.setItem(K.lastBackup, now);
+    dataDirty = false;
+    updateBackupStatus(now);
+    if(!silent) showToast("☁️ Backup complete! Saved to your Drive.", "success");
+  } catch(err){
+    console.error(err);
+    if(!silent) showToast("❌ Backup failed: " + err.message, "error");
+  }
+}
+
+async function restoreFromDrive(){
+  if(!accessToken){ showToast("Please sign in first.", "warn"); return; }
+  try {
+    showToast("🔎 Searching Drive...", "info");
+    let fileId = localStorage.getItem(K.driveFileId);
+
+    if(!fileId){
+      const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
+      const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
+      if(!r.ok) throw new Error("Search failed: " + r.status);
+      const found = await r.json();
+      if(found.files && found.files.length){
+        fileId = found.files[0].id;
+        localStorage.setItem(K.driveFileId, fileId);
+      }
+    }
+    if(!fileId){ showToast("📭 No backup found in your Drive.", "warn"); return; }
+
+    const r = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+      { headers:{ Authorization:"Bearer " + accessToken }});
+    if(!r.ok) throw new Error("Download failed: " + r.status);
+    const data = await r.json();
+
+    if(!confirm("⚠️ This will overwrite ALL current data with the Drive backup. Continue?")) return;
+    applyAllData(data);
+    saveToNamespace();
+    showToast("✅ Restored! Reloading...", "success");
+    setTimeout(() => location.reload(), 900);
+  } catch(err){
+    console.error(err);
+    showToast("❌ Restore failed: " + err.message, "error");
+  }
+}
+
+function manualBackup(){
+  document.getElementById("user-menu").classList.remove("open");
+  backupToDrive(false);
+}
+function manualRestore(){
+  document.getElementById("user-menu").classList.remove("open");
+  restoreFromDrive();
+}
+
+function updateBackupStatus(ts){
+  const textEl = document.getElementById("backup-status-text");
+  const timeEl = document.getElementById("backup-status-time");
+  const iconEl = document.getElementById("backup-status-icon");
+  if(!textEl) return;
+  if(!ts){
+    textEl.textContent = "Not backed up yet";
+    timeEl.textContent = "—";
+    iconEl.innerHTML = '<i class="fa-solid fa-cloud"></i>';
+    iconEl.classList.remove("text-emerald-400");
+    iconEl.classList.add("text-accent");
+  } else {
+    textEl.textContent = "Backup saved to Drive";
+    timeEl.textContent = "Last: " + timeAgo(ts);
+    iconEl.innerHTML = '<i class="fa-solid fa-cloud-check"></i>';
+    iconEl.classList.remove("text-accent");
+    iconEl.classList.add("text-emerald-400");
+  }
+}
+
+function toggleAutoBackup(on){
+  localStorage.setItem(K.autoBackup, on ? "true" : "false");
+  if(autoBackupTimer){ clearInterval(autoBackupTimer); autoBackupTimer = null; }
+  if(on && accessToken){
+    autoBackupTimer = setInterval(() => { if(dataDirty && accessToken) backupToDrive(true); }, 5*60*1000);
+    showToast("🔄 Auto-backup enabled (every 5 min)", "success");
+  } else if(on){ showToast("Sign in to enable auto-backup", "warn"); }
+  else { showToast("Auto-backup disabled", "warn"); }
+}
+
+function markDirty(){ dataDirty = true; }
+
+/* ============================================================
+   THEME (global — same for all users on this browser)
    ============================================================ */
 function initTheme(){
-  const saved = localStorage.getItem(K.theme) || "dark";
+  const saved = localStorage.getItem(K.themeGlobal) || "dark";
   document.body.classList.toggle("light", saved === "light");
   updateThemeIcon();
 }
 function toggleTheme(){
   const isLight = document.body.classList.toggle("light");
-  localStorage.setItem(K.theme, isLight ? "light" : "dark");
+  localStorage.setItem(K.themeGlobal, isLight ? "light" : "dark");
   updateThemeIcon();
-  if(chartsInitialized){ updateChartsTheme(); }
-  showToast(isLight ? "☀️ Light mode activated" : "🌙 Dark mode activated");
+  if(chartsInitialized) updateChartsTheme();
+  showToast(isLight ? "☀️ Light mode" : "🌙 Dark mode");
 }
 function updateThemeIcon(){
   const light = document.body.classList.contains("light");
   const icon = document.getElementById("theme-icon");
-  if(icon){ icon.className = light ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
+  if(icon) icon.className = light ? "fa-solid fa-sun" : "fa-solid fa-moon";
 }
 
 /* ============================================================
-   ACCENT PICKER
+   ACCENT PICKER (global)
    ============================================================ */
 function initAccentPicker(){
   const picker = document.getElementById("accent-picker");
   picker.innerHTML = Object.entries(ACCENTS).map(([name, a]) =>
-    `<div class="accent-dot ${localStorage.getItem(K.accent) === name || (!localStorage.getItem(K.accent) && name === "sky") ? "active" : ""}"
-          data-accent="${name}"
-          style="background:${a.c}"
-          onclick="applyAccent('${name}')"
-          title="${name}"></div>`
+    `<div class="accent-dot ${localStorage.getItem(K.accentGlobal) === name || (!localStorage.getItem(K.accentGlobal) && name === "sky") ? "active" : ""}"
+      data-accent="${name}" style="background:${a.c}" onclick="applyAccent('${name}')" title="${name}"></div>`
   ).join("");
-  const saved = localStorage.getItem(K.accent) || "sky";
-  applyAccent(saved, true);
+  applyAccent(localStorage.getItem(K.accentGlobal) || "sky", true);
 }
 function applyAccent(name, silent){
   const a = ACCENTS[name]; if(!a) return;
   document.documentElement.style.setProperty("--accent", a.c);
   document.documentElement.style.setProperty("--accent-soft", a.s);
   document.documentElement.style.setProperty("--accent-glow", a.g);
-  localStorage.setItem(K.accent, name);
+  localStorage.setItem(K.accentGlobal, name);
   document.querySelectorAll("[data-accent]").forEach(el => el.classList.toggle("active", el.dataset.accent === name));
-  if(!silent) showToast(`🎨 Accent changed to ${name}`, "success");
+  if(!silent) showToast(`🎨 Accent: ${name}`, "success");
 }
 
 /* ============================================================
@@ -730,11 +1100,11 @@ function showToast(msg, type="info"){
    ============================================================ */
 function updateLiveClock(){
   const now = new Date();
-  const timeEl = document.getElementById("live-time");
-  const dateEl = document.getElementById("live-date");
-  if(!timeEl) return;
-  timeEl.textContent = now.toLocaleTimeString("en-US", { hour12:false });
-  dateEl.textContent = now.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"numeric" });
+  const t = document.getElementById("live-time");
+  const d = document.getElementById("live-date");
+  if(!t) return;
+  t.textContent = now.toLocaleTimeString("en-US", { hour12:false });
+  d.textContent = now.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"numeric" });
 }
 
 /* ============================================================
@@ -747,10 +1117,13 @@ function loadSchedule(){
     scheduleData = Array.isArray(parsed) && parsed.length ? parsed : JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
   } catch { scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)); }
 }
-function saveSchedule(){ try{ localStorage.setItem(K.schedule, JSON.stringify(scheduleData)); }catch{} }
+function saveSchedule(){
+  try{ localStorage.setItem(K.schedule, JSON.stringify(scheduleData)); markDirty(); saveToNamespace(); }catch{}
+}
 
 function renderSchedule(){
   const c = document.getElementById("schedule-container");
+  if(!c) return;
   if(!scheduleData.length){
     c.innerHTML = `<div class="text-center text-xs text-muted py-8 border border-dashed rounded-lg" style="border-color:var(--border)">
       No activities yet.<br>Click <span class="text-accent font-bold">+</span> to add one.</div>`;
@@ -759,81 +1132,61 @@ function renderSchedule(){
   c.innerHTML = scheduleData.map((it,i) => i === editingIndex ? editHTML(it,i) : itemHTML(it,i)).join("");
   highlightCurrentActivity();
 }
-
 function itemHTML(item, idx){
   const cls = item.color || "text-accent";
-  return `
-    <div class="schedule-item surface p-3 flex items-start gap-3 group hover:border-transparent transition" data-idx="${idx}" style="transition: all 0.3s;">
-      <div class="mt-1 ${cls}"><i class="fa-solid ${item.icon || "fa-star"}"></i></div>
-      <div class="flex-1 min-w-0">
-        <div class="text-xs text-muted font-mono">${formatRange(item.start, item.end)}</div>
-        <div class="text-sm font-semibold text-primary break-words">${escapeHtml(item.title||"Untitled")}</div>
-        ${item.desc ? `<div class="text-xs text-muted break-words">${escapeHtml(item.desc)}</div>` : ""}
-      </div>
-      <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
-        <button onclick="editScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px]"><i class="fa-solid fa-pen"></i></button>
-        <button onclick="deleteScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px] hover:!text-rose-500"><i class="fa-solid fa-trash"></i></button>
-      </div>
-    </div>`;
+  return `<div class="schedule-item surface p-3 flex items-start gap-3 group transition" data-idx="${idx}" style="transition:all .3s;">
+    <div class="mt-1 ${cls}"><i class="fa-solid ${item.icon || "fa-star"}"></i></div>
+    <div class="flex-1 min-w-0">
+      <div class="text-xs text-muted font-mono">${formatRange(item.start, item.end)}</div>
+      <div class="text-sm font-semibold text-primary break-words">${escapeHtml(item.title||"Untitled")}</div>
+      ${item.desc ? `<div class="text-xs text-muted break-words">${escapeHtml(item.desc)}</div>` : ""}
+    </div>
+    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+      <button onclick="editScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px]"><i class="fa-solid fa-pen"></i></button>
+      <button onclick="deleteScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px] hover:!text-rose-500"><i class="fa-solid fa-trash"></i></button>
+    </div>
+  </div>`;
 }
-
 function editHTML(item, idx){
   const iconOpts = ICON_OPTIONS.map(o => `<option value="${o.v}" ${o.v===item.icon?"selected":""}>${o.l}</option>`).join("");
   const colorOpts = COLOR_OPTIONS.map(o => `<option value="${o.v}" ${o.v===item.color?"selected":""}>${o.l}</option>`).join("");
-  return `
-    <div class="surface p-3 space-y-2 border-accent pop" style="border-color: var(--accent); box-shadow: 0 0 20px var(--accent-soft);">
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Start</label>
-          <input type="time" id="edit-start-${idx}" value="${escapeHtml(item.start)}" class="w-full rounded-md p-1.5 text-xs">
-        </div>
-        <div>
-          <label class="text-[10px] uppercase tracking-wide text-muted font-semibold">End</label>
-          <input type="time" id="edit-end-${idx}" value="${escapeHtml(item.end)}" class="w-full rounded-md p-1.5 text-xs">
-        </div>
-      </div>
-      <div>
-        <label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Title</label>
-        <input type="text" id="edit-title-${idx}" value="${escapeHtml(item.title)}" class="w-full rounded-md p-1.5 text-xs">
-      </div>
-      <div>
-        <label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Note</label>
-        <input type="text" id="edit-desc-${idx}" value="${escapeHtml(item.desc)}" class="w-full rounded-md p-1.5 text-xs">
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Icon</label>
-          <select id="edit-icon-${idx}" class="w-full rounded-md p-1.5 text-xs">${iconOpts}</select>
-        </div>
-        <div>
-          <label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Colour</label>
-          <select id="edit-color-${idx}" class="w-full rounded-md p-1.5 text-xs">${colorOpts}</select>
-        </div>
-      </div>
-      <div class="flex gap-2 pt-1">
-        <button onclick="saveScheduleItem(${idx})" class="flex-1 btn-accent text-xs font-semibold py-1.5 rounded-md"><i class="fa-solid fa-check mr-1"></i>Save</button>
-        <button onclick="cancelScheduleEdit()" class="flex-1 btn-ghost text-xs font-semibold py-1.5 rounded-md">Cancel</button>
-      </div>
-    </div>`;
+  return `<div class="surface p-3 space-y-2 pop" style="border-color:var(--accent); box-shadow:0 0 20px var(--accent-soft);">
+    <div class="grid grid-cols-2 gap-2">
+      <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Start</label>
+        <input type="time" id="edit-start-${idx}" value="${escapeHtml(item.start)}" class="w-full rounded-md p-1.5 text-xs"></div>
+      <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">End</label>
+        <input type="time" id="edit-end-${idx}" value="${escapeHtml(item.end)}" class="w-full rounded-md p-1.5 text-xs"></div>
+    </div>
+    <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Title</label>
+      <input type="text" id="edit-title-${idx}" value="${escapeHtml(item.title)}" class="w-full rounded-md p-1.5 text-xs"></div>
+    <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Note</label>
+      <input type="text" id="edit-desc-${idx}" value="${escapeHtml(item.desc)}" class="w-full rounded-md p-1.5 text-xs"></div>
+    <div class="grid grid-cols-2 gap-2">
+      <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Icon</label>
+        <select id="edit-icon-${idx}" class="w-full rounded-md p-1.5 text-xs">${iconOpts}</select></div>
+      <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Colour</label>
+        <select id="edit-color-${idx}" class="w-full rounded-md p-1.5 text-xs">${colorOpts}</select></div>
+    </div>
+    <div class="flex gap-2 pt-1">
+      <button onclick="saveScheduleItem(${idx})" class="flex-1 btn-accent text-xs font-semibold py-1.5 rounded-md"><i class="fa-solid fa-check mr-1"></i>Save</button>
+      <button onclick="cancelScheduleEdit()" class="flex-1 btn-ghost text-xs font-semibold py-1.5 rounded-md">Cancel</button>
+    </div>
+  </div>`;
 }
-
 function editScheduleItem(idx){ editingIndex = idx; renderSchedule(); const el = document.getElementById(`edit-title-${idx}`); if(el){ el.focus(); el.select(); } }
 function addScheduleItem(){
   if(editingIndex !== null) return;
   scheduleData.push({ start:"", end:"", title:"", desc:"", icon:"fa-star", color:"text-sky-400", _isNew:true });
-  editingIndex = scheduleData.length - 1;
-  renderSchedule();
+  editingIndex = scheduleData.length - 1; renderSchedule();
   const el = document.getElementById(`edit-start-${editingIndex}`); if(el) el.focus();
 }
 function saveScheduleItem(idx){
-  const s = document.getElementById(`edit-start-${idx}`);
-  const e = document.getElementById(`edit-end-${idx}`);
-  const t = document.getElementById(`edit-title-${idx}`);
-  const d = document.getElementById(`edit-desc-${idx}`);
-  const i = document.getElementById(`edit-icon-${idx}`);
-  const c = document.getElementById(`edit-color-${idx}`);
+  const s=document.getElementById(`edit-start-${idx}`), e=document.getElementById(`edit-end-${idx}`),
+        t=document.getElementById(`edit-title-${idx}`), d=document.getElementById(`edit-desc-${idx}`),
+        i=document.getElementById(`edit-icon-${idx}`), c=document.getElementById(`edit-color-${idx}`);
   if(!s || !t) return;
-  scheduleData[idx] = { start:s.value||"", end:e?e.value:"", title:t.value.trim()||"Untitled", desc:d?d.value.trim():"", icon:i?i.value:"fa-star", color:c?c.value:"text-sky-400" };
+  scheduleData[idx] = { start:s.value||"", end:e?e.value:"", title:t.value.trim()||"Untitled",
+    desc:d?d.value.trim():"", icon:i?i.value:"fa-star", color:c?c.value:"text-sky-400" };
   sortSchedule(); saveSchedule(); editingIndex = null; renderSchedule();
   showToast("✅ Schedule updated", "success");
 }
@@ -843,10 +1196,8 @@ function cancelScheduleEdit(){
 }
 function deleteScheduleItem(idx){
   if(!confirm("Delete this schedule item?")) return;
-  scheduleData.splice(idx, 1);
-  if(editingIndex === idx) editingIndex = null;
-  saveSchedule(); renderSchedule();
-  showToast("🗑️ Item removed", "warn");
+  scheduleData.splice(idx, 1); if(editingIndex === idx) editingIndex = null;
+  saveSchedule(); renderSchedule(); showToast("🗑️ Item removed", "warn");
 }
 function resetSchedule(){
   if(!confirm("Reset to default schedule?")) return;
@@ -854,18 +1205,16 @@ function resetSchedule(){
   editingIndex = null; saveSchedule(); renderSchedule();
   showToast("🔄 Schedule reset to default");
 }
-
 function highlightCurrentActivity(){
   const now = new Date();
-  const mins = now.getHours() * 60 + now.getMinutes();
+  const mins = now.getHours()*60 + now.getMinutes();
   document.querySelectorAll(".schedule-item").forEach(el => el.classList.remove("current-activity"));
   scheduleData.forEach((item, idx) => {
     if(!item.start) return;
-    const [sh, sm] = item.start.split(":").map(Number);
+    const [sh,sm] = item.start.split(":").map(Number);
     const start = sh*60 + sm;
     let end;
-    if(item.end){ const [eh, em] = item.end.split(":").map(Number); end = eh*60 + em; }
-    else end = 24*60;
+    if(item.end){ const [eh,em] = item.end.split(":").map(Number); end = eh*60 + em; } else end = 24*60;
     if(mins >= start && mins < end){
       const el = document.querySelector(`.schedule-item[data-idx="${idx}"]`);
       if(el) el.classList.add("current-activity");
@@ -878,37 +1227,37 @@ function highlightCurrentActivity(){
    ============================================================ */
 function renderChecklist(){
   const c = document.getElementById("checklist-container");
+  if(!c) return;
   const saved = JSON.parse(localStorage.getItem(K.checklist) || "{}");
   c.innerHTML = habitList.map(h => {
     const done = saved[h.id];
-    return `
-      <label class="flex items-center gap-3 p-3 surface rounded-lg cursor-pointer hover:border-accent transition group">
-        <input type="checkbox" onchange="toggleChecklist('${h.id}')" ${done?"checked":""} class="w-4 h-4 rounded cursor-pointer" style="accent-color: var(--accent)">
-        <span class="text-sm font-medium ${done ? "line-through text-dim" : "text-primary"} flex-1">${h.name}</span>
-        ${done ? '<i class="fa-solid fa-check text-emerald-500 pop"></i>' : ''}
-      </label>`;
+    return `<label class="flex items-center gap-3 p-3 surface rounded-lg cursor-pointer hover:border-accent transition group">
+      <input type="checkbox" onchange="toggleChecklist('${h.id}')" ${done?"checked":""} class="w-4 h-4 rounded cursor-pointer" style="accent-color: var(--accent)">
+      <span class="text-sm font-medium ${done ? "line-through text-dim" : "text-primary"} flex-1">${h.name}</span>
+      ${done ? '<i class="fa-solid fa-check text-emerald-500 pop"></i>' : ''}
+    </label>`;
   }).join("");
   calculateDailyProgress();
 }
 function toggleChecklist(id){
-  const saved = JSON.parse(localStorage.getItem(K.checklist) || "{}");
-  saved[id] = !saved[id];
-  localStorage.setItem(K.checklist, JSON.stringify(saved));
-  renderChecklist();
+  const s = JSON.parse(localStorage.getItem(K.checklist) || "{}");
+  s[id] = !s[id]; localStorage.setItem(K.checklist, JSON.stringify(s));
+  markDirty(); saveToNamespace(); renderChecklist();
 }
 function calculateDailyProgress(){
-  const saved = JSON.parse(localStorage.getItem(K.checklist) || "{}");
-  const done = habitList.filter(h => saved[h.id]).length;
+  const s = JSON.parse(localStorage.getItem(K.checklist) || "{}");
+  const done = habitList.filter(h => s[h.id]).length;
   const pct = Math.round((done / habitList.length) * 100);
-  document.getElementById("daily-progress-pct").innerText = pct;
-  document.getElementById("daily-progress-bar").style.width = pct + "%";
+  const pEl = document.getElementById("daily-progress-pct");
+  const bEl = document.getElementById("daily-progress-bar");
+  if(pEl) pEl.innerText = pct;
+  if(bEl) bEl.style.width = pct + "%";
   if(pct === 100){
     const lastFull = localStorage.getItem(K.lastFull);
     if(lastFull !== todayKey()){
       localStorage.setItem(K.lastFull, todayKey());
-      fireConfetti();
-      showToast("🎉 100% Complete! Legendary day!", "success");
-      updateStreak();
+      markDirty(); saveToNamespace();
+      fireConfetti(); showToast("🎉 100% Complete! Legendary day!", "success"); updateStreak();
     }
   }
 }
@@ -921,15 +1270,12 @@ function updateStreak(){
   const today = todayKey();
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
   let streak = parseInt(localStorage.getItem(K.streak) || "0", 10);
-  if(lastFull === today){
-    if(streak === 0) streak = 1;
-  } else if(lastFull === yesterday){
-    // Already counted
-  } else {
-    streak = 0;
-  }
+  if(lastFull === today){ if(streak === 0) streak = 1; }
+  else if(lastFull === yesterday){ /* continue */ }
+  else { streak = 0; }
   localStorage.setItem(K.streak, streak);
-  document.getElementById("streak-count").innerText = streak;
+  const el = document.getElementById("streak-count");
+  if(el) el.innerText = streak;
 }
 
 /* ============================================================
@@ -937,6 +1283,7 @@ function updateStreak(){
    ============================================================ */
 function renderMatrix(){
   const c = document.getElementById("matrix-container");
+  if(!c) return;
   const data = JSON.parse(localStorage.getItem(K.matrix) || "{}");
   c.innerHTML = habitList.map(h => {
     const cells = days.map((_, idx) => {
@@ -952,7 +1299,7 @@ function cycleMatrixState(id, di){
   if(!data[id]) data[id] = [0,0,0,0,0,0,0];
   data[id][di] = (data[id][di] + 1) % 4;
   localStorage.setItem(K.matrix, JSON.stringify(data));
-  renderMatrix();
+  markDirty(); saveToNamespace(); renderMatrix();
   if(habitChartInstance) updateCharts();
 }
 
@@ -961,7 +1308,7 @@ function cycleMatrixState(id, di){
    ============================================================ */
 function saveNotes(){
   localStorage.setItem(K.notes, document.getElementById("daily-notes").value);
-  showToast("📝 Journal note saved", "success");
+  markDirty(); saveToNamespace(); showToast("📝 Journal note saved", "success");
 }
 function saveWeeklyReview(){
   localStorage.setItem(K.review, JSON.stringify({
@@ -969,15 +1316,19 @@ function saveWeeklyReview(){
     mistake: document.getElementById("review-mistake").value,
     improve: document.getElementById("review-improve").value
   }));
-  showToast("📊 Weekly review saved", "success");
+  markDirty(); saveToNamespace(); showToast("📊 Weekly review saved", "success");
 }
 function loadSavedData(){
-  document.getElementById("daily-notes").value = localStorage.getItem(K.notes) || "";
+  const n = document.getElementById("daily-notes");
+  if(n) n.value = localStorage.getItem(K.notes) || "";
   try{
     const r = JSON.parse(localStorage.getItem(K.review) || "{}");
-    if(r.well) document.getElementById("review-well").value = r.well;
-    if(r.mistake) document.getElementById("review-mistake").value = r.mistake;
-    if(r.improve) document.getElementById("review-improve").value = r.improve;
+    const rw = document.getElementById("review-well");
+    const rm = document.getElementById("review-mistake");
+    const ri = document.getElementById("review-improve");
+    if(rw && r.well) rw.value = r.well;
+    if(rm && r.mistake) rm.value = r.mistake;
+    if(ri && r.improve) ri.value = r.improve;
   } catch{}
 }
 
@@ -989,12 +1340,14 @@ function initQuote(){
   const today = todayKey();
   let idx = stored.date === today ? stored.idx : Math.floor(Math.random() * QUOTES.length);
   localStorage.setItem(K.quote, JSON.stringify({ date: today, idx }));
-  document.getElementById("daily-quote").textContent = QUOTES[idx];
+  const el = document.getElementById("daily-quote");
+  if(el) el.textContent = QUOTES[idx];
 }
 function newQuote(){
   const idx = Math.floor(Math.random() * QUOTES.length);
   localStorage.setItem(K.quote, JSON.stringify({ date: todayKey(), idx }));
   const el = document.getElementById("daily-quote");
+  if(!el) return;
   el.style.opacity = "0";
   setTimeout(() => { el.textContent = QUOTES[idx]; el.style.opacity = "1"; }, 200);
 }
@@ -1002,31 +1355,26 @@ function newQuote(){
 /* ============================================================
    POMODORO
    ============================================================ */
-let pomo = { total: 25*60, left: 25*60, running: false, mode: "work", timer: null };
-
+let pomo = { total:25*60, left:25*60, running:false, mode:"work", timer:null };
 function renderPomodoro(){
-  const m = Math.floor(pomo.left / 60);
-  const s = pomo.left % 60;
-  document.getElementById("pomo-time").textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  const m = Math.floor(pomo.left / 60), s = pomo.left % 60;
+  const t = document.getElementById("pomo-time"); if(!t) return;
+  t.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
   document.getElementById("pomo-label").textContent = pomo.mode === "work" ? "Work Session" : "Break Time";
-  const pct = ((pomo.total - pomo.left) / pomo.total) * 100;
-  document.getElementById("pomo-bar").style.width = pct + "%";
-  const btn = document.getElementById("pomo-toggle");
-  btn.innerHTML = pomo.running ? '<i class="fa-solid fa-pause mr-1"></i>Pause' : '<i class="fa-solid fa-play mr-1"></i>Start';
+  document.getElementById("pomo-bar").style.width = ((pomo.total - pomo.left) / pomo.total) * 100 + "%";
+  document.getElementById("pomo-toggle").innerHTML = pomo.running ? '<i class="fa-solid fa-pause mr-1"></i>Pause' : '<i class="fa-solid fa-play mr-1"></i>Start';
 }
 function togglePomodoro(){
-  if(pomo.running){
-    clearInterval(pomo.timer); pomo.running = false;
-  } else {
+  if(pomo.running){ clearInterval(pomo.timer); pomo.running = false; }
+  else {
     pomo.running = true;
     pomo.timer = setInterval(() => {
       pomo.left--;
       if(pomo.left <= 0){
-        clearInterval(pomo.timer);
-        pomo.running = false;
+        clearInterval(pomo.timer); pomo.running = false;
         const wasWork = pomo.mode === "work";
-        if(wasWork){ fireConfetti(); showToast("🍅 Work session done! Take a break.", "success"); }
-        else { showToast("☕ Break over! Back to work.", "warn"); }
+        if(wasWork){ fireConfetti(); showToast("🍅 Work session done!", "success"); }
+        else showToast("☕ Break over!", "warn");
         setPomoMode(wasWork ? "break" : "work");
       }
       renderPomodoro();
@@ -1034,20 +1382,17 @@ function togglePomodoro(){
   }
   renderPomodoro();
 }
-function resetPomodoro(){
-  clearInterval(pomo.timer); pomo.running = false;
-  setPomoMode(pomo.mode);
-}
+function resetPomodoro(){ clearInterval(pomo.timer); pomo.running = false; setPomoMode(pomo.mode); }
 function setPomoMode(mode){
-  clearInterval(pomo.timer); pomo.running = false;
-  pomo.mode = mode;
+  clearInterval(pomo.timer); pomo.running = false; pomo.mode = mode;
   pomo.total = mode === "work" ? 25*60 : 5*60;
   pomo.left = pomo.total;
-  document.getElementById("pomo-btn-work").className = (mode==="work" ? "flex-1 py-1.5 rounded btn-accent font-semibold text-xs" : "flex-1 py-1.5 rounded btn-ghost font-semibold text-xs");
-  document.getElementById("pomo-btn-break").className = (mode==="break" ? "flex-1 py-1.5 rounded btn-accent font-semibold text-xs" : "flex-1 py-1.5 rounded btn-ghost font-semibold text-xs");
+  const w = document.getElementById("pomo-btn-work");
+  const b = document.getElementById("pomo-btn-break");
+  if(w) w.className = (mode==="work" ? "flex-1 py-1.5 rounded btn-accent font-semibold text-xs" : "flex-1 py-1.5 rounded btn-ghost font-semibold text-xs");
+  if(b) b.className = (mode==="break" ? "flex-1 py-1.5 rounded btn-accent font-semibold text-xs" : "flex-1 py-1.5 rounded btn-ghost font-semibold text-xs");
   renderPomodoro();
 }
-renderPomodoro();
 
 /* ============================================================
    CONFETTI
@@ -1055,23 +1400,19 @@ renderPomodoro();
 function fireConfetti(){
   const canvas = document.getElementById("confetti-canvas");
   const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
   const colors = ["#38bdf8","#a855f7","#f43f5e","#fbbf24","#4ade80","#ec4899"];
   const parts = [];
   for(let i=0;i<160;i++){
-    parts.push({
-      x: canvas.width/2 + (Math.random()-0.5)*200,
-      y: canvas.height/2,
+    parts.push({ x:canvas.width/2 + (Math.random()-0.5)*200, y:canvas.height/2,
       vx:(Math.random()-0.5)*18, vy:(Math.random()-1)*14,
-      size: Math.random()*8+4, color: colors[Math.floor(Math.random()*colors.length)],
-      rot: Math.random()*Math.PI, rotSpeed:(Math.random()-0.5)*0.35, life:1
-    });
+      size:Math.random()*8+4, color:colors[Math.floor(Math.random()*colors.length)],
+      rot:Math.random()*Math.PI, rotSpeed:(Math.random()-0.5)*0.35, life:1 });
   }
   let frame = 0;
   (function anim(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    parts.forEach(p=>{
+    parts.forEach(p => {
       p.x+=p.vx; p.y+=p.vy; p.vy+=0.45; p.rot+=p.rotSpeed; p.life-=0.01;
       ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
       ctx.globalAlpha = Math.max(0,p.life); ctx.fillStyle = p.color;
@@ -1087,10 +1428,9 @@ function fireConfetti(){
    TABS & CHARTS
    ============================================================ */
 function switchTab(tab){
-  const dv = document.getElementById("view-daily");
-  const wv = document.getElementById("view-weekly");
-  const bd = document.getElementById("tab-daily");
-  const bw = document.getElementById("tab-weekly");
+  const dv=document.getElementById("view-daily"), wv=document.getElementById("view-weekly"),
+        bd=document.getElementById("tab-daily"), bw=document.getElementById("tab-weekly");
+  if(!dv || !wv) return;
   if(tab === "daily"){
     dv.classList.remove("hidden"); wv.classList.add("hidden");
     bd.className = "btn-accent px-5 py-2.5 rounded-lg text-sm font-semibold";
@@ -1108,35 +1448,22 @@ function initCharts(){
   const accent = cssVar("--accent");
   const textMuted = cssVar("--text-muted");
   const gridColor = document.body.classList.contains("light") ? "#e2e8f0" : "#1e293b";
-
   habitChartInstance = new Chart(document.getElementById("habitChart"), {
     type:"bar",
-    data:{
-      labels: habitList.map(h=>h.name.split(" ")[0]),
-      datasets:[{ label:"Completion %", data: calculateScores(), backgroundColor: accent, borderRadius:8 }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      scales:{
-        y:{ beginAtZero:true, max:100, ticks:{ color:textMuted }, grid:{ color:gridColor } },
-        x:{ ticks:{ color:textMuted }, grid:{ display:false } }
-      },
-      plugins:{ legend:{ display:false } }
-    }
+    data:{ labels:habitList.map(h => h.name.split(" ")[0]),
+      datasets:[{ label:"Completion %", data:calculateScores(), backgroundColor:accent, borderRadius:8 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ beginAtZero:true, max:100, ticks:{color:textMuted}, grid:{color:gridColor} },
+               x:{ ticks:{color:textMuted}, grid:{display:false} } },
+      plugins:{ legend:{display:false} } }
   });
-
   balanceChartInstance = new Chart(document.getElementById("balanceChart"), {
     type:"doughnut",
-    data:{
-      labels:["Workout","Books","English","Skill","Money","Phone"],
+    data:{ labels:["Workout","Books","English","Skill","Money","Phone"],
       datasets:[{ data:[70,60,55,50,45,80],
-        backgroundColor:[accent,"#4ade80","#c084fc","#fbbf24","#a855f7","#f43f5e"],
-        borderWidth:0 }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ position:"bottom", labels:{ color:textMuted, font:{ size:10 }, padding:12 } } }
-    }
+        backgroundColor:[accent,"#4ade80","#c084fc","#fbbf24","#a855f7","#f43f5e"], borderWidth:0 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:"bottom", labels:{color:textMuted, font:{size:10}, padding:12} } } }
   });
 }
 function updateCharts(){
@@ -1144,8 +1471,7 @@ function updateCharts(){
 }
 function updateChartsTheme(){
   if(!habitChartInstance) return;
-  const accent = cssVar("--accent");
-  const textMuted = cssVar("--text-muted");
+  const accent = cssVar("--accent"), textMuted = cssVar("--text-muted");
   const gridColor = document.body.classList.contains("light") ? "#e2e8f0" : "#1e293b";
   habitChartInstance.data.datasets[0].backgroundColor = accent;
   habitChartInstance.options.scales.y.ticks.color = textMuted;
@@ -1166,20 +1492,14 @@ function calculateScores(){
 }
 
 /* ============================================================
-   EXPORT / IMPORT
+   LOCAL EXPORT / IMPORT
    ============================================================ */
 function exportData(){
-  const data = {};
-  Object.values(K).forEach(key => {
-    const v = localStorage.getItem(key);
-    if(v !== null) data[key] = v;
-  });
+  const data = collectAllData();
   const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = `life-tracker-backup-${todayKey()}.json`;
-  a.click();
+  a.href = url; a.download = `life-tracker-${currentNamespace.replace(/[^a-z0-9]/gi,"_")}-${todayKey()}.json`; a.click();
   URL.revokeObjectURL(url);
   showToast("💾 Backup downloaded", "success");
 }
@@ -1189,7 +1509,8 @@ function importData(event){
   reader.onload = e => {
     try{
       const data = JSON.parse(e.target.result);
-      Object.entries(data).forEach(([k,v]) => localStorage.setItem(k, v));
+      applyAllData(data);
+      saveToNamespace();
       showToast("📥 Data imported! Reloading...", "success");
       setTimeout(() => location.reload(), 800);
     } catch { showToast("❌ Invalid backup file", "error"); }
@@ -1207,6 +1528,13 @@ document.addEventListener("keydown", e => {
   if(e.key === "2") switchTab("weekly");
   if(e.key === " " && e.target === document.body){ e.preventDefault(); togglePomodoro(); }
 });
+
+/* ============================================================
+   AUTO-SAVE TO NAMESPACE ON EXIT
+   ============================================================ */
+window.addEventListener("beforeunload", () => {
+  if(currentNamespace && currentNamespace !== "guest") saveToNamespace();
+});
 </script>
 </body>
- </html>
+                                     </html>
