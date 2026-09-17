@@ -43,11 +43,13 @@
   .btn-accent:active { transform: translateY(0) scale(0.98); }
   .btn-ghost { background: var(--surface-2); color: var(--text-muted); border:1px solid var(--border); transition: all .2s ease; }
   .btn-ghost:hover { color: var(--text); border-color: var(--accent); }
-  input[type=text], input[type=time], textarea, select {
+  input[type=text], input[type=time], input[type=number], input[type=date], input[type=search], textarea, select {
     background: var(--surface); border:1px solid var(--border); color: var(--text); transition: border-color .2s, box-shadow .2s; }
   input:focus, textarea:focus, select:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-  input[type=time]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor:pointer; }
-  body.light input[type=time]::-webkit-calendar-picker-indicator { filter:none; }
+  input[type=time]::-webkit-calendar-picker-indicator,
+  input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor:pointer; }
+  body.light input[type=time]::-webkit-calendar-picker-indicator,
+  body.light input[type=date]::-webkit-calendar-picker-indicator { filter:none; }
   select option { background: var(--card); color: var(--text); }
   ::-webkit-scrollbar { width:8px; height:8px; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius:4px; }
@@ -101,7 +103,6 @@
   .user-menu button:hover { background: var(--surface-2); }
   .user-menu .divider { height:1px; background: var(--border); margin:6px 0; }
 
-  /* ============ SIDEBAR ============ */
   #sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:300;
     opacity:0; pointer-events:none; transition:opacity .3s; }
   #sidebar-overlay.open { opacity:1; pointer-events:auto; }
@@ -112,15 +113,14 @@
     box-shadow: 4px 0 24px rgba(0,0,0,0.3); }
   #sidebar.open { transform: translateX(0); }
   .side-item { width:100%; display:flex; align-items:center; gap:14px;
-    padding:14px 20px; color: var(--text); font-size:14px; font-weight:600;
+    padding:12px 20px; color: var(--text); font-size:13px; font-weight:600;
     border-left:3px solid transparent; transition: all .2s; }
   .side-item:hover { background: var(--surface-2); border-left-color: var(--accent); }
   .side-item.active { background: var(--accent-soft); border-left-color: var(--accent); color: var(--accent); }
-  .side-item i { width:20px; text-align:center; font-size:16px; }
-  .side-heading { padding: 16px 20px 8px; font-size:10px; text-transform:uppercase;
+  .side-item i { width:20px; text-align:center; font-size:15px; }
+  .side-heading { padding: 14px 20px 6px; font-size:10px; text-transform:uppercase;
     letter-spacing:2px; color: var(--text-dim); font-weight:700; }
 
-  /* ============ CHATBOT ============ */
   .chat-msg { display:flex; gap:10px; margin-bottom:16px; }
   .chat-msg.user { flex-direction: row-reverse; }
   .chat-avatar { width:36px; height:36px; border-radius:50%; flex-shrink:0;
@@ -143,7 +143,6 @@
     cursor:pointer; transition: all .2s; white-space:nowrap; }
   .quick-chip:hover { background: var(--accent); color:#fff; border-color: var(--accent); }
 
-  /* ============ MOTIVATION ============ */
   .motiv-card { display:block; border-radius:14px; overflow:hidden;
     border:1px solid var(--border); background: var(--card); transition: all .3s; }
   .motiv-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 24px var(--accent-soft); }
@@ -156,6 +155,35 @@
   .motiv-play { position:absolute; bottom:12px; right:12px; width:36px; height:36px;
     border-radius:50%; background:#ff0000; display:flex; align-items:center;
     justify-content:center; color:#fff; z-index:3; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+
+  .water-glass { width:100%; aspect-ratio:1; max-width:52px; border-radius:50% 50% 45% 45%;
+    border:2px solid var(--border-strong); background: var(--surface);
+    cursor:pointer; transition: all .25s; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; }
+  .water-glass.filled { background: linear-gradient(180deg, #38bdf8, #0284c7);
+    border-color: #38bdf8; box-shadow: 0 0 16px rgba(56,189,248,0.5); }
+  .water-glass.filled::after { content:'💧'; font-size:16px; position:relative; z-index:1; }
+  .water-glass:hover { transform: scale(1.08); }
+
+  .star { font-size:24px; color: var(--border-strong); cursor:pointer; transition: color .2s, transform .2s; }
+  .star:hover { transform: scale(1.15); }
+  .star.active { color: #fbbf24; }
+
+  .note-card { background: var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:14px; transition: all .25s; cursor:pointer;
+    border-left:4px solid var(--accent); }
+  .note-card:hover { border-color: var(--accent); transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-soft); }
+
+  .modal-bg { position:fixed; inset:0; background: rgba(0,0,0,0.7); z-index:400;
+    display:flex; align-items:center; justify-content:center; padding:16px;
+    opacity:0; pointer-events:none; transition: opacity .25s; }
+  .modal-bg.open { opacity:1; pointer-events:auto; }
+  .modal-content { background: var(--card); border:1px solid var(--border);
+    border-radius:16px; box-shadow: var(--shadow); width:100%; max-width:520px;
+    max-height: 90vh; overflow-y:auto; transform: scale(0.95);
+    transition: transform .25s; }
+  .modal-bg.open .modal-content { transform: scale(1); }
 </style>
 </head>
 <body class="p-4 md:p-6 max-w-7xl mx-auto min-h-screen">
@@ -163,7 +191,7 @@
 <canvas id="confetti-canvas"></canvas>
 <div id="toast-container"></div>
 
-<!-- ============ SIDEBAR OVERLAY & SIDEBAR ============ -->
+<!-- SIDEBAR -->
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="sidebar">
   <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border);">
@@ -181,21 +209,38 @@
     </button>
   </div>
 
-  <nav class="py-3">
-    <div class="side-heading">Main</div>
+  <nav class="py-2">
+    <div class="side-heading">Dashboard</div>
     <button class="side-item" data-nav="dashboard" onclick="switchView('dashboard')">
-      <i class="fa-solid fa-house"></i>Dashboard
+      <i class="fa-solid fa-house"></i>Routine & Habits
     </button>
-    <button class="side-item" data-nav="guide" onclick="switchView('guide')">
-      <i class="fa-solid fa-book-open"></i>User Guide
+
+    <div class="side-heading">Trackers</div>
+    <button class="side-item" data-nav="water" onclick="switchView('water')">
+      <i class="fa-solid fa-droplet"></i>Water Tracker
     </button>
+    <button class="side-item" data-nav="sleep" onclick="switchView('sleep')">
+      <i class="fa-solid fa-moon"></i>Sleep Tracker
+    </button>
+    <button class="side-item" data-nav="weight" onclick="switchView('weight')">
+      <i class="fa-solid fa-weight-scale"></i>Weight Log
+    </button>
+    <button class="side-item" data-nav="notes" onclick="switchView('notes')">
+      <i class="fa-solid fa-note-sticky"></i>Notes App
+    </button>
+
+    <div class="side-heading">Growth</div>
     <button class="side-item" data-nav="motivation" onclick="switchView('motivation')">
       <i class="fa-solid fa-fire"></i>Motivation Hub
     </button>
     <button class="side-item" data-nav="chatbot" onclick="switchView('chatbot')">
       <i class="fa-solid fa-robot"></i>AI Coach
     </button>
-    <div class="side-heading">Info</div>
+    <button class="side-item" data-nav="guide" onclick="switchView('guide')">
+      <i class="fa-solid fa-book-open"></i>User Guide
+    </button>
+
+    <div class="side-heading">Other</div>
     <button class="side-item" data-nav="about" onclick="switchView('about')">
       <i class="fa-solid fa-circle-info"></i>About
     </button>
@@ -206,11 +251,11 @@
 
   <div class="mt-auto p-4 border-t text-center" style="border-color: var(--border);">
     <div class="text-[11px] text-muted">Made with 💙 for you</div>
-    <div class="text-[10px] text-dim mt-1">v4.0 · Pro</div>
+    <div class="text-[10px] text-dim mt-1">v5.0 · Pro+</div>
   </div>
 </aside>
 
-<!-- =============== HEADER =============== -->
+<!-- HEADER -->
 <header class="mb-6 pb-4 border-b anim-in" style="border-color: var(--border);">
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div class="flex items-center gap-3">
@@ -261,7 +306,7 @@
   </div>
 </header>
 
-<!-- =============== SIGN-IN WALL =============== -->
+<!-- SIGN-IN WALL -->
 <div id="signin-wall" class="hidden">
   <div class="card p-8 max-w-md mx-auto text-center space-y-5 anim-in">
     <div class="w-20 h-20 rounded-full bg-accent-soft flex items-center justify-center text-4xl text-accent mx-auto">
@@ -269,7 +314,7 @@
     </div>
     <h2 class="text-2xl font-bold text-primary">Welcome, Champion 👑</h2>
     <p class="text-sm text-muted leading-relaxed">
-      Sign in with Google to save your progress privately to your own Drive.<br>
+      Sign in with Google to save your progress privately.<br>
       Your data is <span class="text-accent font-semibold">100% private</span>.
     </p>
     <div class="flex justify-center">
@@ -277,17 +322,11 @@
         <i class="fa-brands fa-google"></i> Sign in with Google
       </button>
     </div>
-    <div class="text-[11px] text-dim pt-2 border-t" style="border-color: var(--border);">
-      <i class="fa-solid fa-lock mr-1"></i> Secure OAuth 2.0 · Any Google account works
-    </div>
   </div>
 </div>
 
-<!-- ======================================================
-     VIEW: DASHBOARD (main app)
-     ====================================================== -->
+<!-- ==================== VIEW: DASHBOARD ==================== -->
 <div id="view-dashboard" class="space-y-6 hidden">
-  <!-- Tab switcher -->
   <div class="flex gap-2 flex-wrap">
     <button onclick="switchTab('daily')" id="tab-daily" class="btn-accent px-5 py-2.5 rounded-lg text-sm font-semibold">
       <i class="fa-solid fa-calendar-day mr-2"></i>Daily Routine
@@ -301,38 +340,37 @@
     </div>
   </div>
 
-  <!-- DAILY TAB -->
   <div id="tab-content-daily" class="space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class="card p-4 anim-in anim-in-1">
-        <div class="flex items-center gap-4 mb-3">
-          <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="card p-3 anim-in anim-in-1">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
             <i class="fa-solid fa-circle-check"></i>
           </div>
-          <div class="flex-1">
-            <div class="text-muted text-xs font-medium">Daily Completion</div>
-            <div class="text-2xl font-bold text-primary"><span id="daily-progress-pct">0</span>%</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-muted text-[10px] font-medium">Daily</div>
+            <div class="text-xl font-bold text-primary"><span id="daily-progress-pct">0</span>%</div>
           </div>
         </div>
         <div class="progress-track"><div id="daily-progress-bar" class="progress-fill" style="width:0%"></div></div>
       </div>
-      <div class="card p-4 flex items-center gap-4 anim-in anim-in-2">
-        <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
+      <div class="card p-3 flex items-center gap-3 anim-in anim-in-2">
+        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
           <i class="fa-solid fa-fire"></i></div>
-        <div><div class="text-muted text-xs font-medium">Current Streak</div>
-          <div class="text-2xl font-bold text-primary"><span id="streak-count">0</span> <span class="text-sm text-muted">days</span></div></div>
+        <div><div class="text-muted text-[10px] font-medium">Streak</div>
+          <div class="text-xl font-bold text-primary"><span id="streak-count">0</span></div></div>
       </div>
-      <div class="card p-4 flex items-center gap-4 anim-in anim-in-3">
-        <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
-          <i class="fa-solid fa-bullseye"></i></div>
-        <div><div class="text-muted text-xs font-medium">Monthly Focus</div>
-          <div class="text-sm font-semibold text-accent">Month 1: Control</div></div>
+      <div class="card p-3 flex items-center gap-3 anim-in anim-in-3">
+        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
+          <i class="fa-solid fa-droplet"></i></div>
+        <div><div class="text-muted text-[10px] font-medium">Water</div>
+          <div class="text-xl font-bold text-primary"><span id="dash-water-count">0</span><span class="text-sm text-muted">/8</span></div></div>
       </div>
-      <div class="card p-4 flex items-center gap-4 anim-in anim-in-4">
-        <div class="w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-xl text-accent">
+      <div class="card p-3 flex items-center gap-3 anim-in anim-in-4">
+        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
           <i class="fa-solid fa-crown"></i></div>
-        <div><div class="text-muted text-xs font-medium">Ultimate Target</div>
-          <div class="text-sm font-semibold text-accent">Unstoppable You</div></div>
+        <div><div class="text-muted text-[10px] font-medium">Target</div>
+          <div class="text-sm font-bold text-accent">Unstoppable</div></div>
       </div>
     </div>
 
@@ -353,7 +391,7 @@
       <div class="card p-5 lg:col-span-1 space-y-4 anim-in anim-in-1">
         <div class="flex items-center justify-between gap-2">
           <h2 class="text-lg font-bold text-primary">
-            <i class="fa-regular fa-clock text-accent mr-2"></i>Daily Schedule</h2>
+            <i class="fa-regular fa-clock text-accent mr-2"></i>Schedule</h2>
           <div class="flex gap-1.5">
             <button onclick="addScheduleItem()" class="btn-ghost w-8 h-8 rounded-lg flex items-center justify-center text-xs">
               <i class="fa-solid fa-plus"></i></button>
@@ -361,8 +399,6 @@
               <i class="fa-solid fa-rotate-left"></i></button>
           </div>
         </div>
-        <p class="text-[11px] text-muted -mt-2">
-          <i class="fa-solid fa-wand-magic-sparkles text-accent mr-1"></i>Tap pencil to edit</p>
         <div class="space-y-2 max-h-[620px] overflow-y-auto pr-1" id="schedule-container"></div>
       </div>
 
@@ -370,8 +406,7 @@
         <div class="card p-5 space-y-4 anim-in anim-in-2">
           <div class="flex justify-between items-center">
             <h2 class="text-lg font-bold text-primary">
-              <i class="fa-solid fa-list-check text-accent mr-2"></i>Daily Checklist</h2>
-            <span class="text-xs text-muted">Tap to toggle</span>
+              <i class="fa-solid fa-list-check text-accent mr-2"></i>Checklist</h2>
           </div>
           <div class="space-y-2" id="checklist-container"></div>
         </div>
@@ -397,8 +432,7 @@
 
         <div class="card p-5 space-y-4 anim-in anim-in-4">
           <h2 class="text-lg font-bold text-primary">
-            <i class="fa-solid fa-calendar-week text-accent mr-2"></i>Weekly Habit Matrix</h2>
-          <p class="text-xs text-muted -mt-2">Tap: Done · Partial · Missed</p>
+            <i class="fa-solid fa-calendar-week text-accent mr-2"></i>Habit Matrix</h2>
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left matrix-table">
               <thead class="text-xs uppercase">
@@ -419,7 +453,7 @@
           <h2 class="text-lg font-bold text-primary">
             <i class="fa-solid fa-pen-to-square text-accent mr-2"></i>Daily Reflection</h2>
           <textarea id="daily-notes" rows="6" class="w-full rounded-lg p-3 text-sm"
-                    placeholder="What went well today? What can be improved tomorrow?"></textarea>
+                    placeholder="What went well today?"></textarea>
           <button onclick="saveNotes()" class="w-full btn-accent font-semibold py-2 rounded-lg text-sm">
             <i class="fa-solid fa-floppy-disk mr-2"></i>Save Note</button>
         </div>
@@ -452,30 +486,17 @@
           <h2 class="text-lg font-bold text-primary">
             <i class="fa-solid fa-map text-accent mr-2"></i>6-Month Plan</h2>
           <div class="grid grid-cols-2 gap-2 text-xs">
-            <div class="surface-2 p-2 rounded"><span class="font-bold text-accent block">Month 1</span><span class="text-primary">Control & Routine</span></div>
-            <div class="surface-2 p-2 rounded"><span class="font-bold text-emerald-500 block">Month 2</span><span class="text-primary">Consistency</span></div>
-            <div class="surface-2 p-2 rounded"><span class="font-bold text-purple-500 block">Month 3</span><span class="text-primary">Strength & Skill</span></div>
-            <div class="surface-2 p-2 rounded"><span class="font-bold text-amber-500 block">Month 4</span><span class="text-primary">Discipline</span></div>
-            <div class="surface-2 p-2 rounded col-span-2"><span class="font-bold text-rose-500 block">Months 5 & 6</span><span class="text-primary">High Performance</span></div>
-          </div>
-        </div>
-
-        <div class="card p-5 space-y-3 anim-in anim-in-4">
-          <h2 class="text-lg font-bold text-primary">
-            <i class="fa-solid fa-database text-accent mr-2"></i>Local Backup</h2>
-          <div class="flex gap-2">
-            <button onclick="exportData()" class="flex-1 btn-ghost py-2 rounded-lg text-xs font-semibold">
-              <i class="fa-solid fa-download mr-1"></i>Export</button>
-            <button onclick="document.getElementById('import-file').click()" class="flex-1 btn-ghost py-2 rounded-lg text-xs font-semibold">
-              <i class="fa-solid fa-upload mr-1"></i>Import</button>
-            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
+            <div class="surface-2 p-2 rounded"><span class="font-bold text-accent block">M1</span><span class="text-primary">Control</span></div>
+            <div class="surface-2 p-2 rounded"><span class="font-bold text-emerald-500 block">M2</span><span class="text-primary">Consistency</span></div>
+            <div class="surface-2 p-2 rounded"><span class="font-bold text-purple-500 block">M3</span><span class="text-primary">Strength</span></div>
+            <div class="surface-2 p-2 rounded"><span class="font-bold text-amber-500 block">M4</span><span class="text-primary">Discipline</span></div>
+            <div class="surface-2 p-2 rounded col-span-2"><span class="font-bold text-rose-500 block">M5-6</span><span class="text-primary">High Performance</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- WEEKLY TAB -->
   <div id="tab-content-weekly" class="hidden space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="card p-5 space-y-4 anim-in">
@@ -489,7 +510,6 @@
         <div class="h-64 flex justify-center"><canvas id="balanceChart"></canvas></div>
       </div>
     </div>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="card p-5 space-y-3 anim-in">
         <h3 class="font-bold text-emerald-500 text-sm">1. What did I do well?</h3>
@@ -504,405 +524,420 @@
         <textarea id="review-improve" rows="4" class="w-full rounded-lg p-2.5 text-xs" placeholder="..."></textarea>
       </div>
     </div>
-
     <div class="flex justify-end">
       <button onclick="saveWeeklyReview()" class="btn-accent font-semibold px-6 py-2.5 rounded-lg text-sm">
-        <i class="fa-solid fa-floppy-disk mr-2"></i>Save Weekly Review</button>
-    </div>
-
-    <div class="card p-5 space-y-3 anim-in" style="border-color: var(--accent);">
-      <h3 class="font-bold text-accent text-sm flex items-center gap-2">
-        <i class="fa-solid fa-lightbulb"></i> KEY REMINDERS</h3>
-      <ul class="text-sm text-primary space-y-2 list-disc list-inside">
-        <li>Progress over perfection.</li>
-        <li>Small steps create big results.</li>
-        <li>Don't miss twice in a row.</li>
-        <li>Protect your mental health & sleep.</li>
-        <li>You are doing better than you think!</li>
-      </ul>
-      <div class="text-center font-bold text-accent italic pt-2 text-lg">You got this! 👑</div>
+        <i class="fa-solid fa-floppy-disk mr-2"></i>Save Review</button>
     </div>
   </div>
 </div>
 
-<!-- ======================================================
-     VIEW: USER GUIDE
-     ====================================================== -->
-<div id="view-guide" class="hidden space-y-6">
+<!-- ==================== VIEW: WATER TRACKER ==================== -->
+<div id="view-water" class="hidden space-y-6">
   <div class="card p-6 anim-in">
     <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">
-      <i class="fa-solid fa-book-open text-accent mr-3"></i>User Guide
+      <i class="fa-solid fa-droplet text-accent mr-3"></i>Water Tracker
     </h1>
-    <p class="text-muted text-sm">මේ app එක පාවිච්චි කරන විදිය පියවරින් පියවර ඉගෙන ගන්න. 👑</p>
+    <p class="text-muted text-sm">Drink 8 glasses a day — stay hydrated! 💧</p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="card p-5 space-y-3 anim-in anim-in-1">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-1"></i>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="card p-6 anim-in anim-in-1">
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h2 class="text-lg font-bold text-primary">
+            <i class="fa-solid fa-calendar-day text-accent mr-2"></i>Today
+          </h2>
+          <div class="text-sm">
+            <span id="water-today-count" class="text-3xl font-bold text-accent">0</span>
+            <span class="text-muted">/ 8 glasses</span>
+          </div>
         </div>
-        <h3 class="font-bold text-primary">Sign in කරන්න</h3>
+
+        <div class="flex flex-wrap gap-3 justify-center mb-5" id="water-glasses-container"></div>
+
+        <div class="progress-track mb-4"><div id="water-progress" class="progress-fill" style="width:0%"></div></div>
+
+        <div class="flex gap-2">
+          <button onclick="addWater()" class="btn-accent flex-1 py-3 rounded-lg text-sm font-semibold">
+            <i class="fa-solid fa-plus mr-2"></i>Add 1 Glass
+          </button>
+          <button onclick="removeWater()" class="btn-ghost px-4 py-3 rounded-lg text-sm font-semibold">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <button onclick="resetWaterToday()" class="btn-ghost px-4 py-3 rounded-lg text-sm font-semibold">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mt-5">
+          <div class="surface-2 p-3 rounded-lg text-center">
+            <div class="text-[10px] text-muted uppercase font-bold">Today</div>
+            <div id="water-stat-today" class="text-lg font-bold text-accent">0</div>
+          </div>
+          <div class="surface-2 p-3 rounded-lg text-center">
+            <div class="text-[10px] text-muted uppercase font-bold">Week Avg</div>
+            <div id="water-stat-week" class="text-lg font-bold text-accent">0</div>
+          </div>
+          <div class="surface-2 p-3 rounded-lg text-center">
+            <div class="text-[10px] text-muted uppercase font-bold">Goal Streak</div>
+            <div id="water-stat-streak" class="text-lg font-bold text-accent">0</div>
+          </div>
+        </div>
       </div>
-      <p class="text-sm text-muted leading-relaxed">
-        උඩ දකුණේ තියෙන <b class="text-accent">"Sign in with Google"</b> button එක ඔබන්න. ඔයාගේ Gmail එක තෝරන්න. එතකොට ඔයාගේ data ඔයාගේම Google Drive එකට save වෙන්න පටන් ගන්නවා.
-      </p>
+
+      <div class="card p-5 anim-in anim-in-2">
+        <h2 class="text-lg font-bold text-primary mb-3">
+          <i class="fa-solid fa-chart-bar text-accent mr-2"></i>Last 7 Days
+        </h2>
+        <div class="h-56"><canvas id="waterChart"></canvas></div>
+      </div>
     </div>
 
-    <div class="card p-5 space-y-3 anim-in anim-in-2">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-2"></i>
-        </div>
-        <h3 class="font-bold text-primary">දවසේ කාලසටහන හදන්න</h3>
+    <div class="space-y-6">
+      <div class="card p-5 anim-in anim-in-1">
+        <h3 class="font-bold text-primary mb-3">
+          <i class="fa-solid fa-lightbulb text-accent mr-2"></i>Hydration Tips
+        </h3>
+        <ul class="text-sm text-muted space-y-2 list-disc list-inside">
+          <li>Drink 1 glass right after waking up</li>
+          <li>1 glass before every meal</li>
+          <li>Before and after workouts</li>
+          <li>Set reminders on your phone</li>
+          <li>Keep a water bottle nearby</li>
+        </ul>
       </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Daily Schedule</b> කාඩ් එකේ ඕන activity එකක <b>✏️ pencil icon</b> ඔබලා time, title, note, icon, color edit කරන්න. <b>+</b> එකෙන් අලුත් ඒවා add කරන්න. දැන් වෙලාවට කරන්න ඕන activity එක auto highlight වෙනවා.
-      </p>
-    </div>
 
-    <div class="card p-5 space-y-3 anim-in anim-in-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-3"></i>
-        </div>
-        <h3 class="font-bold text-primary">පුරුදු track කරන්න</h3>
-      </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Daily Checklist</b> එකේ හැම පුරුද්දක්ම tick කරන්න. <b class="text-accent">Weekly Habit Matrix</b> එකේ dots ඔබලා දවසේ තත්වය දාන්න (🟢 Done / 🟡 Partial / 🔴 Missed).
-      </p>
-    </div>
-
-    <div class="card p-5 space-y-3 anim-in anim-in-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-4"></i>
-        </div>
-        <h3 class="font-bold text-primary">Pomodoro Timer පාවිච්චි කරන්න</h3>
-      </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Focus Timer</b> එකේ <b>Start</b> ඔබන්න. මිනිත්තු 25ක් එකදිගට වැඩ කරන්න. Timer ඉවර වුනාම confetti + notification එකක් එයි. ඊට පස්සේ මිනිත්තු 5ක break එකක් ගන්න.
-      </p>
-    </div>
-
-    <div class="card p-5 space-y-3 anim-in anim-in-1">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-5"></i>
-        </div>
-        <h3 class="font-bold text-primary">Journal ලියන්න</h3>
-      </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Daily Reflection</b> එකේ දවස ගැන ලියන්න. හොඳට කරපු දේ, ප්‍රශ්න, ලබන දවසේ improve කරන්න ඕන දේ. Save කරන්න අමතක කරන්න එපා.
-      </p>
-    </div>
-
-    <div class="card p-5 space-y-3 anim-in anim-in-2">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-6"></i>
-        </div>
-        <h3 class="font-bold text-primary">Backup ගන්න</h3>
-      </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Cloud Backup</b> එකේ <b>Backup Now</b> ඔබන්න. Auto-backup checkbox එක tick කරන්න — හැම විනාඩි 5කට වරක් auto save වෙයි. අලුත් device එකකට යනකොට <b>Restore</b> ඔබන්න.
-      </p>
-    </div>
-
-    <div class="card p-5 space-y-3 anim-in anim-in-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-7"></i>
-        </div>
-        <h3 class="font-bold text-primary">AI Coach අහන්න</h3>
-      </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Sidebar → AI Coach</b> එකට ගිහින් උදේ නැගිටින්නේ කොහොමද, study focus වැඩි කරගන්නේ කොහොමද වගේ ප්‍රශ්න අහන්න. සිංහලෙන් හෝ English වලින් ලියන්න පුළුවන්.
-      </p>
-    </div>
-
-    <div class="card p-5 space-y-3 anim-in anim-in-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-          <i class="fa-solid fa-8"></i>
-        </div>
-        <h3 class="font-bold text-primary">Motivation ගන්න</h3>
-      </div>
-      <p class="text-sm text-muted leading-relaxed">
-        <b class="text-accent">Sidebar → Motivation Hub</b> එකේ speeches, songs, videos තියෙනවා. කලකිරුන වෙලාවට ඒවා බලන්න. Daily Fuel quote එකත් දිනපතා බලන්න.
-      </p>
-    </div>
-  </div>
-
-  <div class="card p-5 anim-in" style="border-color: var(--accent);">
-    <h3 class="font-bold text-accent mb-3"><i class="fa-solid fa-keyboard mr-2"></i>Keyboard Shortcuts</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
-        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">T</kbd>
-        <span class="text-primary">Theme toggle කරන්න</span>
-      </div>
-      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
-        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">1</kbd>
-        <span class="text-primary">Daily Routine බලන්න</span>
-      </div>
-      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
-        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">2</kbd>
-        <span class="text-primary">Weekly Review බලන්න</span>
-      </div>
-      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
-        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">Space</kbd>
-        <span class="text-primary">Pomodoro Start/Pause</span>
+      <div class="card p-5 anim-in anim-in-2">
+        <h3 class="font-bold text-primary mb-3">
+          <i class="fa-solid fa-clock-rotate-left text-accent mr-2"></i>History
+        </h3>
+        <div id="water-history" class="space-y-2 max-h-64 overflow-y-auto"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ======================================================
-     VIEW: MOTIVATION HUB
-     ====================================================== -->
+<!-- ==================== VIEW: SLEEP TRACKER ==================== -->
+<div id="view-sleep" class="hidden space-y-6">
+  <div class="card p-6 anim-in">
+    <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">
+      <i class="fa-solid fa-moon text-accent mr-3"></i>Sleep Tracker
+    </h1>
+    <p class="text-muted text-sm">Good sleep = good life. Aim for 7-8 hours. 😴</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="card p-6 anim-in anim-in-1">
+        <h2 class="text-lg font-bold text-primary mb-4">
+          <i class="fa-solid fa-plus-circle text-accent mr-2"></i>Log Last Night's Sleep
+        </h2>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[10px] uppercase tracking-wide text-muted font-bold">Bedtime</label>
+            <input type="time" id="sleep-bedtime" class="w-full rounded-lg p-2.5 text-sm mt-1">
+          </div>
+          <div>
+            <label class="text-[10px] uppercase tracking-wide text-muted font-bold">Wake Time</label>
+            <input type="time" id="sleep-waketime" class="w-full rounded-lg p-2.5 text-sm mt-1">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="text-[10px] uppercase tracking-wide text-muted font-bold block mb-2">Quality</label>
+          <div class="flex gap-1" id="sleep-stars">
+            <span class="star" onclick="setSleepQuality(1)">★</span>
+            <span class="star" onclick="setSleepQuality(2)">★</span>
+            <span class="star" onclick="setSleepQuality(3)">★</span>
+            <span class="star" onclick="setSleepQuality(4)">★</span>
+            <span class="star" onclick="setSleepQuality(5)">★</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="text-[10px] uppercase tracking-wide text-muted font-bold">Notes (optional)</label>
+          <input type="text" id="sleep-note" placeholder="Dreams? Woke up at 3am?" class="w-full rounded-lg p-2.5 text-sm mt-1">
+        </div>
+
+        <div class="surface-2 p-3 rounded-lg mb-4 text-center">
+          <div class="text-[10px] text-muted uppercase font-bold">Calculated Hours</div>
+          <div id="sleep-hours-preview" class="text-2xl font-bold text-accent">—</div>
+        </div>
+
+        <button onclick="saveSleepEntry()" class="w-full btn-accent py-3 rounded-lg text-sm font-semibold">
+          <i class="fa-solid fa-floppy-disk mr-2"></i>Save Sleep Entry
+        </button>
+      </div>
+
+      <div class="card p-5 anim-in anim-in-2">
+        <h2 class="text-lg font-bold text-primary mb-3">
+          <i class="fa-solid fa-chart-line text-accent mr-2"></i>Sleep Hours (Last 7 Days)
+        </h2>
+        <div class="h-56"><canvas id="sleepChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="grid grid-cols-2 gap-3 anim-in anim-in-1">
+        <div class="card p-4 text-center">
+          <div class="text-[10px] text-muted uppercase font-bold">Avg (7 days)</div>
+          <div id="sleep-stat-avg" class="text-2xl font-bold text-accent mt-1">—</div>
+          <div class="text-[10px] text-muted">hours</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-[10px] text-muted uppercase font-bold">Avg Quality</div>
+          <div id="sleep-stat-quality" class="text-2xl font-bold text-accent mt-1">—</div>
+          <div class="text-[10px] text-muted">stars</div>
+        </div>
+      </div>
+
+      <div class="card p-5 anim-in anim-in-2">
+        <h3 class="font-bold text-primary mb-3">
+          <i class="fa-solid fa-list text-accent mr-2"></i>Recent Entries
+        </h3>
+        <div id="sleep-history" class="space-y-2 max-h-96 overflow-y-auto"></div>
+      </div>
+
+      <div class="card p-5 anim-in anim-in-3">
+        <h3 class="font-bold text-primary mb-3">
+          <i class="fa-solid fa-lightbulb text-accent mr-2"></i>Sleep Tips
+        </h3>
+        <ul class="text-sm text-muted space-y-2 list-disc list-inside">
+          <li>Sleep before 10 PM</li>
+          <li>No phone 1 hour before bed</li>
+          <li>Dark, cool room</li>
+          <li>No caffeine in the evening</li>
+          <li>Same bedtime every night</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== VIEW: WEIGHT LOG ==================== -->
+<div id="view-weight" class="hidden space-y-6">
+  <div class="card p-6 anim-in">
+    <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">
+      <i class="fa-solid fa-weight-scale text-accent mr-3"></i>Weight Log
+    </h1>
+    <p class="text-muted text-sm">Track your weight journey. Progress is progress! ⚖️</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="card p-6 anim-in anim-in-1">
+        <h2 class="text-lg font-bold text-primary mb-4">
+          <i class="fa-solid fa-plus-circle text-accent mr-2"></i>Add Weight Entry
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div>
+            <label class="text-[10px] uppercase tracking-wide text-muted font-bold">Weight (kg)</label>
+            <input type="number" id="weight-input" step="0.1" placeholder="e.g. 65.5" class="w-full rounded-lg p-2.5 text-sm mt-1">
+          </div>
+          <div>
+            <label class="text-[10px] uppercase tracking-wide text-muted font-bold">Date</label>
+            <input type="date" id="weight-date" class="w-full rounded-lg p-2.5 text-sm mt-1">
+          </div>
+          <div>
+            <label class="text-[10px] uppercase tracking-wide text-muted font-bold">Note</label>
+            <input type="text" id="weight-note" placeholder="Optional" class="w-full rounded-lg p-2.5 text-sm mt-1">
+          </div>
+        </div>
+        <button onclick="saveWeightEntry()" class="w-full btn-accent py-3 rounded-lg text-sm font-semibold">
+          <i class="fa-solid fa-plus mr-2"></i>Add Entry
+        </button>
+      </div>
+
+      <div class="card p-5 anim-in anim-in-2">
+        <h2 class="text-lg font-bold text-primary mb-3">
+          <i class="fa-solid fa-chart-line text-accent mr-2"></i>Weight Progress
+        </h2>
+        <div class="h-64"><canvas id="weightChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="grid grid-cols-2 gap-3 anim-in anim-in-1">
+        <div class="card p-4 text-center">
+          <div class="text-[10px] text-muted uppercase font-bold">Current</div>
+          <div id="weight-stat-current" class="text-2xl font-bold text-accent mt-1">—</div>
+          <div class="text-[10px] text-muted">kg</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-[10px] text-muted uppercase font-bold">Change</div>
+          <div id="weight-stat-change" class="text-2xl font-bold text-accent mt-1">—</div>
+          <div class="text-[10px] text-muted">kg total</div>
+        </div>
+      </div>
+
+      <div class="card p-5 anim-in anim-in-2">
+        <h3 class="font-bold text-primary mb-3">
+          <i class="fa-solid fa-bullseye text-accent mr-2"></i>Goal Weight (optional)
+        </h3>
+        <div class="flex gap-2">
+          <input type="number" id="weight-goal-input" step="0.1" placeholder="Target kg" class="flex-1 rounded-lg p-2.5 text-sm">
+          <button onclick="saveWeightGoal()" class="btn-accent px-4 rounded-lg text-xs font-semibold">Set</button>
+        </div>
+        <div id="weight-goal-display" class="mt-3 text-sm text-muted"></div>
+      </div>
+
+      <div class="card p-5 anim-in anim-in-3">
+        <h3 class="font-bold text-primary mb-3">
+          <i class="fa-solid fa-list text-accent mr-2"></i>History
+        </h3>
+        <div id="weight-history" class="space-y-2 max-h-96 overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== VIEW: NOTES ==================== -->
+<div id="view-notes" class="hidden space-y-6">
+  <div class="card p-6 anim-in">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-primary mb-1">
+          <i class="fa-solid fa-note-sticky text-accent mr-3"></i>Notes
+        </h1>
+        <p class="text-muted text-sm">Quick notes, ideas, thoughts. 📝</p>
+      </div>
+      <button onclick="openNoteModal()" class="btn-accent px-5 py-3 rounded-lg text-sm font-semibold">
+        <i class="fa-solid fa-plus mr-2"></i>New Note
+      </button>
+    </div>
+  </div>
+
+  <div class="card p-4 anim-in anim-in-1">
+    <div class="flex gap-2">
+      <div class="flex-1 relative">
+        <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+        <input type="search" id="notes-search" placeholder="Search notes..." oninput="renderNotesApp()"
+               class="w-full rounded-lg pl-9 pr-3 py-2.5 text-sm">
+      </div>
+      <select id="notes-sort" onchange="renderNotesApp()" class="rounded-lg px-3 py-2.5 text-sm">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="az">A - Z</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 anim-in anim-in-2"></div>
+
+  <div id="notes-empty" class="hidden text-center py-16">
+    <div class="w-20 h-20 rounded-full bg-accent-soft flex items-center justify-center text-accent text-3xl mx-auto mb-4">
+      <i class="fa-solid fa-note-sticky"></i>
+    </div>
+    <h3 class="text-lg font-bold text-primary mb-2">No notes yet</h3>
+    <p class="text-sm text-muted mb-4">Click "New Note" to create your first note.</p>
+    <button onclick="openNoteModal()" class="btn-accent px-5 py-2.5 rounded-lg text-sm font-semibold">
+      <i class="fa-solid fa-plus mr-2"></i>Create Note
+    </button>
+  </div>
+</div>
+
+<!-- ==================== VIEW: MOTIVATION ==================== -->
 <div id="view-motivation" class="hidden space-y-6">
   <div class="card p-6 anim-in">
     <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">
       <i class="fa-solid fa-fire text-accent mr-3"></i>Motivation Hub
     </h1>
-    <p class="text-muted text-sm">කලකිරුන වෙලාවට බලන්න, අහන්න, ඉගෙන ගන්න. 💪</p>
+    <p class="text-muted text-sm">When you feel down — watch, listen, learn. 💪</p>
   </div>
 
-  <!-- Speeches -->
   <div class="anim-in anim-in-1">
-    <h2 class="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-      <i class="fa-solid fa-microphone text-accent"></i>Motivational Speeches
-    </h2>
+    <h2 class="text-xl font-bold text-primary mb-3"><i class="fa-solid fa-microphone text-accent mr-2"></i>Speeches</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <a href="https://www.youtube.com/results?search_query=steve+jobs+stanford+commencement" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1e40af,#000);">
-          <i class="fa-solid fa-apple-whole"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Steve Jobs · Stay Hungry</div>
-          <div class="text-xs text-muted mt-1">Stanford Commencement 2005</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1e40af,#000);"><i class="fa-solid fa-apple-whole"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Steve Jobs · Stay Hungry</div><div class="text-xs text-muted mt-1">Stanford 2005</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=denzel+washington+fall+forward+speech" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#7c2d12,#000);">
-          <i class="fa-solid fa-dumbbell"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Denzel Washington · Fall Forward</div>
-          <div class="text-xs text-muted mt-1">Powerful Commencement Speech</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=denzel+washington+fall+forward" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#7c2d12,#000);"><i class="fa-solid fa-dumbbell"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Denzel Washington</div><div class="text-xs text-muted mt-1">Fall Forward</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=eric+thomas+motivation+speech" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#831843,#000);">
-          <i class="fa-solid fa-fire-flame-curved"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Eric Thomas · How Bad Do You Want It</div>
-          <div class="text-xs text-muted mt-1">The Voice of Motivation</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=eric+thomas+motivation" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#831843,#000);"><i class="fa-solid fa-fire-flame-curved"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Eric Thomas</div><div class="text-xs text-muted mt-1">How Bad Do You Want It</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=rocky+balboa+speech+inspirational" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1c1917,#000);">
-          <i class="fa-solid fa-fist-raised"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Rocky Balboa · It Ain't About How Hard You Hit</div>
-          <div class="text-xs text-muted mt-1">Legendary Movie Speech</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=rocky+balboa+speech" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1c1917,#000);"><i class="fa-solid fa-fist-raised"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Rocky Balboa</div><div class="text-xs text-muted mt-1">Legendary Speech</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=alan+watts+motivation" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#134e4a,#000);">
-          <i class="fa-solid fa-brain"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Alan Watts · Life & Purpose</div>
-          <div class="text-xs text-muted mt-1">Deep Philosophy</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#134e4a,#000);"><i class="fa-solid fa-brain"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Alan Watts</div><div class="text-xs text-muted mt-1">Life & Purpose</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=simon+sinek+start+with+why" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#065f46,#000);">
-          <i class="fa-solid fa-lightbulb"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Simon Sinek · Start With Why</div>
-          <div class="text-xs text-muted mt-1">Purpose-Driven Life</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#065f46,#000);"><i class="fa-solid fa-lightbulb"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Simon Sinek</div><div class="text-xs text-muted mt-1">Start With Why</div></div>
       </a>
     </div>
   </div>
 
-  <!-- Songs -->
   <div class="anim-in anim-in-2">
-    <h2 class="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-      <i class="fa-solid fa-music text-accent"></i>Motivational Songs
-    </h2>
+    <h2 class="text-xl font-bold text-primary mb-3"><i class="fa-solid fa-music text-accent mr-2"></i>Songs</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <a href="https://www.youtube.com/results?search_query=eye+of+the+tiger+survivor" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#dc2626,#000);">
-          <i class="fa-solid fa-music"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Eye of the Tiger</div>
-          <div class="text-xs text-muted mt-1">Survivor · Workout Anthem</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#dc2626,#000);"><i class="fa-solid fa-music"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Eye of the Tiger</div><div class="text-xs text-muted mt-1">Survivor</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=hall+of+fame+the+script" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#7c3aed,#000);">
-          <i class="fa-solid fa-trophy"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Hall of Fame</div>
-          <div class="text-xs text-muted mt-1">The Script · Dreams Big</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#7c3aed,#000);"><i class="fa-solid fa-trophy"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Hall of Fame</div><div class="text-xs text-muted mt-1">The Script</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=lose+yourself+eminem" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1e293b,#000);">
-          <i class="fa-solid fa-headphones"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Lose Yourself</div>
-          <div class="text-xs text-muted mt-1">Eminem · Focus Anthem</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1e293b,#000);"><i class="fa-solid fa-headphones"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Lose Yourself</div><div class="text-xs text-muted mt-1">Eminem</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=stronger+kanye+west" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#0891b2,#000);">
-          <i class="fa-solid fa-bolt"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Stronger</div>
-          <div class="text-xs text-muted mt-1">Kanye West · Rise Above</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#0891b2,#000);"><i class="fa-solid fa-bolt"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Stronger</div><div class="text-xs text-muted mt-1">Kanye West</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=until+i+collapse+eminem" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#be123c,#000);">
-          <i class="fa-solid fa-heart-pulse"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Till I Collapse</div>
-          <div class="text-xs text-muted mt-1">Eminem · Go Hard</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#be123c,#000);"><i class="fa-solid fa-heart-pulse"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Till I Collapse</div><div class="text-xs text-muted mt-1">Eminem</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=we+will+rock+you+queen" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#a16207,#000);">
-          <i class="fa-solid fa-guitar"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">We Will Rock You</div>
-          <div class="text-xs text-muted mt-1">Queen · Energy Boost</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#a16207,#000);"><i class="fa-solid fa-guitar"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">We Will Rock You</div><div class="text-xs text-muted mt-1">Queen</div></div>
       </a>
     </div>
   </div>
 
-  <!-- Videos -->
   <div class="anim-in anim-in-3">
-    <h2 class="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-      <i class="fa-solid fa-video text-accent"></i>Motivational Videos
-    </h2>
+    <h2 class="text-xl font-bold text-primary mb-3"><i class="fa-solid fa-video text-accent mr-2"></i>Videos</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <a href="https://www.youtube.com/results?search_query=best+motivational+video+2024" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1e40af,#831843);">
-          <i class="fa-solid fa-film"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Best Motivational Videos</div>
-          <div class="text-xs text-muted mt-1">Collection 2024-2025</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=best+motivational+video" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#1e40af,#831843);"><i class="fa-solid fa-film"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Best Motivational Videos</div><div class="text-xs text-muted mt-1">Collection</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=study+motivation+video" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#065f46,#0c4a6e);">
-          <i class="fa-solid fa-graduation-cap"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Study Motivation</div>
-          <div class="text-xs text-muted mt-1">Focus & Concentration</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=study+motivation" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#065f46,#0c4a6e);"><i class="fa-solid fa-graduation-cap"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Study Motivation</div><div class="text-xs text-muted mt-1">Focus</div></div>
       </a>
-
       <a href="https://www.youtube.com/results?search_query=gym+workout+motivation" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#7c2d12,#dc2626);">
-          <i class="fa-solid fa-dumbbell"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Workout Motivation</div>
-          <div class="text-xs text-muted mt-1">Gym & Fitness</div>
-        </div>
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#7c2d12,#dc2626);"><i class="fa-solid fa-dumbbell"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Workout Motivation</div><div class="text-xs text-muted mt-1">Gym</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=srilanka+motivation+sinhala" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#991b1b,#000);">
-          <i class="fa-solid fa-flag"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">සිංහල Motivation</div>
-          <div class="text-xs text-muted mt-1">Sri Lankan speeches</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=success+mindset" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#6d28d9,#1e40af);"><i class="fa-solid fa-brain"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Success Mindset</div><div class="text-xs text-muted mt-1">Growth</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=buddhist+motivation+sinhala" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#a16207,#000);">
-          <i class="fa-solid fa-dharmachakra"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">බෞද්ධ දේශනා</div>
-          <div class="text-xs text-muted mt-1">Buddhist motivation</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=discipline+motivation" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#0f172a,#334155);"><i class="fa-solid fa-bullseye"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Discipline Motivation</div><div class="text-xs text-muted mt-1">Consistency</div></div>
       </a>
-
-      <a href="https://www.youtube.com/results?search_query=success+mindset+motivation" target="_blank" class="motiv-card">
-        <div class="motiv-thumb" style="background: linear-gradient(135deg,#6d28d9,#1e40af);">
-          <i class="fa-solid fa-brain"></i>
-          <div class="motiv-play"><i class="fa-solid fa-play"></i></div>
-        </div>
-        <div class="motiv-body">
-          <div class="text-sm font-bold text-primary">Success Mindset</div>
-          <div class="text-xs text-muted mt-1">Growth & Abundance</div>
-        </div>
+      <a href="https://www.youtube.com/results?search_query=life+transformation+motivation" target="_blank" class="motiv-card">
+        <div class="motiv-thumb" style="background: linear-gradient(135deg,#be185d,#000);"><i class="fa-solid fa-star"></i><div class="motiv-play"><i class="fa-solid fa-play"></i></div></div>
+        <div class="motiv-body"><div class="text-sm font-bold text-primary">Life Transformation</div><div class="text-xs text-muted mt-1">Change</div></div>
       </a>
-    </div>
-  </div>
-
-  <div class="card p-5 anim-in" style="border-color: var(--accent);">
-    <div class="flex items-center gap-3">
-      <i class="fa-solid fa-circle-info text-accent text-xl"></i>
-      <p class="text-sm text-muted">
-        🎵 හැම card එකක්ම YouTube එකට යන link එකක්. ඔබන්නකොට YouTube app එකේ හෝ browser එකේ open වෙයි.
-      </p>
     </div>
   </div>
 </div>
 
-<!-- ======================================================
-     VIEW: AI COACH (CHATBOT)
-     ====================================================== -->
+<!-- ==================== VIEW: CHATBOT ==================== -->
 <div id="view-chatbot" class="hidden">
   <div class="card p-6 anim-in">
     <div class="flex items-center gap-3 mb-4">
@@ -911,7 +946,7 @@
       </div>
       <div>
         <h1 class="text-xl md:text-2xl font-bold text-primary">AI Coach</h1>
-        <p class="text-xs text-muted">ඔයාගේ daily routine එකට උදව් කරන්න මම මෙතන ඉන්නවා 💙</p>
+        <p class="text-xs text-muted">Ask anything — I'll help with your daily routine 💙</p>
       </div>
     </div>
 
@@ -919,16 +954,15 @@
 
     <div class="flex gap-2 flex-wrap my-3" id="quick-chips">
       <button class="quick-chip" onclick="quickAsk('How to wake up early?')">🌅 Wake up early</button>
-      <button class="quick-chip" onclick="quickAsk('How to stay consistent?')">🔥 Stay consistent</button>
+      <button class="quick-chip" onclick="quickAsk('How to stay consistent?')">🔥 Consistency</button>
       <button class="quick-chip" onclick="quickAsk('How to focus while studying?')">📚 Study focus</button>
-      <button class="quick-chip" onclick="quickAsk('I feel lazy today')">😴 I feel lazy</button>
-      <button class="quick-chip" onclick="quickAsk('How to control phone usage?')">📱 Phone control</button>
-      <button class="quick-chip" onclick="quickAsk('Motivate me')">💪 Motivate me</button>
+      <button class="quick-chip" onclick="quickAsk('I feel lazy today')">😴 Laziness</button>
+      <button class="quick-chip" onclick="quickAsk('How to control phone usage?')">📱 Phone</button>
+      <button class="quick-chip" onclick="quickAsk('Motivate me')">💪 Motivate</button>
     </div>
 
     <div class="flex gap-2">
-      <input type="text" id="chat-input" placeholder="Type your question in Sinhala or English..."
-             class="flex-1 rounded-lg p-3 text-sm" onkeydown="if(event.key==='Enter') sendChat()">
+      <input type="text" id="chat-input" placeholder="Ask anything (English or Sinhala)..." class="flex-1 rounded-lg p-3 text-sm" onkeydown="if(event.key==='Enter') sendChat()">
       <button onclick="sendChat()" class="btn-accent px-5 rounded-lg text-sm font-semibold">
         <i class="fa-solid fa-paper-plane"></i>
       </button>
@@ -939,9 +973,50 @@
   </div>
 </div>
 
-<!-- ======================================================
-     VIEW: ABOUT
-     ====================================================== -->
+<!-- ==================== VIEW: GUIDE ==================== -->
+<div id="view-guide" class="hidden space-y-6">
+  <div class="card p-6 anim-in">
+    <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">
+      <i class="fa-solid fa-book-open text-accent mr-3"></i>User Guide
+    </h1>
+    <p class="text-muted text-sm">Learn how to use this app step by step. 👑</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-droplet text-accent mr-2"></i>Water Tracker</h3><p class="text-sm text-muted">Go to Sidebar → Water Tracker. Tap the glass icons or "Add 1 Glass". Goal is 8 per day.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-moon text-accent mr-2"></i>Sleep Tracker</h3><p class="text-sm text-muted">Enter bedtime and wake time, save. Add a quality rating with the stars.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-weight-scale text-accent mr-2"></i>Weight Log</h3><p class="text-sm text-muted">Add your weight. See progress on the chart. Set a goal weight if you want.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-note-sticky text-accent mr-2"></i>Notes</h3><p class="text-sm text-muted">Click "New Note". You can search, sort, and edit notes anytime.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-robot text-accent mr-2"></i>AI Coach</h3><p class="text-sm text-muted">Ask questions about daily life, habits, focus, motivation. Works in English and Sinhala.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-fire text-accent mr-2"></i>Motivation</h3><p class="text-sm text-muted">Watch speeches, listen to songs, and get inspired when you feel low.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-list-check text-accent mr-2"></i>Daily Routine</h3><p class="text-sm text-muted">Edit any schedule item with the pencil icon. Toggle habits, use the Pomodoro timer.</p></div>
+    <div class="card p-5 anim-in"><h3 class="font-bold text-primary mb-2"><i class="fa-brands fa-google-drive text-accent mr-2"></i>Backup</h3><p class="text-sm text-muted">Sign in with Google, then "Backup Now". Enable auto-backup for safe syncing every 5 minutes.</p></div>
+  </div>
+
+  <div class="card p-5 anim-in" style="border-color: var(--accent);">
+    <h3 class="font-bold text-accent mb-3"><i class="fa-solid fa-keyboard mr-2"></i>Keyboard Shortcuts</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
+        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">T</kbd>
+        <span class="text-primary">Toggle theme</span>
+      </div>
+      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
+        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">1</kbd>
+        <span class="text-primary">Daily Routine tab</span>
+      </div>
+      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
+        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">2</kbd>
+        <span class="text-primary">Weekly Review tab</span>
+      </div>
+      <div class="surface-2 p-3 rounded-lg flex items-center gap-3">
+        <kbd class="px-2 py-1 rounded bg-black/30 text-xs font-bold text-accent">Space</kbd>
+        <span class="text-primary">Pomodoro Start/Pause</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== VIEW: ABOUT ==================== -->
 <div id="view-about" class="hidden space-y-6">
   <div class="card p-8 anim-in text-center">
     <div class="w-24 h-24 rounded-full bg-accent-soft flex items-center justify-center text-accent text-4xl mx-auto mb-4">
@@ -953,73 +1028,58 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div class="card p-6 anim-in anim-in-1">
-      <h3 class="text-lg font-bold text-primary mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-star text-accent"></i>Features
-      </h3>
+      <h3 class="text-lg font-bold text-primary mb-3"><i class="fa-solid fa-star text-accent mr-2"></i>Features</h3>
       <ul class="space-y-2 text-sm text-muted">
         <li>✅ Editable daily schedule</li>
-        <li>✅ 6 habit tracking (daily + weekly)</li>
-        <li>✅ Pomodoro focus timer</li>
-        <li>✅ Motivation hub (speeches, songs, videos)</li>
-        <li>✅ AI Coach chatbot (offline)</li>
-        <li>✅ Google Drive cloud backup</li>
-        <li>✅ Multi-user support</li>
-        <li>✅ Dark / Light theme</li>
-        <li>✅ 8 accent colors</li>
-        <li>✅ Confetti celebrations</li>
+        <li>✅ Habit tracking (daily + weekly)</li>
+        <li>✅ Pomodoro timer</li>
+        <li>✅ Water tracker</li>
+        <li>✅ Sleep tracker</li>
+        <li>✅ Weight log</li>
+        <li>✅ Notes app</li>
+        <li>✅ Motivation hub</li>
+        <li>✅ AI Coach (bilingual)</li>
+        <li>✅ Google Drive backup</li>
       </ul>
     </div>
-
     <div class="card p-6 anim-in anim-in-2">
-      <h3 class="text-lg font-bold text-primary mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-lock text-accent"></i>Privacy
-      </h3>
+      <h3 class="text-lg font-bold text-primary mb-3"><i class="fa-solid fa-lock text-accent mr-2"></i>Privacy</h3>
       <ul class="space-y-2 text-sm text-muted">
         <li>🔒 Data stored locally on your device</li>
         <li>☁️ Backups only in YOUR Google Drive</li>
         <li>👤 Only you can see your data</li>
-        <li>🚫 No ads, no tracking, no analytics</li>
-        <li>💯 100% free and open</li>
-      </ul>
-    </div>
-
-    <div class="card p-6 anim-in anim-in-3">
-      <h3 class="text-lg font-bold text-primary mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-circle-check text-accent"></i>Tech Stack
-      </h3>
-      <div class="flex flex-wrap gap-2">
-        <span class="px-3 py-1 rounded-full text-xs font-semibold surface-2 text-primary">HTML5</span>
-        <span class="px-3 py-1 rounded-full text-xs font-semibold surface-2 text-primary">Tailwind CSS</span>
-        <span class="px-3 py-1 rounded-full text-xs font-semibold surface-2 text-primary">JavaScript</span>
-        <span class="px-3 py-1 rounded-full text-xs font-semibold surface-2 text-primary">Chart.js</span>
-        <span class="px-3 py-1 rounded-full text-xs font-semibold surface-2 text-primary">Google OAuth 2.0</span>
-        <span class="px-3 py-1 rounded-full text-xs font-semibold surface-2 text-primary">Drive API</span>
-      </div>
-    </div>
-
-    <div class="card p-6 anim-in anim-in-4">
-      <h3 class="text-lg font-bold text-primary mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-crown text-accent"></i>Golden Rules
-      </h3>
-      <ul class="space-y-2 text-sm text-muted">
-        <li>1️⃣ Progress over perfection</li>
-        <li>2️⃣ Don't miss twice in a row</li>
-        <li>3️⃣ Small steps create big results</li>
-        <li>4️⃣ Protect your sleep</li>
-        <li>5️⃣ You're doing better than you think!</li>
+        <li>🚫 No ads, no tracking</li>
+        <li>💯 100% free</li>
       </ul>
     </div>
   </div>
 
-  <div class="text-center py-4 text-sm text-muted anim-in">
-    Made with 💙 for you · v4.0 · Keep going, champion! 👑
+  <div class="text-center py-4 text-sm text-muted anim-in">Made with 💙 · v5.0 · Keep going, champion! 👑</div>
+</div>
+
+<!-- NOTE MODAL -->
+<div id="note-modal" class="modal-bg" onclick="if(event.target===this) closeNoteModal()">
+  <div class="modal-content p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 id="note-modal-title" class="text-lg font-bold text-primary">New Note</h3>
+      <button onclick="closeNoteModal()" class="btn-ghost w-9 h-9 rounded-lg flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <input type="text" id="note-title-input" placeholder="Title" class="w-full rounded-lg p-3 text-sm mb-3">
+    <textarea id="note-content-input" rows="8" placeholder="Write your note here..." class="w-full rounded-lg p-3 text-sm mb-3"></textarea>
+    <div class="flex gap-2">
+      <button onclick="saveNoteFromModal()" class="btn-accent flex-1 py-2.5 rounded-lg text-sm font-semibold">
+        <i class="fa-solid fa-floppy-disk mr-1"></i>Save
+      </button>
+      <button id="note-delete-btn" onclick="deleteNoteFromModal()" class="btn-ghost px-4 py-2.5 rounded-lg text-sm font-semibold" style="color:#f43f5e; display:none;">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
-/* ============================================================
-   GOOGLE CLIENT ID
-   ============================================================ */
 const GOOGLE_CLIENT_ID = "931375707752-6nlkq1vc0mr6cqjca5me44vk1h4klsgg.apps.googleusercontent.com";
 const SCOPES = [
   "https://www.googleapis.com/auth/drive.file",
@@ -1030,9 +1090,6 @@ const SCOPES = [
 const BACKUP_FILENAME = "life-tracker-backup.json";
 const BACKUP_DESCRIPTION = "Life Transformation Tracker auto-backup";
 
-/* ============================================================
-   DATA
-   ============================================================ */
 const DEFAULT_SCHEDULE = [
   { start:"05:30", end:"06:00", title:"Wake Up & Hydrate",        desc:"No phone first 30 mins",       icon:"fa-sun",          color:"text-amber-400" },
   { start:"06:00", end:"07:00", title:"Exercise / Workout",       desc:"Physical fitness & movement",  icon:"fa-dumbbell",     color:"text-emerald-400" },
@@ -1101,15 +1158,20 @@ const ACCENTS = {
 };
 
 const K = {
-  schedule:"ltt_schedule_v4", checklist:"ltt_checklist_v4", matrix:"ltt_matrix_v4",
-  notes:"ltt_notes_v4", review:"ltt_review_v4",
-  quote:"ltt_quote_date_v4", streak:"ltt_streak_v4",
-  lastFull:"ltt_last_full_v4",
-  lastBackup:"ltt_last_backup_v4", autoBackup:"ltt_auto_backup_v4",
-  driveFileId:"ltt_drive_file_id_v4",
-  themeGlobal:"ltt_theme_global_v4",
-  accentGlobal:"ltt_accent_global_v4",
-  chatHistory:"ltt_chat_history_v4"
+  schedule:"ltt_schedule_v6", checklist:"ltt_checklist_v6", matrix:"ltt_matrix_v6",
+  notes:"ltt_notes_v6", review:"ltt_review_v6",
+  quote:"ltt_quote_date_v6", streak:"ltt_streak_v6",
+  lastFull:"ltt_last_full_v6",
+  lastBackup:"ltt_last_backup_v6", autoBackup:"ltt_auto_backup_v6",
+  driveFileId:"ltt_drive_file_id_v6",
+  themeGlobal:"ltt_theme_global_v6",
+  accentGlobal:"ltt_accent_global_v6",
+  chatHistory:"ltt_chat_history_v6",
+  water:"ltt_water_v6",
+  sleep:"ltt_sleep_v6",
+  weight:"ltt_weight_v6",
+  weightGoal:"ltt_weight_goal_v6",
+  notesApp:"ltt_notes_app_v6"
 };
 const GLOBAL_KEYS = [K.themeGlobal, K.accentGlobal];
 const USER_KEYS = Object.values(K).filter(k => !GLOBAL_KEYS.includes(k));
@@ -1118,7 +1180,13 @@ let scheduleData = [];
 let editingIndex = null;
 let habitChartInstance = null;
 let balanceChartInstance = null;
+let waterChartInstance = null;
+let sleepChartInstance = null;
+let weightChartInstance = null;
 let chartsInitialized = false;
+let waterChartInitialized = false;
+let sleepChartInitialized = false;
+let weightChartInitialized = false;
 let tokenClient = null;
 let accessToken = null;
 let currentUser = null;
@@ -1127,10 +1195,9 @@ let autoBackupTimer = null;
 let dataDirty = false;
 let currentNamespace = "guest";
 let currentView = "dashboard";
+let editingNoteId = null;
+let pendingSleepQuality = 0;
 
-/* ============================================================
-   NAMESPACE HELPERS
-   ============================================================ */
 function nsKeyFor(user){
   const id = user && user.email ? user.email.toLowerCase() : "guest";
   return "ltt_ns_" + id.replace(/[^a-z0-9]/g, "_");
@@ -1163,7 +1230,7 @@ function collectAllData(){
     const v = localStorage.getItem(key);
     if(v !== null) data[key] = v;
   });
-  data._meta = { version: 4, owner: currentNamespace, exportedAt: new Date().toISOString() };
+  data._meta = { version: 6, owner: currentNamespace, exportedAt: new Date().toISOString() };
   return data;
 }
 function applyAllData(data){
@@ -1196,9 +1263,6 @@ function timeAgo(ts){
   return `${Math.floor(s/86400)} days ago`;
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initAccentPicker();
@@ -1207,6 +1271,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(highlightCurrentActivity, 30000);
   renderPomodoro();
   initChat();
+  const wd = document.getElementById("weight-date");
+  if(wd) wd.value = todayKey();
 
   const cachedToken = localStorage.getItem("ltt_token");
   const cachedExp = parseInt(localStorage.getItem("ltt_token_exp") || "0", 10);
@@ -1231,6 +1297,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   waitForGoogleAndInit();
+
+  ["sleep-bedtime","sleep-waketime"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener("change", updateSleepHoursPreview);
+  });
 });
 
 function loadAllViews(){
@@ -1241,6 +1312,10 @@ function loadAllViews(){
   loadSavedData();
   initQuote();
   updateStreak();
+  renderWaterTracker();
+  renderSleepTracker();
+  renderWeightTracker();
+  renderNotesApp();
   updateBackupStatus(parseInt(localStorage.getItem(K.lastBackup) || "0", 10));
   const autoOn = localStorage.getItem(K.autoBackup) === "true";
   const cb = document.getElementById("auto-backup-toggle");
@@ -1252,74 +1327,47 @@ function loadAllViews(){
 }
 function showSigninWall(){
   document.getElementById("signin-wall").classList.remove("hidden");
-  document.getElementById("view-dashboard").classList.add("hidden");
-  document.getElementById("view-guide").classList.add("hidden");
-  document.getElementById("view-motivation").classList.add("hidden");
-  document.getElementById("view-chatbot").classList.add("hidden");
-  document.getElementById("view-about").classList.add("hidden");
-}
-function hideSigninWall(){
-  document.getElementById("signin-wall").classList.add("hidden");
-}
-
-/* ============================================================
-   SIDEBAR / VIEW SWITCHING
-   ============================================================ */
-function toggleSidebar(){
-  const sb = document.getElementById("sidebar");
-  const ov = document.getElementById("sidebar-overlay");
-  sb.classList.toggle("open");
-  ov.classList.toggle("open");
-}
-
-function switchView(view){
-  currentView = view;
-  // Hide all
-  ["dashboard","guide","motivation","chatbot","about"].forEach(v => {
+  ["dashboard","water","sleep","weight","notes","motivation","chatbot","guide","about"].forEach(v => {
     const el = document.getElementById("view-" + v);
     if(el) el.classList.add("hidden");
   });
-  // Show selected
+}
+function hideSigninWall(){ document.getElementById("signin-wall").classList.add("hidden"); }
+
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("sidebar-overlay").classList.toggle("open");
+}
+function switchView(view){
+  currentView = view;
+  ["dashboard","water","sleep","weight","notes","motivation","chatbot","guide","about"].forEach(v => {
+    const el = document.getElementById("view-" + v);
+    if(el) el.classList.add("hidden");
+  });
   const target = document.getElementById("view-" + view);
   if(target) target.classList.remove("hidden");
-  // Update nav active state
   document.querySelectorAll(".side-item").forEach(el => {
     el.classList.toggle("active", el.dataset.nav === view);
   });
-  // Close sidebar
   document.getElementById("sidebar").classList.remove("open");
   document.getElementById("sidebar-overlay").classList.remove("open");
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: "smooth" });
-  // If chatbot opened, scroll chat to bottom
+
+  if(view === "water" && !waterChartInitialized){ renderWaterChart(); waterChartInitialized = true; }
+  if(view === "water" && waterChartInitialized) updateWaterChart();
+  if(view === "sleep" && !sleepChartInitialized){ renderSleepChart(); sleepChartInitialized = true; }
+  if(view === "sleep" && sleepChartInitialized) updateSleepChart();
+  if(view === "weight" && !weightChartInitialized){ renderWeightChart(); weightChartInitialized = true; }
+  if(view === "weight" && weightChartInitialized) updateWeightChart();
   if(view === "chatbot"){
-    setTimeout(() => {
-      const c = document.getElementById("chat-container");
-      if(c) c.scrollTop = c.scrollHeight;
-    }, 100);
+    setTimeout(() => { const c = document.getElementById("chat-container"); if(c) c.scrollTop = c.scrollHeight; }, 100);
   }
 }
 
-/* ============================================================
-   SIGN-IN CHECK
-   ============================================================ */
-function requireSignIn(){
-  if(!currentUser || !accessToken){
-    showToast("Please sign in first.", "warn");
-    return false;
-  }
-  return true;
-}
-
-/* ============================================================
-   GOOGLE AUTH
-   ============================================================ */
+/* ============ AUTH ============ */
 function waitForGoogleAndInit(){
-  if(window.google && google.accounts && google.accounts.oauth2){
-    initGoogleAuth();
-  } else {
-    setTimeout(waitForGoogleAndInit, 200);
-  }
+  if(window.google && google.accounts && google.accounts.oauth2){ initGoogleAuth(); }
+  else { setTimeout(waitForGoogleAndInit, 200); }
 }
 function initGoogleAuth(){
   try {
@@ -1335,58 +1383,45 @@ function initGoogleAuth(){
         await fetchUserInfo();
         await afterSignIn();
       },
-      error_callback: (err) => {
-        console.warn("Google auth error:", err);
-        showToast("⚠️ Google auth error.", "error");
-      }
+      error_callback: (err) => { console.warn(err); showToast("⚠️ Auth error", "error"); }
     });
-  } catch(e){
-    console.warn("Google init failed", e);
-  }
+  } catch(e){ console.warn(e); }
 }
 function requestToken(prompt=""){
-  if(!tokenClient){ showToast("⚠️ Google auth not ready yet.", "warn"); return; }
+  if(!tokenClient){ showToast("⚠️ Not ready yet.", "warn"); return; }
   tokenClient.requestAccessToken({ prompt });
 }
 async function fetchUserInfo(){
   try {
-    const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: "Bearer " + accessToken }
-    });
-    if(!r.ok) throw new Error("userinfo failed");
+    const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", { headers: { Authorization: "Bearer " + accessToken } });
+    if(!r.ok) throw new Error("failed");
     currentUser = await r.json();
     localStorage.setItem("ltt_user", JSON.stringify(currentUser));
   } catch(e){
-    console.warn(e);
     currentUser = { name:"User", email:"unknown@user", picture:"", given_name:"User" };
   }
 }
 async function afterSignIn(){
   const newNs = currentUser.email.toLowerCase();
   const previousNs = currentNamespace;
-
-  if(previousNs && previousNs !== "guest" && previousNs !== newNs){
-    saveToNamespace();
-  }
-
+  if(previousNs && previousNs !== "guest" && previousNs !== newNs) saveToNamespace();
   const hasLocalData = localStorage.getItem(nsKeyFor(currentUser)) !== null;
   currentNamespace = newNs;
   localStorage.setItem("ltt_ns", newNs);
-
   if(hasLocalData){
     loadFromNamespace(newNs);
     hideSigninWall();
     loadAllViews();
     updateAuthUI();
-    switchView("dashboard");
-    showToast("✅ Welcome back, " + (currentUser.given_name || "friend") + "!", "success");
+    showView("dashboard");
+    showToast("✅ Welcome back!", "success");
   } else {
     hideSigninWall();
     USER_KEYS.forEach(k => localStorage.removeItem(k));
     loadAllViews();
     updateAuthUI();
-    switchView("dashboard");
-    showToast("👋 Signed in as " + (currentUser.given_name || "friend"), "success");
+    showView("dashboard");
+    showToast("👋 Signed in!", "success");
     setTimeout(() => autoRestoreFromDrive(), 500);
   }
 }
@@ -1396,18 +1431,11 @@ async function autoRestoreFromDrive(){
     const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
     if(!r.ok) return;
     const found = await r.json();
-    if(!found.files || !found.files.length){
-      setTimeout(() => showToast("🎉 Welcome! Your data will sync to your Drive.", "success"), 600);
-      return;
-    }
+    if(!found.files || !found.files.length){ setTimeout(() => showToast("🎉 Welcome!", "success"), 600); return; }
     const fileId = found.files[0].id;
     localStorage.setItem(K.driveFileId, fileId);
-    setTimeout(() => {
-      if(confirm("☁️ We found an existing backup in your Google Drive.\n\nRestore it to this device?")){
-        restoreFromDrive();
-      }
-    }, 700);
-  } catch(e){ console.warn("Auto-restore check failed:", e); }
+    setTimeout(() => { if(confirm("☁️ Found existing backup. Restore it?")) restoreFromDrive(); }, 700);
+  } catch(e){ console.warn(e); }
 }
 async function updateAuthUI(){
   const authC = document.getElementById("auth-container");
@@ -1417,7 +1445,7 @@ async function updateAuthUI(){
     userI.classList.remove("hidden");
     userI.classList.add("flex");
     document.getElementById("user-avatar").src = currentUser.picture || "";
-    document.getElementById("user-name").textContent = currentUser.given_name || currentUser.name || "User";
+    document.getElementById("user-name").textContent = currentUser.given_name || "User";
     document.getElementById("menu-user-name").textContent = currentUser.name || "User";
     document.getElementById("menu-user-email").textContent = currentUser.email || "";
   } else {
@@ -1426,152 +1454,96 @@ async function updateAuthUI(){
     userI.classList.remove("flex");
   }
 }
-function toggleUserMenu(e){
-  e.stopPropagation();
-  document.getElementById("user-menu").classList.toggle("open");
-}
-document.addEventListener("click", () => {
-  const m = document.getElementById("user-menu");
-  if(m) m.classList.remove("open");
-});
+function toggleUserMenu(e){ e.stopPropagation(); document.getElementById("user-menu").classList.toggle("open"); }
+document.addEventListener("click", () => { const m = document.getElementById("user-menu"); if(m) m.classList.remove("open"); });
 function switchAccount(){
   document.getElementById("user-menu").classList.remove("open");
   saveToNamespace();
-  if(accessToken && window.google){ google.accounts.oauth2.revoke(accessToken, () => {}); }
+  if(accessToken && window.google) google.accounts.oauth2.revoke(accessToken, () => {});
   accessToken = null; currentUser = null; tokenExpiresAt = 0;
-  localStorage.removeItem("ltt_token");
-  localStorage.removeItem("ltt_token_exp");
-  localStorage.removeItem("ltt_user");
-  localStorage.removeItem("ltt_ns");
+  ["ltt_token","ltt_token_exp","ltt_user","ltt_ns"].forEach(k => localStorage.removeItem(k));
   setTimeout(() => requestToken("select_account"), 300);
 }
 function signOut(){
   document.getElementById("user-menu").classList.remove("open");
   saveToNamespace();
-  if(accessToken && window.google){ google.accounts.oauth2.revoke(accessToken, () => {}); }
+  if(accessToken && window.google) google.accounts.oauth2.revoke(accessToken, () => {});
   accessToken = null; currentUser = null; tokenExpiresAt = 0;
-  localStorage.removeItem("ltt_token");
-  localStorage.removeItem("ltt_token_exp");
-  localStorage.removeItem("ltt_user");
-  localStorage.removeItem("ltt_ns");
+  ["ltt_token","ltt_token_exp","ltt_user","ltt_ns"].forEach(k => localStorage.removeItem(k));
   if(autoBackupTimer){ clearInterval(autoBackupTimer); autoBackupTimer = null; }
   USER_KEYS.forEach(k => localStorage.removeItem(k));
   currentNamespace = "guest";
   updateAuthUI();
   showSigninWall();
-  showToast("👋 Signed out. Your data is safe.", "warn");
+  showToast("👋 Signed out", "warn");
 }
 
+/* ============ DRIVE ============ */
 async function backupToDrive(silent = false){
-  if(!accessToken){ if(!silent) showToast("Please sign in first.", "warn"); return; }
+  if(!accessToken){ if(!silent) showToast("Please sign in", "warn"); return; }
   try {
     if(!silent) showToast("☁️ Backing up...", "info");
     const data = collectAllData();
     const content = JSON.stringify(data, null, 2);
     let fileId = localStorage.getItem(K.driveFileId);
     if(!fileId){
-      const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
-      const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
-      if(!r.ok) throw new Error("Search failed");
-      const found = await r.json();
-      if(found.files && found.files.length){
-        fileId = found.files[0].id;
-        localStorage.setItem(K.driveFileId, fileId);
-      }
+      const s = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id)`, { headers:{ Authorization:"Bearer " + accessToken }});
+      if(s.ok){ const f = await s.json(); if(f.files && f.files.length){ fileId = f.files[0].id; localStorage.setItem(K.driveFileId, fileId); } }
     }
     const metadata = { name: BACKUP_FILENAME, description: BACKUP_DESCRIPTION, mimeType:"application/json" };
-    const boundary = "-------LTT_BOUNDARY_" + Date.now();
-    const body =
-      `--${boundary}\r\n` +
-      `Content-Type: application/json; charset=UTF-8\r\n\r\n` +
-      JSON.stringify(metadata) + `\r\n` +
-      `--${boundary}\r\n` +
-      `Content-Type: application/json\r\n\r\n` +
-      content + `\r\n` +
-      `--${boundary}--`;
-    let fileResponse;
+    const boundary = "-------LTT_" + Date.now();
+    const body = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n` + JSON.stringify(metadata) + `\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n` + content + `\r\n--${boundary}--`;
+    let resp;
     if(fileId){
-      fileResponse = await fetch(
-        `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
-        { method:"PATCH",
-          headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary },
-          body });
+      resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`, { method:"PATCH", headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary }, body });
     } else {
-      fileResponse = await fetch(
-        "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-        { method:"POST",
-          headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary },
-          body });
+      resp = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", { method:"POST", headers:{ Authorization:"Bearer " + accessToken, "Content-Type":"multipart/related; boundary=" + boundary }, body });
     }
-    if(!fileResponse.ok){ throw new Error("Upload failed"); }
-    const file = await fileResponse.json();
+    if(!resp.ok) throw new Error("Upload failed");
+    const file = await resp.json();
     if(!fileId && file.id) localStorage.setItem(K.driveFileId, file.id);
     const now = Date.now();
     localStorage.setItem(K.lastBackup, now);
     dataDirty = false;
     updateBackupStatus(now);
     if(!silent) showToast("☁️ Backup complete!", "success");
-  } catch(err){
-    console.error(err);
-    if(!silent) showToast("❌ Backup failed: " + err.message, "error");
-  }
+  } catch(err){ if(!silent) showToast("❌ " + err.message, "error"); }
 }
 async function restoreFromDrive(){
-  if(!accessToken){ showToast("Please sign in first.", "warn"); return; }
+  if(!accessToken){ showToast("Sign in first", "warn"); return; }
   try {
-    showToast("🔎 Searching Drive...", "info");
+    showToast("🔎 Searching...", "info");
     let fileId = localStorage.getItem(K.driveFileId);
     if(!fileId){
-      const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`;
-      const r = await fetch(searchUrl, { headers:{ Authorization:"Bearer " + accessToken }});
-      if(!r.ok) throw new Error("Search failed");
-      const found = await r.json();
-      if(found.files && found.files.length){
-        fileId = found.files[0].id;
-        localStorage.setItem(K.driveFileId, fileId);
-      }
+      const s = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(BACKUP_FILENAME)}' and trashed=false&spaces=drive&fields=files(id)`, { headers:{ Authorization:"Bearer " + accessToken }});
+      if(s.ok){ const f = await s.json(); if(f.files && f.files.length){ fileId = f.files[0].id; localStorage.setItem(K.driveFileId, fileId); } }
     }
-    if(!fileId){ showToast("📭 No backup found.", "warn"); return; }
-    const r = await fetch(
-      `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-      { headers:{ Authorization:"Bearer " + accessToken }});
+    if(!fileId){ showToast("📭 No backup", "warn"); return; }
+    const r = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, { headers:{ Authorization:"Bearer " + accessToken }});
     if(!r.ok) throw new Error("Download failed");
     const data = await r.json();
-    if(!confirm("⚠️ This will overwrite ALL current data. Continue?")) return;
+    if(!confirm("⚠️ Overwrite current data?")) return;
     applyAllData(data);
     saveToNamespace();
-    showToast("✅ Restored! Reloading...", "success");
+    showToast("✅ Restored!", "success");
     setTimeout(() => location.reload(), 900);
-  } catch(err){
-    console.error(err);
-    showToast("❌ Restore failed: " + err.message, "error");
-  }
+  } catch(err){ showToast("❌ " + err.message, "error"); }
 }
-function manualBackup(){
-  document.getElementById("user-menu").classList.remove("open");
-  backupToDrive(false);
-}
-function manualRestore(){
-  document.getElementById("user-menu").classList.remove("open");
-  restoreFromDrive();
-}
+function manualBackup(){ document.getElementById("user-menu").classList.remove("open"); backupToDrive(false); }
+function manualRestore(){ document.getElementById("user-menu").classList.remove("open"); restoreFromDrive(); }
 function updateBackupStatus(ts){
   const textEl = document.getElementById("backup-status-text");
   const timeEl = document.getElementById("backup-status-time");
   const iconEl = document.getElementById("backup-status-icon");
   if(!textEl) return;
   if(!ts){
-    textEl.textContent = "Not backed up yet";
-    timeEl.textContent = "—";
+    textEl.textContent = "Not backed up yet"; timeEl.textContent = "—";
     iconEl.innerHTML = '<i class="fa-solid fa-cloud"></i>';
-    iconEl.classList.remove("text-emerald-400");
-    iconEl.classList.add("text-accent");
+    iconEl.classList.remove("text-emerald-400"); iconEl.classList.add("text-accent");
   } else {
-    textEl.textContent = "Backup saved to Drive";
-    timeEl.textContent = "Last: " + timeAgo(ts);
+    textEl.textContent = "Backed up"; timeEl.textContent = "Last: " + timeAgo(ts);
     iconEl.innerHTML = '<i class="fa-solid fa-cloud-check"></i>';
-    iconEl.classList.remove("text-accent");
-    iconEl.classList.add("text-emerald-400");
+    iconEl.classList.remove("text-accent"); iconEl.classList.add("text-emerald-400");
   }
 }
 function toggleAutoBackup(on){
@@ -1580,14 +1552,12 @@ function toggleAutoBackup(on){
   if(on && accessToken){
     autoBackupTimer = setInterval(() => { if(dataDirty && accessToken) backupToDrive(true); }, 5*60*1000);
     showToast("🔄 Auto-backup enabled", "success");
-  } else if(on){ showToast("Sign in to enable auto-backup", "warn"); }
-  else { showToast("Auto-backup disabled", "warn"); }
+  } else if(on){ showToast("Sign in to enable", "warn"); }
+  else showToast("Auto-backup off", "warn");
 }
 function markDirty(){ dataDirty = true; }
 
-/* ============================================================
-   THEME & ACCENT
-   ============================================================ */
+/* ============ THEME / ACCENT / TOAST ============ */
 function initTheme(){
   const saved = localStorage.getItem(K.themeGlobal) || "dark";
   document.body.classList.toggle("light", saved === "light");
@@ -1598,7 +1568,7 @@ function toggleTheme(){
   localStorage.setItem(K.themeGlobal, isLight ? "light" : "dark");
   updateThemeIcon();
   if(chartsInitialized) updateChartsTheme();
-  showToast(isLight ? "☀️ Light mode" : "🌙 Dark mode");
+  showToast(isLight ? "☀️ Light" : "🌙 Dark");
 }
 function updateThemeIcon(){
   const light = document.body.classList.contains("light");
@@ -1609,8 +1579,7 @@ function initAccentPicker(){
   const picker = document.getElementById("accent-picker");
   if(!picker) return;
   picker.innerHTML = Object.entries(ACCENTS).map(([name, a]) =>
-    `<div class="accent-dot ${localStorage.getItem(K.accentGlobal) === name || (!localStorage.getItem(K.accentGlobal) && name === "sky") ? "active" : ""}"
-      data-accent="${name}" style="background:${a.c}" onclick="applyAccent('${name}')" title="${name}"></div>`
+    `<div class="accent-dot ${localStorage.getItem(K.accentGlobal) === name || (!localStorage.getItem(K.accentGlobal) && name === "sky") ? "active" : ""}" data-accent="${name}" style="background:${a.c}" onclick="applyAccent('${name}')"></div>`
   ).join("");
   applyAccent(localStorage.getItem(K.accentGlobal) || "sky", true);
 }
@@ -1621,7 +1590,7 @@ function applyAccent(name, silent){
   document.documentElement.style.setProperty("--accent-glow", a.g);
   localStorage.setItem(K.accentGlobal, name);
   document.querySelectorAll("[data-accent]").forEach(el => el.classList.toggle("active", el.dataset.accent === name));
-  if(!silent) showToast(`🎨 Accent: ${name}`, "success");
+  if(!silent) showToast(`🎨 ${name}`);
 }
 function showToast(msg, type="info"){
   const t = document.createElement("div");
@@ -1632,15 +1601,12 @@ function showToast(msg, type="info"){
   setTimeout(() => { t.classList.remove("show"); setTimeout(() => t.remove(), 400); }, 2800);
 }
 function updateLiveClock(){
-  const now = new Date();
   const t = document.getElementById("live-time");
   if(!t) return;
-  t.textContent = now.toLocaleTimeString("en-US", { hour12:false });
+  t.textContent = new Date().toLocaleTimeString("en-US", { hour12:false });
 }
 
-/* ============================================================
-   SCHEDULE
-   ============================================================ */
+/* ============ SCHEDULE ============ */
 function loadSchedule(){
   try{
     const raw = localStorage.getItem(K.schedule);
@@ -1648,16 +1614,11 @@ function loadSchedule(){
     scheduleData = Array.isArray(parsed) && parsed.length ? parsed : JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
   } catch { scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)); }
 }
-function saveSchedule(){
-  try{ localStorage.setItem(K.schedule, JSON.stringify(scheduleData)); markDirty(); saveToNamespace(); }catch{}
-}
+function saveSchedule(){ try{ localStorage.setItem(K.schedule, JSON.stringify(scheduleData)); markDirty(); saveToNamespace(); }catch{} }
 function renderSchedule(){
   const c = document.getElementById("schedule-container");
   if(!c) return;
-  if(!scheduleData.length){
-    c.innerHTML = `<div class="text-center text-xs text-muted py-8 border border-dashed rounded-lg" style="border-color:var(--border)">No activities. Click + to add.</div>`;
-    return;
-  }
+  if(!scheduleData.length){ c.innerHTML = `<div class="text-center text-xs text-muted py-8">No activities.</div>`; return; }
   c.innerHTML = scheduleData.map((it,i) => i === editingIndex ? editHTML(it,i) : itemHTML(it,i)).join("");
   highlightCurrentActivity();
 }
@@ -1672,42 +1633,39 @@ function itemHTML(item, idx){
     </div>
     <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
       <button onclick="editScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px]"><i class="fa-solid fa-pen"></i></button>
-      <button onclick="deleteScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px] hover:!text-rose-500"><i class="fa-solid fa-trash"></i></button>
+      <button onclick="deleteScheduleItem(${idx})" class="w-7 h-7 rounded-md btn-ghost flex items-center justify-center text-[11px]" style="color:#f43f5e;"><i class="fa-solid fa-trash"></i></button>
     </div>
   </div>`;
 }
 function editHTML(item, idx){
   const iconOpts = ICON_OPTIONS.map(o => `<option value="${o.v}" ${o.v===item.icon?"selected":""}>${o.l}</option>`).join("");
   const colorOpts = COLOR_OPTIONS.map(o => `<option value="${o.v}" ${o.v===item.color?"selected":""}>${o.l}</option>`).join("");
-  return `<div class="surface p-3 space-y-2 pop" style="border-color:var(--accent); box-shadow:0 0 20px var(--accent-soft);">
+  return `<div class="surface p-3 space-y-2 pop" style="border-color:var(--accent);">
     <div class="grid grid-cols-2 gap-2">
       <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Start</label>
         <input type="time" id="edit-start-${idx}" value="${escapeHtml(item.start)}" class="w-full rounded-md p-1.5 text-xs"></div>
       <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">End</label>
         <input type="time" id="edit-end-${idx}" value="${escapeHtml(item.end)}" class="w-full rounded-md p-1.5 text-xs"></div>
     </div>
-    <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Title</label>
+    <div><label class="text-[10px] text-muted font-semibold">Title</label>
       <input type="text" id="edit-title-${idx}" value="${escapeHtml(item.title)}" class="w-full rounded-md p-1.5 text-xs"></div>
-    <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Note</label>
+    <div><label class="text-[10px] text-muted font-semibold">Note</label>
       <input type="text" id="edit-desc-${idx}" value="${escapeHtml(item.desc)}" class="w-full rounded-md p-1.5 text-xs"></div>
     <div class="grid grid-cols-2 gap-2">
-      <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Icon</label>
-        <select id="edit-icon-${idx}" class="w-full rounded-md p-1.5 text-xs">${iconOpts}</select></div>
-      <div><label class="text-[10px] uppercase tracking-wide text-muted font-semibold">Colour</label>
-        <select id="edit-color-${idx}" class="w-full rounded-md p-1.5 text-xs">${colorOpts}</select></div>
+      <select id="edit-icon-${idx}" class="w-full rounded-md p-1.5 text-xs">${iconOpts}</select>
+      <select id="edit-color-${idx}" class="w-full rounded-md p-1.5 text-xs">${colorOpts}</select>
     </div>
     <div class="flex gap-2 pt-1">
-      <button onclick="saveScheduleItem(${idx})" class="flex-1 btn-accent text-xs font-semibold py-1.5 rounded-md"><i class="fa-solid fa-check mr-1"></i>Save</button>
+      <button onclick="saveScheduleItem(${idx})" class="flex-1 btn-accent text-xs font-semibold py-1.5 rounded-md">Save</button>
       <button onclick="cancelScheduleEdit()" class="flex-1 btn-ghost text-xs font-semibold py-1.5 rounded-md">Cancel</button>
     </div>
   </div>`;
 }
-function editScheduleItem(idx){ editingIndex = idx; renderSchedule(); const el = document.getElementById(`edit-title-${idx}`); if(el){ el.focus(); el.select(); } }
+function editScheduleItem(idx){ editingIndex = idx; renderSchedule(); }
 function addScheduleItem(){
   if(editingIndex !== null) return;
   scheduleData.push({ start:"", end:"", title:"", desc:"", icon:"fa-star", color:"text-sky-400", _isNew:true });
   editingIndex = scheduleData.length - 1; renderSchedule();
-  const el = document.getElementById(`edit-start-${editingIndex}`); if(el) el.focus();
 }
 function saveScheduleItem(idx){
   const s=document.getElementById(`edit-start-${idx}`), e=document.getElementById(`edit-end-${idx}`),
@@ -1717,22 +1675,21 @@ function saveScheduleItem(idx){
   scheduleData[idx] = { start:s.value||"", end:e?e.value:"", title:t.value.trim()||"Untitled",
     desc:d?d.value.trim():"", icon:i?i.value:"fa-star", color:c?c.value:"text-sky-400" };
   sortSchedule(); saveSchedule(); editingIndex = null; renderSchedule();
-  showToast("✅ Schedule updated", "success");
+  showToast("✅ Updated", "success");
 }
 function cancelScheduleEdit(){
   if(editingIndex !== null && scheduleData[editingIndex] && scheduleData[editingIndex]._isNew) scheduleData.splice(editingIndex, 1);
   editingIndex = null; renderSchedule();
 }
 function deleteScheduleItem(idx){
-  if(!confirm("Delete this item?")) return;
+  if(!confirm("Delete?")) return;
   scheduleData.splice(idx, 1); if(editingIndex === idx) editingIndex = null;
   saveSchedule(); renderSchedule(); showToast("🗑️ Removed", "warn");
 }
 function resetSchedule(){
-  if(!confirm("Reset to default schedule?")) return;
+  if(!confirm("Reset to default?")) return;
   scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
   editingIndex = null; saveSchedule(); renderSchedule();
-  showToast("🔄 Reset done");
 }
 function highlightCurrentActivity(){
   const now = new Date();
@@ -1750,20 +1707,15 @@ function highlightCurrentActivity(){
     }
   });
 }
-
-/* ============================================================
-   CHECKLIST / MATRIX / NOTES / STREAK
-   ============================================================ */
 function renderChecklist(){
   const c = document.getElementById("checklist-container");
   if(!c) return;
   const saved = JSON.parse(localStorage.getItem(K.checklist) || "{}");
   c.innerHTML = habitList.map(h => {
     const done = saved[h.id];
-    return `<label class="flex items-center gap-3 p-3 surface rounded-lg cursor-pointer hover:border-accent transition">
+    return `<label class="flex items-center gap-3 p-3 surface rounded-lg cursor-pointer">
       <input type="checkbox" onchange="toggleChecklist('${h.id}')" ${done?"checked":""} class="w-4 h-4 rounded cursor-pointer" style="accent-color: var(--accent)">
       <span class="text-sm font-medium ${done ? "line-through text-dim" : "text-primary"} flex-1">${h.name}</span>
-      ${done ? '<i class="fa-solid fa-check text-emerald-500 pop"></i>' : ''}
     </label>`;
   }).join("");
   calculateDailyProgress();
@@ -1786,7 +1738,7 @@ function calculateDailyProgress(){
     if(lastFull !== todayKey()){
       localStorage.setItem(K.lastFull, todayKey());
       markDirty(); saveToNamespace();
-      fireConfetti(); showToast("🎉 100% Complete!", "success"); updateStreak();
+      fireConfetti(); showToast("🎉 100%!", "success"); updateStreak();
     }
   }
 }
@@ -1796,8 +1748,7 @@ function updateStreak(){
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
   let streak = parseInt(localStorage.getItem(K.streak) || "0", 10);
   if(lastFull === today){ if(streak === 0) streak = 1; }
-  else if(lastFull === yesterday){ }
-  else { streak = 0; }
+  else if(lastFull !== yesterday){ streak = 0; }
   localStorage.setItem(K.streak, streak);
   const el = document.getElementById("streak-count");
   if(el) el.innerText = streak;
@@ -1810,7 +1761,7 @@ function renderMatrix(){
     const cells = days.map((_, idx) => {
       const st = (data[h.id] && data[h.id][idx]) || 0;
       const cls = st===1?"status-done":st===2?"status-partial":st===3?"status-missed":"status-unset";
-      return `<td class="p-1 text-center"><button onclick="cycleMatrixState('${h.id}',${idx})" class="w-6 h-6 rounded-full ${cls} transition-transform active:scale-90 inline-block"></button></td>`;
+      return `<td class="p-1 text-center"><button onclick="cycleMatrixState('${h.id}',${idx})" class="w-6 h-6 rounded-full ${cls} inline-block"></button></td>`;
     }).join("");
     return `<tr><td class="p-2 font-medium text-primary text-xs">${h.name}</td>${cells}</tr>`;
   }).join("");
@@ -1825,7 +1776,7 @@ function cycleMatrixState(id, di){
 }
 function saveNotes(){
   localStorage.setItem(K.notes, document.getElementById("daily-notes").value);
-  markDirty(); saveToNamespace(); showToast("📝 Note saved", "success");
+  markDirty(); saveToNamespace(); showToast("📝 Saved", "success");
 }
 function saveWeeklyReview(){
   localStorage.setItem(K.review, JSON.stringify({
@@ -1833,7 +1784,7 @@ function saveWeeklyReview(){
     mistake: document.getElementById("review-mistake").value,
     improve: document.getElementById("review-improve").value
   }));
-  markDirty(); saveToNamespace(); showToast("📊 Review saved", "success");
+  markDirty(); saveToNamespace(); showToast("📊 Saved", "success");
 }
 function loadSavedData(){
   const n = document.getElementById("daily-notes");
@@ -1865,9 +1816,6 @@ function newQuote(){
   setTimeout(() => { el.textContent = QUOTES[idx]; el.style.opacity = "1"; }, 200);
 }
 
-/* ============================================================
-   POMODORO
-   ============================================================ */
 let pomo = { total:25*60, left:25*60, running:false, mode:"work", timer:null };
 function renderPomodoro(){
   const m = Math.floor(pomo.left / 60), s = pomo.left % 60;
@@ -1886,8 +1834,8 @@ function togglePomodoro(){
       if(pomo.left <= 0){
         clearInterval(pomo.timer); pomo.running = false;
         const wasWork = pomo.mode === "work";
-        if(wasWork){ fireConfetti(); showToast("🍅 Work done!", "success"); }
-        else showToast("☕ Break over!", "warn");
+        if(wasWork){ fireConfetti(); showToast("🍅 Done!", "success"); }
+        else showToast("☕ Break over", "warn");
         setPomoMode(wasWork ? "break" : "work");
       }
       renderPomodoro();
@@ -1933,9 +1881,6 @@ function fireConfetti(){
   })();
 }
 
-/* ============================================================
-   TABS & CHARTS
-   ============================================================ */
 function switchTab(tab){
   const dv=document.getElementById("tab-content-daily"), wv=document.getElementById("tab-content-weekly"),
         bd=document.getElementById("tab-daily"), bw=document.getElementById("tab-weekly");
@@ -1959,8 +1904,7 @@ function initCharts(){
   const gridColor = document.body.classList.contains("light") ? "#e2e8f0" : "#1e293b";
   habitChartInstance = new Chart(document.getElementById("habitChart"), {
     type:"bar",
-    data:{ labels:habitList.map(h => h.name.split(" ")[0]),
-      datasets:[{ label:"%", data:calculateScores(), backgroundColor:accent, borderRadius:8 }] },
+    data:{ labels:habitList.map(h => h.name.split(" ")[0]), datasets:[{ label:"%", data:calculateScores(), backgroundColor:accent, borderRadius:8 }] },
     options:{ responsive:true, maintainAspectRatio:false,
       scales:{ y:{ beginAtZero:true, max:100, ticks:{color:textMuted}, grid:{color:gridColor} },
                x:{ ticks:{color:textMuted}, grid:{display:false} } },
@@ -1969,15 +1913,12 @@ function initCharts(){
   balanceChartInstance = new Chart(document.getElementById("balanceChart"), {
     type:"doughnut",
     data:{ labels:["Workout","Books","English","Skill","Money","Phone"],
-      datasets:[{ data:[70,60,55,50,45,80],
-        backgroundColor:[accent,"#4ade80","#c084fc","#fbbf24","#a855f7","#f43f5e"], borderWidth:0 }] },
+      datasets:[{ data:[70,60,55,50,45,80], backgroundColor:[accent,"#4ade80","#c084fc","#fbbf24","#a855f7","#f43f5e"], borderWidth:0 }] },
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ position:"bottom", labels:{color:textMuted, font:{size:10}, padding:12} } } }
   });
 }
-function updateCharts(){
-  if(habitChartInstance){ habitChartInstance.data.datasets[0].data = calculateScores(); habitChartInstance.update(); }
-}
+function updateCharts(){ if(habitChartInstance){ habitChartInstance.data.datasets[0].data = calculateScores(); habitChartInstance.update(); } }
 function updateChartsTheme(){
   if(!habitChartInstance) return;
   const accent = cssVar("--accent"), textMuted = cssVar("--text-muted");
@@ -1999,444 +1940,722 @@ function calculateScores(){
     return Math.round((pts / 7) * 100);
   });
 }
-function exportData(){
-  const data = collectAllData();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = `life-tracker-${todayKey()}.json`; a.click();
-  URL.revokeObjectURL(url);
-  showToast("💾 Downloaded", "success");
+
+/* ============ WATER ============ */
+function getWaterData(){ try{ return JSON.parse(localStorage.getItem(K.water) || "{}"); }catch{ return {}; } }
+function saveWaterData(data){ localStorage.setItem(K.water, JSON.stringify(data)); markDirty(); saveToNamespace(); }
+function getWaterToday(){ const d = getWaterData(); return d[todayKey()] || 0; }
+function setWaterToday(n){
+  const d = getWaterData();
+  if(n <= 0) delete d[todayKey()];
+  else d[todayKey()] = Math.min(n, 12);
+  saveWaterData(d); renderWaterTracker();
+  if(waterChartInitialized) updateWaterChart();
+  updateDashWater();
 }
-function importData(event){
-  const file = event.target.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try{
-      const data = JSON.parse(e.target.result);
-      applyAllData(data);
-      saveToNamespace();
-      showToast("📥 Imported! Reloading...", "success");
-      setTimeout(() => location.reload(), 800);
-    } catch { showToast("❌ Invalid file", "error"); }
-  };
-  reader.readAsText(file);
+function addWater(){ setWaterToday(getWaterToday() + 1); }
+function removeWater(){ setWaterToday(getWaterToday() - 1); }
+function resetWaterToday(){ if(confirm("Reset today's water count?")) setWaterToday(0); }
+function renderWaterTracker(){
+  const d = getWaterData();
+  const today = getWaterToday();
+  const glasses = document.getElementById("water-glasses-container");
+  if(glasses){
+    let html = "";
+    for(let i = 1; i <= 8; i++) html += `<div class="water-glass ${i <= today ? "filled" : ""}" onclick="toggleWaterGlass(${i})"></div>`;
+    glasses.innerHTML = html;
+  }
+  const tEl = document.getElementById("water-today-count");
+  if(tEl) tEl.innerText = today;
+  const bar = document.getElementById("water-progress");
+  if(bar) bar.style.width = Math.min((today/8)*100, 100) + "%";
+  const days7 = last7Days();
+  const values7 = days7.map(k => d[k] || 0);
+  const sum = values7.reduce((a,b)=>a+b, 0);
+  const t2 = document.getElementById("water-stat-today"); if(t2) t2.innerText = today;
+  const t3 = document.getElementById("water-stat-week"); if(t3) t3.innerText = (sum / 7).toFixed(1);
+  let streak = 0;
+  let check = new Date();
+  while(true){
+    const k = check.toISOString().slice(0,10);
+    if((d[k] || 0) >= 8){ streak++; check.setDate(check.getDate() - 1); }
+    else break;
+  }
+  const t4 = document.getElementById("water-stat-streak"); if(t4) t4.innerText = streak;
+  const hist = document.getElementById("water-history");
+  if(hist){
+    const sorted = Object.entries(d).sort((a,b)=> b[0].localeCompare(a[0])).slice(0, 14);
+    if(!sorted.length){ hist.innerHTML = '<div class="text-xs text-muted text-center py-4">No history yet.</div>'; }
+    else {
+      hist.innerHTML = sorted.map(([date, count]) => {
+        const pct = Math.min((count/8)*100, 100);
+        return `<div class="text-xs">
+          <div class="flex justify-between mb-1"><span class="text-muted">${date}</span><span class="text-primary font-bold">${count}/8</span></div>
+          <div class="progress-track" style="height:6px"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join("");
+    }
+  }
+  updateDashWater();
+}
+function toggleWaterGlass(n){ const today = getWaterToday(); setWaterToday(n === today ? n - 1 : n); }
+function last7Days(){
+  const arr = [];
+  for(let i = 6; i >= 0; i--){ const d = new Date(); d.setDate(d.getDate() - i); arr.push(d.toISOString().slice(0,10)); }
+  return arr;
+}
+function updateDashWater(){ const el = document.getElementById("dash-water-count"); if(el) el.innerText = getWaterToday(); }
+function renderWaterChart(){
+  const ctx = document.getElementById("waterChart"); if(!ctx) return;
+  const d = getWaterData();
+  const days7 = last7Days();
+  const accent = cssVar("--accent"), textMuted = cssVar("--text-muted");
+  const gridColor = document.body.classList.contains("light") ? "#e2e8f0" : "#1e293b";
+  waterChartInstance = new Chart(ctx, {
+    type:"bar",
+    data:{ labels: days7.map(k => k.slice(5)), datasets:[{ label:"Glasses", data: days7.map(k => d[k] || 0), backgroundColor:accent, borderRadius:6 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ beginAtZero:true, max:10, ticks:{color:textMuted}, grid:{color:gridColor} },
+               x:{ ticks:{color:textMuted}, grid:{display:false} } },
+      plugins:{ legend:{display:false} } }
+  });
+}
+function updateWaterChart(){
+  if(!waterChartInstance) return;
+  const d = getWaterData();
+  const days7 = last7Days();
+  waterChartInstance.data.labels = days7.map(k => k.slice(5));
+  waterChartInstance.data.datasets[0].data = days7.map(k => d[k] || 0);
+  waterChartInstance.update();
+}
+
+/* ============ SLEEP ============ */
+function getSleepData(){ try{ return JSON.parse(localStorage.getItem(K.sleep) || "[]"); }catch{ return []; } }
+function saveSleepData(arr){ localStorage.setItem(K.sleep, JSON.stringify(arr)); markDirty(); saveToNamespace(); }
+function setSleepQuality(n){
+  pendingSleepQuality = n;
+  document.querySelectorAll("#sleep-stars .star").forEach((el, idx) => el.classList.toggle("active", idx < n));
+}
+function updateSleepHoursPreview(){
+  const b = document.getElementById("sleep-bedtime").value;
+  const w = document.getElementById("sleep-waketime").value;
+  const el = document.getElementById("sleep-hours-preview");
+  if(!el) return;
+  if(!b || !w){ el.innerText = "—"; return; }
+  const [bh,bm] = b.split(":").map(Number);
+  const [wh,wm] = w.split(":").map(Number);
+  let mins = (wh*60+wm) - (bh*60+bm);
+  if(mins < 0) mins += 24*60;
+  el.innerText = (mins/60).toFixed(1) + " h";
+}
+function saveSleepEntry(){
+  const b = document.getElementById("sleep-bedtime").value;
+  const w = document.getElementById("sleep-waketime").value;
+  const note = document.getElementById("sleep-note").value.trim();
+  if(!b || !w){ showToast("Fill bedtime and wake time", "warn"); return; }
+  const [bh,bm] = b.split(":").map(Number);
+  const [wh,wm] = w.split(":").map(Number);
+  let mins = (wh*60+wm) - (bh*60+bm);
+  if(mins < 0) mins += 24*60;
+  const hours = +(mins/60).toFixed(2);
+  const arr = getSleepData();
+  arr.push({ id: Date.now(), date: todayKey(), bed: b, wake: w, hours, quality: pendingSleepQuality || 0, note });
+  saveSleepData(arr);
+  document.getElementById("sleep-bedtime").value = "";
+  document.getElementById("sleep-waketime").value = "";
+  document.getElementById("sleep-note").value = "";
+  setSleepQuality(0); updateSleepHoursPreview();
+  renderSleepTracker();
+  if(sleepChartInitialized) updateSleepChart();
+  showToast("😴 Sleep logged!", "success");
+}
+function renderSleepTracker(){
+  const arr = getSleepData();
+  const last7 = arr.slice(-7);
+  const avgH = last7.length ? (last7.reduce((s,e)=>s+e.hours,0)/last7.length).toFixed(1) : "—";
+  const withQ = last7.filter(e=>e.quality>0);
+  const avgQ = withQ.length ? (withQ.reduce((s,e)=>s+e.quality,0)/withQ.length).toFixed(1) : "—";
+  const aEl = document.getElementById("sleep-stat-avg"); if(aEl) aEl.innerText = avgH;
+  const qEl = document.getElementById("sleep-stat-quality"); if(qEl) qEl.innerText = avgQ;
+  const hist = document.getElementById("sleep-history");
+  if(hist){
+    const sorted = [...arr].reverse().slice(0, 14);
+    if(!sorted.length){ hist.innerHTML = '<div class="text-xs text-muted text-center py-4">No entries yet.</div>'; }
+    else {
+      hist.innerHTML = sorted.map(e => {
+        const stars = "★".repeat(e.quality) + "☆".repeat(5 - e.quality);
+        return `<div class="surface-2 p-3 rounded-lg">
+          <div class="flex justify-between items-start mb-1">
+            <div class="text-xs text-muted">${e.date}</div>
+            <div class="text-sm font-bold text-accent">${e.hours} h</div>
+          </div>
+          <div class="text-[11px] text-muted">${formatTime12(e.bed)} → ${formatTime12(e.wake)}</div>
+          ${e.quality ? `<div class="text-xs mt-1" style="color:#fbbf24;">${stars}</div>` : ""}
+          ${e.note ? `<div class="text-[11px] text-dim mt-1">${escapeHtml(e.note)}</div>` : ""}
+        </div>`;
+      }).join("");
+    }
+  }
+}
+function renderSleepChart(){
+  const ctx = document.getElementById("sleepChart"); if(!ctx) return;
+  const arr = getSleepData();
+  const last7 = arr.slice(-7);
+  const accent = cssVar("--accent"), textMuted = cssVar("--text-muted");
+  const gridColor = document.body.classList.contains("light") ? "#e2e8f0" : "#1e293b";
+  sleepChartInstance = new Chart(ctx, {
+    type:"line",
+    data:{ labels: last7.map(e => e.date.slice(5)), datasets:[{
+      label:"Hours", data: last7.map(e => e.hours), borderColor:accent, backgroundColor:cssVar("--accent-soft"),
+      tension:0.35, fill:true, pointBackgroundColor:accent, pointRadius:5, pointHoverRadius:7 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ beginAtZero:true, max:12, ticks:{color:textMuted}, grid:{color:gridColor} },
+               x:{ ticks:{color:textMuted}, grid:{display:false} } },
+      plugins:{ legend:{display:false} } }
+  });
+}
+function updateSleepChart(){
+  if(!sleepChartInstance) return;
+  const arr = getSleepData();
+  const last7 = arr.slice(-7);
+  sleepChartInstance.data.labels = last7.map(e => e.date.slice(5));
+  sleepChartInstance.data.datasets[0].data = last7.map(e => e.hours);
+  sleepChartInstance.update();
+}
+
+/* ============ WEIGHT ============ */
+function getWeightData(){ try{ return JSON.parse(localStorage.getItem(K.weight) || "[]"); }catch{ return []; } }
+function saveWeightData(arr){ localStorage.setItem(K.weight, JSON.stringify(arr)); markDirty(); saveToNamespace(); }
+function saveWeightEntry(){
+  const w = parseFloat(document.getElementById("weight-input").value);
+  const d = document.getElementById("weight-date").value || todayKey();
+  const note = document.getElementById("weight-note").value.trim();
+  if(!w || w <= 0){ showToast("Enter valid weight", "warn"); return; }
+  const arr = getWeightData();
+  arr.push({ id: Date.now(), date: d, weight: w, note });
+  arr.sort((a,b)=> a.date.localeCompare(b.date));
+  saveWeightData(arr);
+  document.getElementById("weight-input").value = "";
+  document.getElementById("weight-note").value = "";
+  renderWeightTracker();
+  if(weightChartInitialized) updateWeightChart();
+  showToast("⚖️ Added!", "success");
+}
+function saveWeightGoal(){
+  const g = parseFloat(document.getElementById("weight-goal-input").value);
+  if(!g || g <= 0){ showToast("Enter valid goal", "warn"); return; }
+  localStorage.setItem(K.weightGoal, g); markDirty(); saveToNamespace();
+  renderWeightTracker();
+  showToast("🎯 Goal set!", "success");
+}
+function renderWeightTracker(){
+  const arr = getWeightData();
+  const cur = arr.length ? arr[arr.length-1].weight : null;
+  const first = arr.length ? arr[0].weight : null;
+  const goal = parseFloat(localStorage.getItem(K.weightGoal) || "0");
+  const cEl = document.getElementById("weight-stat-current"); if(cEl) cEl.innerText = cur !== null ? cur : "—";
+  const chEl = document.getElementById("weight-stat-change");
+  if(chEl){
+    if(cur !== null && first !== null){
+      const diff = (cur - first).toFixed(1);
+      chEl.innerText = (diff > 0 ? "+" : "") + diff;
+      chEl.style.color = diff < 0 ? "#4ade80" : (diff > 0 ? "#f43f5e" : "var(--accent)");
+    } else chEl.innerText = "—";
+  }
+  const gd = document.getElementById("weight-goal-display");
+  if(gd){
+    if(goal > 0 && cur !== null){
+      const diff = (cur - goal).toFixed(1);
+      if(diff > 0) gd.innerHTML = `Goal: <b class="text-accent">${goal} kg</b> · Need to lose <b>${diff} kg</b>`;
+      else if(diff < 0) gd.innerHTML = `Goal: <b class="text-accent">${goal} kg</b> · <b class="text-emerald-500">${Math.abs(diff)} kg to go!</b>`;
+      else gd.innerHTML = `🎉 Goal achieved!`;
+    } else if(goal > 0) gd.innerHTML = `Goal: <b class="text-accent">${goal} kg</b>`;
+    else gd.innerHTML = '<span class="text-xs">No goal set yet.</span>';
+  }
+  const hist = document.getElementById("weight-history");
+  if(hist){
+    const sorted = [...arr].reverse().slice(0, 20);
+    if(!sorted.length){ hist.innerHTML = '<div class="text-xs text-muted text-center py-4">No entries yet.</div>'; }
+    else {
+      hist.innerHTML = sorted.map(e => `
+        <div class="surface-2 p-3 rounded-lg flex items-center justify-between gap-2">
+          <div>
+            <div class="text-xs text-muted">${e.date}</div>
+            ${e.note ? `<div class="text-[11px] text-dim">${escapeHtml(e.note)}</div>` : ""}
+          </div>
+          <div class="text-sm font-bold text-accent">${e.weight} kg</div>
+          <button onclick="deleteWeightEntry(${e.id})" class="btn-ghost w-7 h-7 rounded-md flex items-center justify-center text-[11px]" style="color:#f43f5e;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>`).join("");
+    }
+  }
+}
+function deleteWeightEntry(id){
+  if(!confirm("Delete entry?")) return;
+  const arr = getWeightData().filter(e => e.id !== id);
+  saveWeightData(arr); renderWeightTracker();
+  if(weightChartInitialized) updateWeightChart();
+}
+function renderWeightChart(){
+  const ctx = document.getElementById("weightChart"); if(!ctx) return;
+  const arr = getWeightData();
+  const accent = cssVar("--accent"), textMuted = cssVar("--text-muted");
+  const gridColor = document.body.classList.contains("light") ? "#e2e8f0" : "#1e293b";
+  weightChartInstance = new Chart(ctx, {
+    type:"line",
+    data:{ labels: arr.map(e => e.date.slice(5)), datasets:[{ label:"kg", data: arr.map(e => e.weight),
+      borderColor:accent, backgroundColor:cssVar("--accent-soft"), tension:0.3, fill:true, pointBackgroundColor:accent, pointRadius:5 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ ticks:{color:textMuted}, grid:{color:gridColor} },
+               x:{ ticks:{color:textMuted}, grid:{display:false} } },
+      plugins:{ legend:{display:false} } }
+  });
+}
+function updateWeightChart(){
+  if(!weightChartInstance) return;
+  const arr = getWeightData();
+  weightChartInstance.data.labels = arr.map(e => e.date.slice(5));
+  weightChartInstance.data.datasets[0].data = arr.map(e => e.weight);
+  weightChartInstance.update();
+}
+
+/* ============ NOTES ============ */
+function getNotesData(){ try{ return JSON.parse(localStorage.getItem(K.notesApp) || "[]"); }catch{ return []; } }
+function saveNotesData(arr){ localStorage.setItem(K.notesApp, JSON.stringify(arr)); markDirty(); saveToNamespace(); }
+function renderNotesApp(){
+  const arr = getNotesData();
+  const search = (document.getElementById("notes-search")?.value || "").toLowerCase();
+  const sort = document.getElementById("notes-sort")?.value || "newest";
+  let filtered = arr.filter(n => n.title.toLowerCase().includes(search) || n.content.toLowerCase().includes(search));
+  if(sort === "newest") filtered.sort((a,b)=> b.updatedAt - a.updatedAt);
+  else if(sort === "oldest") filtered.sort((a,b)=> a.updatedAt - b.updatedAt);
+  else if(sort === "az") filtered.sort((a,b)=> a.title.localeCompare(b.title));
+  const grid = document.getElementById("notes-grid");
+  const empty = document.getElementById("notes-empty");
+  if(!grid) return;
+  if(!filtered.length){
+    grid.innerHTML = "";
+    empty.classList.toggle("hidden", arr.length > 0);
+    if(arr.length === 0) empty.classList.remove("hidden");
+    else empty.classList.add("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+  grid.innerHTML = filtered.map(n => `
+    <div class="note-card" onclick="openNoteModal(${n.id})">
+      <div class="flex justify-between items-start gap-2 mb-2">
+        <div class="text-sm font-bold text-primary break-words flex-1">${escapeHtml(n.title || "Untitled")}</div>
+        <button onclick="event.stopPropagation(); deleteNote(${n.id})" class="w-6 h-6 rounded-md flex items-center justify-center text-[10px] flex-shrink-0" style="color:#f43f5e;">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+      <div class="text-xs text-muted whitespace-pre-wrap break-words" style="display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(n.content || "No content")}</div>
+      <div class="text-[10px] text-dim mt-3">${new Date(n.updatedAt).toLocaleDateString()}</div>
+    </div>
+  `).join("");
+}
+function openNoteModal(id){
+  editingNoteId = id || null;
+  const modal = document.getElementById("note-modal");
+  const titleEl = document.getElementById("note-modal-title");
+  const titleInput = document.getElementById("note-title-input");
+  const contentInput = document.getElementById("note-content-input");
+  const delBtn = document.getElementById("note-delete-btn");
+  if(id){
+    const n = getNotesData().find(x => x.id === id);
+    if(!n) return;
+    titleEl.textContent = "Edit Note";
+    titleInput.value = n.title;
+    contentInput.value = n.content;
+    delBtn.style.display = "block";
+  } else {
+    titleEl.textContent = "New Note";
+    titleInput.value = "";
+    contentInput.value = "";
+    delBtn.style.display = "none";
+  }
+  modal.classList.add("open");
+  setTimeout(() => titleInput.focus(), 200);
+}
+function closeNoteModal(){
+  document.getElementById("note-modal").classList.remove("open");
+  editingNoteId = null;
+}
+function saveNoteFromModal(){
+  const title = document.getElementById("note-title-input").value.trim();
+  const content = document.getElementById("note-content-input").value.trim();
+  if(!title && !content){ showToast("Note is empty", "warn"); return; }
+  const arr = getNotesData();
+  const now = Date.now();
+  if(editingNoteId){
+    const idx = arr.findIndex(n => n.id === editingNoteId);
+    if(idx >= 0){
+      arr[idx].title = title || "Untitled";
+      arr[idx].content = content;
+      arr[idx].updatedAt = now;
+    }
+  } else {
+    arr.push({ id: now, title: title || "Untitled", content, createdAt: now, updatedAt: now });
+  }
+  saveNotesData(arr);
+  closeNoteModal(); renderNotesApp();
+  showToast("📝 Saved!", "success");
+}
+function deleteNoteFromModal(){ if(!editingNoteId) return; deleteNote(editingNoteId); closeNoteModal(); }
+function deleteNote(id){
+  if(!confirm("Delete this note?")) return;
+  const arr = getNotesData().filter(n => n.id !== id);
+  saveNotesData(arr); renderNotesApp();
+  showToast("🗑️ Deleted", "warn");
 }
 
 /* ============================================================
-   🤖 AI COACH CHATBOT (rule-based, offline, no API key)
+   🤖 AI CHATBOT — English replies, bilingual recognition
    ============================================================ */
 const CHAT_RESPONSES = [
-  {
-    keys:["wake up","wakeup","early morning","උදේ","නැගිටින්න","උදේට","නැගිටින"],
-    reply:`🌅 උදේ නැගිටින්න මේ ටිප්ස් try කරන්න:
+  { keys:["wake up","wakeup","wake-up","early morning","get up","morning routine","උදේ","නැගිටින්න","නැගිටින"], reply:`🌅 How to wake up early:
 
-1. **රෑ 10ට කලින් නිදාගන්න** — පැය 7-8ක නින්ද ඕන
-2. **Alarm එක ඇඳෙන් ඈතින් තියන්න** — එවිට නැගිටලා නිවා දාන්න වෙනවා
-3. **රෑට phone එක ඇඳට ගන්න එපා** — screen light නින්ද කැඩෙනවා
-4. **පළවෙනි දවසේම 5:30ට නැගිටින්න එපා** — 15 න් 15 විනාඩි ඉස්සරහට ගන්න
-5. **නැගිට්ට ගමන් වතුර වීදුරුවක් බොන්න** — ශරීරය active වෙනවා
-6. **රෑට කලින් දවසේ ඇඳුම් ලෑස්ති කරන්න** — උදේට තීරණ ගන්න ඕන නැහැ
-7. **5-second rule** — alarm එක නාද වුනාම 5,4,3,2,1 කියලා නැගිටින්න
+1. **Sleep before 10 PM** — you need 7-8 hours
+2. **Put your alarm far from bed** — so you have to get up
+3. **No phone in bed** — blue light kills sleep
+4. **Shift gradually** — move 15 min earlier every few days
+5. **Drink water right after waking** — activates your body
+6. **Prep clothes at night** — fewer morning decisions
+7. **5-second rule** — count 5,4,3,2,1 and get up
 
-💡 **රහස:** උදේ නැගිටින්න බැරි වෙන්නේ රෑ නිදාගන්නේ පරක්කු නිසයි. රෑට හොඳ නින්දක් ගන්න එකයි පළවෙනි පියවර!`
-  },
-  {
-    keys:["consistent","consistency","discipline","පුරුදු","ස්ථිර","හැමදාම"],
-    reply:`🔥 Consistency එක හදාගන්න:
+💡 **Secret:** You can't wake up early if you sleep late. Fix your night first!` },
+  { keys:["consistent","consistency","discipline","stick to","පුරුදු","ස්ථිර","හැමදාම"], reply:`🔥 How to stay consistent:
 
-1. **පොඩියට පටන් ගන්න** — දවසට විනාඩි 5ක් හරි කරන්න
-2. **Fixed time එකක් තෝරන්න** — හැමදාම එකම වෙලාවට
-3. **Habit stacking** — පරණ පුරුද්දකට අලුත් එකක් එකතු කරන්න (උදා: උදේ කෑමට පස්සේ පොතක් කියවන්න)
-4. **Don't miss twice** — එක දවසක් miss වුනාට අවුලක් නැහැ. දෙපාරක් miss කරන්න එපා!
-5. **Track කරන්න** — මේ app එකේ checklist එක පාවිච්චි කරන්න
-6. **Reward එකක් දෙන්න** — සතියක් සම්පූර්ණ කරාම ඔයාට කැමති දෙයක් කරන්න
+1. **Start small** — even 5 minutes a day
+2. **Fix a time** — same hour every day
+3. **Habit stacking** — attach new habit to old one
+4. **Don't miss twice** — one slip is fine, two is a pattern
+5. **Track it** — use the checklist in this app
+6. **Reward yourself** — after a full week
 
-💡 **මතක තියාගන්න:** Motivation එක එනවා යනවා. Discipline එක තමයි රජ. "මට ඕන නැහැ" කියලා හිතෙන දවස්වලත් කරන එකයි consistency!`
-  },
-  {
-    keys:["focus","study","concentrate","studying","පාඩම","ඉගෙන","හිත","අවධානය"],
-    reply:`📚 Study focus වැඩි කරගන්න:
+💡 **Remember:** Motivation comes and goes. Discipline is the king. Do it even when you don't feel like it.` },
+  { keys:["focus","study","concentrate","concentration","studying","පාඩම","ඉගෙන","අවධානය"], reply:`📚 How to improve study focus:
 
-1. **Pomodoro පාවිඩ්චි කරන්න** — විනාඩි 25 වැඩ, විනාඩි 5 break (මේ app එකේ timer එක තියෙනවා!)
-2. **Phone එක තව කාමරේක තියන්න** — නිකන් silent කරන එක මදි
-3. **Study spot එකක් වෙන් කරන්න** — එකම තැනේ හැමදාම ඉගෙන ගන්න
-4. **Active recall** — කියවනවා වෙනුවට ලියන්න, කියන්න, ප්‍රශ්න අහන්න
-5. **Water + snack** — ඉගෙන ගන්න කලින් වතුර වීදුරුවක්
-6. **Environment** — clean, bright, organized. අවුල් පරිසරයක focus එක අඩු කරනවා
-7. **Warm-up** — ඉගෙන ගන්න කලින් පහසු දෙයකින් පටන් ගන්න (brain warm up)
+1. **Pomodoro** — 25 min work, 5 min break (built-in timer in this app!)
+2. **Phone in another room** — silent is not enough
+3. **Designated study spot** — same place every time
+4. **Active recall** — write, speak, quiz yourself
+5. **Water + snack** — hydrate before studying
+6. **Clean environment** — mess = distraction
+7. **Warm up** — start with something easy
 
-💡 **80/20 rule:** ඔයාගේ පාඩමේ වැදගත්ම 20% හඳුනාගන්න — ඒකෙන් 80% ප්‍රතිඵල එනවා!`
-  },
-  {
-    keys:["lazy","laziness","අලස","කම්මැලි","මට බැහැ","හෙම්බත්","tired"],
-    reply:`😴 කම්මැලි ගතිය එනකොට මේක try කරන්න:
+💡 **80/20 rule:** Identify the 20% that gives 80% results.` },
+  { keys:["lazy","laziness","tired","no energy","can't do","කම්මැලි","හෙම්බත්","මට බැහැ"], reply:`😴 When you feel lazy:
 
-1. **5-minute rule** — "මම විනාඩි 5ක් විතරයි කරන්නම්" කියලා පටන් ගන්න. බොහෝ විට ඔයා ඒක දිගටම කරගෙන යයි!
-2. **මුල් පියවර පොඩි කරන්න** — "පැයක් study" නෙමෙයි, "පොත අරන් මේසයේ තියන්න"
-3. **වතුර බොන්න** — dehydration එක කම්මැලි කමට හේතුවක්
-4. **විනාඩි 5 ක් ඇවිදින්න** — blood flow වැඩි වෙයි
-5. **Music එකක් දාන්න** — motivational song එකක් (Motivation Hub බලන්න!)
-6. **මතක් කරගන්න ඇයි පටන් ගත්තේ** — ඔයාගේ ලොකු ඉලක්කය මතක් කරන්න
-7. **තව කෙනෙක්ට කියන්න** — accountability partner කෙනෙක් ඉන්නවා නම් හොඳයි
+1. **5-minute rule** — "I'll only do 5 minutes" — you'll usually continue
+2. **Shrink the first step** — "open the book" not "study for an hour"
+3. **Drink water** — dehydration causes fatigue
+4. **Walk 5 minutes** — gets blood flowing
+5. **Play a motivational song** (check the Motivation Hub!)
+6. **Remember your why** — visualize your goal
+7. **Tell someone** — accountability helps
 
-💡 **සත්‍යය:** කම්මැලි කමක් නෙමෙයි — ඔයාගේ brain එක comfort zone එකෙන් එලියට යන්න බයයි. ඒත් ඔයාට ඒක පුළුවන්! 💪`
-  },
-  {
-    keys:["phone","mobile","screen","scroll","instagram","tiktok","youtube","facebook","ෆෝන්","මොබයිල්","ස්ක්‍රීන්"],
-    reply:`📱 Phone usage control කරන්න:
+💡 **Truth:** It's not laziness — your brain is scared of leaving the comfort zone. You can do this!` },
+  { keys:["phone","mobile","screen","scroll","instagram","tiktok","youtube","facebook","reels","ෆෝන්","මොබයිල්","ස්ක්‍රීන්"], reply:`📱 How to control phone usage:
 
-1. **Screen time එක බලන්න** — දවසට කී පැයක්ද කියලා දැනගන්න
-2. **App timers දාන්න** — Instagram/TikTok වලට දවසට විනාඩි 30
-3. **Grayscale mode** — phone එක කළු-සුදු කරන්න → වඩා අඩුවෙන් scroll කරයි
-4. **Phone එක තව කාමරේ තියන්න** — නිදාගන්න කලින් පැයකට
-5. **Notifications off** — social media apps වලින්
-6. **Home screen එක clean** — සමාජ මාධ්‍ය apps folder එකකට දාන්න
-7. **උදේ පළවෙනි පැය** — phone එකට අත ගහන්න එපා
-8. **Replace කරන්න** — scroll කරන වෙනුවට පොතක්, ව්‍යායාමයක් කරන්න
+1. **Check screen time** — know your daily average
+2. **Set app timers** — 30 min/day for social media
+3. **Grayscale mode** — phone becomes boring
+4. **Phone in another room at night** — 1 hour before bed
+5. **Turn off notifications** — for social apps
+6. **Clean home screen** — move distracting apps to a folder
+7. **First hour rule** — no phone for 1 hour after waking
+8. **Replace** — reading, exercise, journaling
 
-💡 **ගණනයක්:** දවසට පැය 3ක් phone එකේ = වර්ෂයකට **පැය 1095** = දවස් 45ක්! ඒ දවස් 45 ඔයාට ජීවිතය වෙනස් කරගන්න පුළුවන්. 💯`
-  },
-  {
-    keys:["motivate","motivation","inspire","give up","quit","කලකිරි","අධෛර්ය","මොකටද"],
-    reply:`💪 ඔයාට මේක අහන්න ඕන වුනා:
+💡 **Math:** 3 hours/day = **1,095 hours/year** = 45 days! You could transform your life in those 45 days. 💯` },
+  { keys:["motivate","motivation","inspire","give up","quit","demotivated","කලකිරි","අධෛර්ය","මොකටද"], reply:`💪 You asked, so hear this:
 
-**"ඔයා හෙට මැරෙනවා නම්, අද මොකද කරන්නේ?"** — Steve Jobs
+**"If today were the last day of your life, would you want to do what you are about to do today?"** — Steve Jobs
 
-දැන් මේක හිතන්න:
-• ඔයා මේ app එක හදාගත්තේ ඇයි?
-• ඔයාගේ 6-month plan එකේ මොකද තියෙන්නේ?
-• ඔයාගේ future self එක අද ඔයාට කියන්නේ මොකද?
+Think about this:
+• Why did you start using this app?
+• What's in your 6-month plan?
+• What would your future self tell you right now?
 
-**මතක තියාගන්න:**
-🔥 ඔයා හැමදාම strong නැහැ. ඒත් ඔයා **හැමදාම try කරන්න පුළුවන්**
-🔥 Success එක overnight එන්නේ නැහැ — **small steps** වලින් එනවා
-🔥 ඔයාගේ තරඟකරුවා තව කෙනෙක් නෙමෙයි — **ඊයේ ඔයා** විතරයි
-🔥 Failure එක අවසානය නෙමෙයි — **පාඩමක්**
+**Remember:**
+🔥 You're not strong every day. But you can **try** every day
+🔥 Success isn't overnight — it's **small steps**
+🔥 Your only competitor is **yesterday's you**
+🔥 Failure is not the end — it's a **lesson**
 
-**Motivation Hub එකට ගිහින්** speech එකක් අහන්න, song එකක් අහන්න. දැන්ම එක පියවරක් ගන්න! 🚀
+Go to the **Motivation Hub**, play a speech. Take one step right now! 🚀
 
-*You are not alone in this. Every champion has been where you are now. 👑*`
-  },
-  {
-    keys:["exercise","workout","gym","fitness","ව්‍යායාම","ක‍යායාම","ක්‍රීඩා"],
-    reply:`💪 Exercise routine එකක් පටන් ගන්න:
+*You are not alone in this. Every champion has been where you are now.* 👑` },
+  { keys:["exercise","workout","gym","fitness","run","training","ව්‍යායාම","ක්‍රීඩා"], reply:`💪 How to start exercising:
 
-**Beginner plan (සතියට 3 වතාවක්):**
-• දින 1: 20 min walk + 10 pushups + 10 squats
-• දින 2: Rest
-• දින 3: 30 min walk + 15 pushups + 15 squats
-• දින 4: Rest
-• දින 5: 40 min walk + 20 pushups + 20 squats
-• දින 6-7: Rest / light stretching
+**Beginner plan (3x per week):**
+• Day 1: 20 min walk + 10 pushups + 10 squats
+• Day 2: Rest
+• Day 3: 30 min walk + 15 pushups + 15 squats
+• Day 4: Rest
+• Day 5: 40 min walk + 20 pushups + 20 squats
+• Day 6-7: Rest / light stretching
 
-**රන්න ඕන නීති:**
-1. උදේම කරන්න try කරන්න
-2. **Warm up** අනිවාර්යයෙන් කරන්න (විනාඩි 5)
-3. Water bottle එකක් ළඟ තියන්න
-4. සතියට දවස් 2ක්වත් rest ගන්න
-5. Mirror එකක් ඉස්සරහා කරන්න (form හරිද බලන්න)
-6. Progress photos ගන්න මාසෙකට වරක්
-7. Diet එකත් වැදගත් — protein + vegetables
+**Rules:**
+1. Try mornings
+2. Always warm up (5 min)
+3. Keep water nearby
+4. At least 2 rest days/week
+5. Check your form in a mirror
+6. Progress photos monthly
+7. Diet matters — protein + veggies
 
-💡 **රහස:** Gym එකට යන්න ඕන නැහැ. ගෙදර වුනත් කරන්න පුළුවන්. පටන් ගන්න එකයි වැදගත්! 💯`
-  },
-  {
-    keys:["sleep","insomnia","නින්ද","නිදාගන්න","නිදි"],
-    reply:`😴 හොඳ නින්දක් ගන්න:
+💡 **Secret:** You don't need a gym. Home workouts work. Just start! 💯` },
+  { keys:["sleep","insomnia","can't sleep","නින්ද","නිදාගන්න"], reply:`😴 How to sleep well:
 
-1. **රෑ 10ට කලින්** නිදාගන්න try කරන්න
-2. **නිදාගන්න පැයකට කලින් phone එක අයින් කරන්න** (blue light melatonin එක block කරනවා)
-3. **කාමරය අඳුරු කරන්න** — blackout curtains හොඳයි
-4. **සිසිල් උෂ්ණත්වය** — 18-20°C තමයි හොඳම
-5. **කෑම ප්‍රමාද වෙන්න එපා** — නිදාගන්න පැය 3කට කලින් රෑ කෑම
-6. **කෝපි නින්දට පැය 8කට කලින් නවත්තන්න**
-7. **එකම වෙලාවට** නිදාගන්න සහ නැගිටින්න
-8. **නිදාගන්න බැරි නම්** — ඇඳෙන් නැගිටලා පොතක් කියවන්න, ආපහු එන්න
-9. **Alcohol / Caffeine** අඩු කරන්න
+1. **Sleep before 10 PM** whenever possible
+2. **No phone 1 hour before bed** (blue light blocks melatonin)
+3. **Dark room** — blackout curtains
+4. **Cool temperature** — 18-20°C
+5. **Last meal 3 hours before bed**
+6. **No caffeine after 2 PM**
+7. **Same bedtime every night**
+8. **If you can't sleep** — get up, read, come back
+9. **Limit alcohol**
 
-💡 **රහස:** ඔයාට පැය 7-8ක නින්ද ඕන. ඒක පැය 6ට කපන එකෙන් ඔයාගේ memory, focus, mood 30%කින් අඩු වෙනවා!`
-  },
-  {
-    keys:["reading","book","පොත","කියවන්න","පොත්"],
-    reply:`📚 Reading habit එකක් හදාගන්න:
+💡 **Truth:** You need 7-8 hours. Cutting to 6 hours reduces memory, focus, and mood by ~30%!` },
+  { keys:["stress","anxiety","depress","sad","worried","ආතති","කනස්සල්ල","දුක"], reply:`💙 Your feelings matter. Let's talk:
 
-1. **දවසට පිටු 10ක්** — පොඩියට පටන් ගන්න. මාසෙකට පොත් 2ක්!
-2. **නිදාගන්න කලින් කියවන්න** — phone එක වෙනුවට
-3. **ඔයාට කැමති subject එකකින් පටන් ගන්න** — boring පොතක් බලෙන් කියවන්න එපා
-4. **Physical book** හෝ e-book — දෙකම හරි
-5. **Notes ගන්න** — වැදගත් කරුණු ලියන්න
-6. **Library එකකට යන්න** — පරිසරය වැදගත්
-7. **Audio books** — වැඩ කරන අතරේ අහන්න පුළුවන්
+**Right now:**
+1. **Deep breathing** — in 4, hold 7, out 8. Three rounds.
+2. **Drink water** — your body needs it
+3. **Go outside** — 10 min walk
+4. **Write it down** — what's on your mind?
+5. **Talk to someone** — a trusted friend
 
-**Start කරන්න හොඳ පොත්:**
-• Atomic Habits — James Clear
-• Deep Work — Cal Newport
-• The 7 Habits of Highly Effective People — Stephen Covey
-• Rich Dad Poor Dad — Robert Kiyosaki
-• ගම්පෙරලිය — Martin Wickramasinghe
+**Long term:**
+• Daily exercise (best natural antidepressant)
+• Good sleep
+• Reduce screen time
+• Time in nature
+• Do things you love
+• Meditation
 
-💡 **අවුරුද්දකට පොත් 12ක්** කියවන කෙනෙක්, පොත් කියවන්නේ නැති කෙනෙක්ට වඩා **දුර පැනලා** ඉන්නවා! 🚀`
-  },
-  {
-    keys:["english","ඉංග්‍රීසි","ingrisi","speak english","learn english"],
-    reply:`🗣️ English වැඩි දියුණු කරන්න:
+**Always remember:** You are not alone. These feelings are temporary. You are stronger than you think. 💪
 
-**Daily routine (විනාඩි 30):**
-• **විනාඩි 10** — English news එකක් කියවන්න
-• **විනාඩි 10** — වචන 5ක් ඉගෙන ගන්න (with sentences)
-• **විනාඩි 10** — English video/podcast එකක් අහන්න
+⚠️ **Important:** If you feel very down or have harmful thoughts — please talk to a trusted adult, a doctor, or a helpline like Sumithrayo (1926) in Sri Lanka. You matter. 💙` },
+  { keys:["english","learn english","speak english","ඉංග්‍රීසි"], reply:`🗣️ How to improve English:
+
+**Daily routine (30 min):**
+• **10 min** — read English news
+• **10 min** — learn 5 new words with sentences
+• **10 min** — listen to a video/podcast
 
 **Practical tips:**
-1. **Mirror practice** — උදේ toothbrush කරන අතරේ English වලින් කතා කරන්න
-2. **Think in English** — සිංහලෙන් හිතන එක නවත්තන්න
-3. **Journal in English** — දවසේ සිද්ධිය ලියන්න
-4. **Movies with subtitles** — English subtitles සමඟ
+1. **Mirror practice** — speak English while brushing teeth
+2. **Think in English** — stop translating
+3. **Journal in English**
+4. **Movies with English subtitles**
 5. **Change phone language** to English
-6. **Record yourself** — ඔයාගේ උච්චාරණය අහන්න
-7. **Don't be afraid** — වැරදි කරන එක ඉගෙන ගන්න ක්‍රමයක්
+6. **Record yourself** — hear your pronunciation
+7. **Don't fear mistakes** — they're part of learning
 
 **Free resources:**
 • BBC Learning English
 • Duolingo
 • YouTube: English with Lucy
 
-💡 **රහස:** Grammar පොත ඉස්සෙල්ලා ඉවර කරන්න ඕන නැහැ. **කතා කරන්න පටන් ගන්න** — වැරදි වුනත් කමක් නැහැ! 💪`
-  },
-  {
-    keys:["money","save money","finance","spend","සල්ලි","මුදල්","වියදම්","ඉතිරි"],
-    reply:`💰 Money save කරන්න:
+💡 **Secret:** You don't need to finish a grammar book first. **Start speaking** — mistakes are OK! 💪` },
+  { keys:["money","save money","finance","budget","spend","සල්ලි","මුදල්","වියදම්"], reply:`💰 How to save money:
 
 **50/30/20 rule:**
-• **50%** — අවශ්‍ය දේවල් (කෑම, නවාතැන්, transport)
-• **30%** — කැමති දේවල් (fun, shopping)
-• **20%** — ඉතිරි / investment
+• **50%** — needs (food, rent, transport)
+• **30%** — wants (fun, shopping)
+• **20%** — savings / investment
 
 **Practical tips:**
-1. **Track කරන්න** — හැම වියදමක්ම notes app එකේ ලියන්න
-2. **24-hour rule** — ඕන දෙයක් මිළදී ගන්න පැය 24ක් ඉන්න
-3. **No-spend days** — සතියට දවස් 2ක් සල්ලි වියදම් නොකර ඉන්න
-4. **Subscription බලන්න** — පාවිච්චි නොකරන ඒවා cancel කරන්න
-5. **Cooking** — එලියේ කනවා වෙනුවට ගෙදර උයන්න
-6. **Auto-save** — salary එකෙන් 20% කෙලින්ම savings account එකට
-7. **Emergency fund** — මාස 3-6ක වියදම් තියෙන fund එකක් හදන්න
+1. **Track every expense**
+2. **24-hour rule** — wait a day before buying
+3. **No-spend days** — 2 per week
+4. **Review subscriptions** — cancel unused
+5. **Cook at home**
+6. **Auto-save 20%** of salary
+7. **Emergency fund** — 3-6 months of expenses
 
-💡 **රහස:** ඔයාගේ income එක වැඩි කරන එකට වඩා **expenses අඩු කරන එක** ලේසි! 📊`
-  },
-  {
-    keys:["stress","anxiety","depress","sad","ආතති","කනස්සල්ල","දුක","හිත රිදෙන"],
-    reply:`💙 ඔයාගේ හැඟීම් වැදගත්. අපි කතා කරමු:
-
-**මේ පියවර ගන්න:**
-1. **ගැඹුරු හුස්ම** — 4 seconds අරන්, 7 තියාගෙන, 8 අතහරින්න. 3 වතාවක්
-2. **වතුර වීදුරුවක් බොන්න** — ඔයාගේ ශරීරයට ඕන
-3. **එලියට යන්න** — විනාඩි 10ක් ඇවිදින්න
-4. **ලියන්න** — මොකද හිතෙන්නේ කියලා ලියන්න
-5. **කතා කරන්න** — විශ්වාස කරන කෙනෙක්ට
-
-**දිගු කාලීනව:**
-• දිනපතා ව්‍යායාමය (හොඳම antidepressant)
-• නින්ද හරියට
-• Screen time අඩු කරන්න
-• Nature එකේ වෙලාව ගත කරන්න
-• ඔයාට කැමති දේවල් වලට වෙලාව දෙන්න
-• භාවනාව (meditation)
-
-**හැමදාම මතක තියාගන්න:**
-ඔයා තනියම නෙමෙයි. මේ හැඟීම් තාවකාලිකයි. ඔයා ඔයාට වඩා ශක්තිමත්. 💪
-
-⚠️ **වැදගත්:** ඔයාට තදින්ම දුකක්, හානි කරගන්න හිතෙනවා නම් — **වහාම** විශ්වාස කරන වැඩිහිටියෙක්, doctor කෙනෙක් හෝ Sumithrayo (1926) අමතන්න. ඔයා වටිනවා! 💙`
-  },
-  {
-    keys:["time management","busy","schedule","manage","කාලය","වෙලාව","කාර්යබහුල"],
-    reply:`⏰ Time management:
+💡 **Secret:** Cutting expenses is easier than raising income! 📊` },
+  { keys:["time","busy","schedule","manage","කාලය","වෙලාව","කාර්යබහුල"], reply:`⏰ Time management:
 
 **Eisenhower Matrix:**
-• **Urgent + Important** — දැන්ම කරන්න
-• **Not Urgent + Important** — Schedule කරන්න (මේවා තමයි වැදගත්ම!)
-• **Urgent + Not Important** — delegate කරන්න
-• **Not Urgent + Not Important** — අයින් කරන්න
+• **Urgent + Important** → Do now
+• **Not Urgent + Important** → Schedule (these matter most!)
+• **Urgent + Not Important** → Delegate
+• **Not Urgent + Not Important** → Eliminate
 
 **Daily tips:**
-1. **උදේම ලියන්න** — අද කරන්න ඕන දේවල් 3ක්
-2. **Time blocking** — හැම පැයකට කරන්න ඕන දේ
-3. **2-minute rule** — විනාඩි 2න් කරන්න පුළුවන් දේ දැන්ම කරන්න
-4. **Night before planning** — හෙට දවසේ plan එක රෑට හදන්න
-5. **Say NO** — හැම දේටම ඔව් කියන්න එපා
-6. **Multitasking එපා** — එකවර දෙකක් කරන්න එපා
-7. **Break ගන්න** — විනාඩි 90 වැඩ + විනාඩි 15 break
+1. **Write 3 priorities** every morning
+2. **Time blocking** — assign hours to tasks
+3. **2-minute rule** — if it takes <2 min, do it now
+4. **Plan tomorrow tonight**
+5. **Say NO** more often
+6. **No multitasking**
+7. **Break after 90 min** of work
 
-💡 **රහස:** "මට වෙලාව නැහැ" කියන්නේ "ඒක මට priority නැහැ" කියන එකයි. 🎯`
-  },
-  {
-    keys:["failure","fail","mistake","wrong","අසාර්ථක","වැරදි","පරාජ"],
-    reply:`🌱 Failure ගැන මම ඔයාට කියන්නම්:
-
-**නිවැරදි සිතුවිල්ල:**
-• Failure = feedback
-• ඔයා fail වුනා = ඔයා උත්සාහ කළා
-• හැම champion කෙනෙක්ම පරාජිතයෙක් වෙලා ඉන්නවා
-• ඔයාගේ failure එක ඔයාගේ අනන්‍යතාවය නෙමෙයි
-
-**ළඟදි ප්‍රසිද්ධ උදාහරණ:**
-• **Steve Jobs** — Apple එකෙන් එලවලා දැම්මා, ආයෙත් ආවා
-• **J.K. Rowling** — publishers 12ක් ප්‍රතික්ෂේප කළා
-• **Michael Jordan** — 9000ක් විතර miss කළා
-• **Thomas Edison** — 1000 වතාවක් fail වුනා
-
-**කරන්න ඕන දේ:**
-1. වැරැද්ද පිළිගන්න (deny කරන්න එපා)
-2. ඉගෙන ගන්න — මොකද වැරදුනේ?
-3. වෙනස් විදියකින් try කරන්න
-4. දිගටම යන්න
-
-💡 **මතක තියාගන්න:** "Fall seven times, stand up eight." ජපන් කියමනක්! 🇯🇵`
-  },
-  {
-    keys:["goal","dream","target","ඉලක්ක","සිහින","බලාපොරොත්තු"],
-    reply:`🎯 Goals set කරගන්න:
+💡 **Secret:** "No time" really means "not a priority." 🎯` },
+  { keys:["goal","dream","target","ambition","ඉලක්ක","සිහින","බලාපොරොත්තු"], reply:`🎯 How to set goals:
 
 **SMART framework:**
-• **S**pecific — හරියටම මොකද කරන්නේ?
-• **M**easurable — කොච්චරද කියලා මනින්න පුළුවන්ද?
-• **A**chievable — ඇත්තටම කරන්න පුළුවන්ද?
-• **R**elevant — ඔයාගේ ජීවිතයට ගැලපෙනවද?
-• **T**ime-bound — කවදාටද ඉවර කරන්නේ?
+• **S**pecific — exactly what?
+• **M**easurable — how will you measure?
+• **A**chievable — is it realistic?
+• **R**elevant — does it fit your life?
+• **T**ime-bound — by when?
 
 **Example:**
-❌ "මම English ඉගෙන ගන්නම්"
-✅ "මම මාස 6ක් ඇතුලත දවසට විනාඩි 30 English practice කරලා, basic conversation කරන්න පුළුවන් වෙන්නම්"
+❌ "I'll learn English"
+✅ "In 6 months I'll practice 30 min/day and hold basic conversations"
 
-**Goals ලියන්න:**
-1. **වර්ෂයට** — මොකද achieve කරන්න ඕන?
-2. **මාසෙට** — කුඩා steps මොනවද?
-3. **සතියට** — අද සතියේ මොකද කරන්නේ?
-4. **දවසට** — දැන්ම මොකද කරන්නේ?
+**Write them down:**
+1. Yearly — big goals
+2. Monthly — milestones
+3. Weekly — action steps
+4. Daily — what to do today
 
-💡 **රහස:** ලියපු ඉලක්ක 42%ක් වැඩියෙන් achieve වෙනවා. **දැන්ම ලියන්න!** ✍️`
-  },
-  {
-    keys:["hello","hi","hey","ayubowan","හලෝ","හායි","කොහොමද"],
-    reply:`හායි! 👋 මම ඔයාගේ **AI Coach**. 
+💡 **Secret:** Written goals are 42% more likely to be achieved. **Write them now!** ✍️` },
+  { keys:["failure","fail","mistake","wrong","lost","අසාර්ථක","වැරදි","පරාජ"], reply:`🌱 Let's talk about failure:
 
-මට උදව් කරන්න පුළුවන්:
-🌅 උදේ නැගිටින්න
-🔥 Consistency හදාගන්න
-📚 Study focus වැඩි කරගන්න
-📱 Phone usage අඩු කරන්න
-💪 Exercise පටන් ගන්න
-💰 සල්ලි ඉතිරි කරන්න
-🗣️ English ඉගෙන ගන්න
-😴 නින්ද හරි ගස්සන්න
-💙 Stress එක manage කරන්න
+**Reframe it:**
+• Failure = feedback
+• You failed = you tried
+• Every champion has failed
+• Your failure is not your identity
 
-**ඕන එකක් අහන්න — සිංහලෙන් හෝ English වලින්!** 💙`
-  },
-  {
-    keys:["thank","thanks","thx","ස්තූති","බොහොම"],
-    reply:`You're welcome! 💙 
+**Famous examples:**
+• **Steve Jobs** — fired from Apple, came back
+• **J.K. Rowling** — rejected by 12 publishers
+• **Michael Jordan** — missed 9,000 shots
+• **Thomas Edison** — failed 1,000 times
 
-මම හැමවෙලාවෙම මෙතන ඉන්නවා. තව ඕන දෙයක් අහන්න!
+**What to do:**
+1. Acknowledge (don't deny)
+2. Learn from it
+3. Try a different way
+4. Keep going
 
-**මතක තියාගන්න:**
-👑 ඔයා **champion** කෙනෙක්
-🔥 දවසෙන් දවස ටිකක් better වෙන්න
-💪 දිගටම යන්න!
+💡 **Remember:** "Fall seven times, stand up eight." — Japanese proverb 🇯🇵` },
+  { keys:["reading","book","read","පොත","කියවන්න"], reply:`📚 How to build a reading habit:
 
-**You got this! 🚀**`
-  }
-];
+1. **10 pages a day** — small start. 2 books/month!
+2. **Read before bed** — instead of scrolling
+3. **Pick what you love** — don't force boring books
+4. **Physical or e-book** — both work
+5. **Take notes** — write key ideas
+6. **Visit a library** — environment helps
+7. **Audiobooks** — during commutes
 
-const FALLBACK_RESPONSES = [
-  `හ්ම්ම්... මට ඒක හරියටම තේරුනේ නැහැ. 🤔 තව ටිකක් විස්තර කරලා අහන්න පුළුවන්ද?
+**Great starter books:**
+• Atomic Habits — James Clear
+• Deep Work — Cal Newport
+• The 7 Habits of Highly Effective People — Covey
+• Rich Dad Poor Dad — Kiyosaki
 
-**මම උදව් කරන්න පුළුවන් දේවල්:**
-🌅 උදේ නැගිටින්න
-🔥 Consistency හදාගන්න
+💡 **Fact:** 12 books/year puts you years ahead of non-readers! 🚀` },
+  { keys:["hello","hi","hey","ayubowan","හලෝ","හායි","කොහොමද"], reply:`Hi there! 👋 I'm your **AI Coach**.
+
+I can help you with:
+🌅 Waking up early
+🔥 Staying consistent
 📚 Study focus
-😴 කම්මැලි ගතිය
+😴 Beating laziness
 📱 Phone control
 💪 Exercise
-💰 Money save
-🗣️ English
-😴 නින්ද
-💙 Stress
+💰 Saving money
+🗣️ Learning English
+😴 Better sleep
+💙 Managing stress
 ⏰ Time management
-🎯 Goals
+🎯 Goal setting
 
-**උදාහරණ:** "How to wake up early?" හෝ "මට කම්මැලි" කියලා අහන්න!`,
-  `මට ඒක හරියට තේරුනේ නැහැ. 💙 තව ටිකක් විස්තර කරන්න පුළුවන්ද?
+**Ask me anything — in English or Sinhala!** 💙` },
+  { keys:["thank","thanks","thx","ස්තූති","බොහොම"], reply:`You're welcome! 💙
 
-නැත්නම් පහල තියෙන **quick chips** එකක් ඔබන්න — මම ඒකට කෙලින්ම උත්තර දෙන්නම්! 👇`,
-  `Hmm, I'm not sure about that one. 🤔 Try asking differently, or use one of the quick buttons below!
+I'm always here. Ask me anything, anytime.
 
-**Try asking:**
-• "How to wake up early?"
-• "How to stay consistent?"
-• "I feel lazy today"
-• "Motivate me"
-• "How to control phone usage?"`
+**Remember:**
+👑 You are a champion
+🔥 Get a little better every day
+💪 Keep going!
+
+**You got this! 🚀**` },
+  { keys:["who are you","your name","what are you","කවුද","ඔයා"], reply:`I'm your **AI Coach** — a friendly assistant built into this app. 🤖
+
+I'm here to:
+• Answer questions about daily habits
+• Give you advice on focus, sleep, exercise, money, and more
+• Motivate you when you feel low
+• Help you build better routines
+
+I work **completely offline** — no API keys, no internet needed. All your conversations stay on your device. 🔒
+
+**Ask me anything!** 💙` }
 ];
+const FALLBACK = [
+  `Hmm, I didn't quite catch that. 🤔 Can you say it a bit differently?
 
+**Try asking about:**
+🌅 Wake up early · 🔥 Consistency · 📚 Study focus
+😴 Laziness · 📱 Phone control · 💪 Exercise
+💰 Money · 🗣️ English · 😴 Sleep · 💙 Stress
+⏰ Time · 🎯 Goals
+
+**Example:** "How to wake up early?" or "I feel lazy"`,
+  `I'm not sure about that one. 💙 Try rephrasing, or tap one of the quick chips below! 👇`,
+  `Hmm, that one's tricky. 🤔 Try one of the quick buttons below, or ask in a simpler way!`
+];
 function findChatResponse(input){
   const text = input.toLowerCase();
-  let bestMatch = null;
-  let bestScore = 0;
-  CHAT_RESPONSES.forEach(entry => {
-    let score = 0;
-    entry.keys.forEach(k => {
-      if(text.includes(k.toLowerCase())) score++;
-    });
-    if(score > bestScore){ bestScore = score; bestMatch = entry; }
+  let best = null, bestScore = 0;
+  CHAT_RESPONSES.forEach(e => {
+    let sc = 0;
+    e.keys.forEach(k => { if(text.includes(k.toLowerCase())) sc++; });
+    if(sc > bestScore){ bestScore = sc; best = e; }
   });
-  if(bestMatch && bestScore > 0) return bestMatch.reply;
-  return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)];
+  if(best && bestScore > 0) return best.reply;
+  return FALLBACK[Math.floor(Math.random() * FALLBACK.length)];
 }
-
 function initChat(){
   const stored = localStorage.getItem(K.chatHistory);
+  const c = document.getElementById("chat-container");
+  if(!c) return;
   if(stored){
     try{
       const msgs = JSON.parse(stored);
       if(Array.isArray(msgs) && msgs.length){
-        const c = document.getElementById("chat-container");
         c.innerHTML = "";
         msgs.forEach(m => appendChatMsg(m.role, m.text, false));
         return;
       }
     }catch{}
   }
-  // Fresh welcome
-  appendChatMsg("bot", `හායි! 👋 මම ඔයාගේ **AI Coach**.
+  appendChatMsg("bot", `Hi there! 👋 I'm your **AI Coach**.
 
-මම ඔයාට උදව් කරන්න පුළුවන්:
-🌅 උදේ නැගිටින්න · 🔥 Consistency · 📚 Study focus
-😴 කම්මැලි ගතිය · 📱 Phone control · 💪 Exercise
+I can help with:
+🌅 Wake up early · 🔥 Consistency · 📚 Study focus
+😴 Laziness · 📱 Phone control · 💪 Exercise
 💰 Money · 🗣️ English · 💙 Stress
 
-**සිංහලෙන් හෝ English වලින් ඕන ප්‍රශ්නයක් අහන්න!** 👑`, false);
+**Ask me anything — in English or Sinhala!** 👑`, false);
 }
 function appendChatMsg(role, text, save=true){
   const c = document.getElementById("chat-container");
   if(!c) return;
-  const avatarIcon = role === "user"
-    ? '<i class="fa-solid fa-user"></i>'
-    : '<i class="fa-solid fa-robot"></i>';
+  const av = role === "user" ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
   const div = document.createElement("div");
   div.className = "chat-msg " + role;
-  div.innerHTML = `
-    <div class="chat-avatar">${avatarIcon}</div>
-    <div class="chat-bubble">${escapeHtml(text).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")}</div>
-  `;
+  div.innerHTML = `<div class="chat-avatar">${av}</div><div class="chat-bubble">${escapeHtml(text).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")}</div>`;
   c.appendChild(div);
   c.scrollTop = c.scrollHeight;
-
   if(save){
     try{
-      const hist = JSON.parse(localStorage.getItem(K.chatHistory) || "[]");
-      hist.push({ role, text, t: Date.now() });
-      if(hist.length > 50) hist.splice(0, hist.length - 50);
-      localStorage.setItem(K.chatHistory, JSON.stringify(hist));
+      const h = JSON.parse(localStorage.getItem(K.chatHistory) || "[]");
+      h.push({ role, text, t: Date.now() });
+      if(h.length > 50) h.splice(0, h.length - 50);
+      localStorage.setItem(K.chatHistory, JSON.stringify(h));
     }catch{}
   }
 }
@@ -2446,43 +2665,29 @@ function sendChat(){
   if(!text) return;
   appendChatMsg("user", text);
   input.value = "";
-
-  // Show typing
   const c = document.getElementById("chat-container");
   const typing = document.createElement("div");
   typing.className = "chat-msg bot";
-  typing.id = "typing-indicator";
-  typing.innerHTML = `
-    <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
-    <div class="chat-bubble typing-dots"><span></span><span></span><span></span></div>
-  `;
+  typing.id = "typing";
+  typing.innerHTML = `<div class="chat-avatar"><i class="fa-solid fa-robot"></i></div><div class="chat-bubble typing-dots"><span></span><span></span><span></span></div>`;
   c.appendChild(typing);
   c.scrollTop = c.scrollHeight;
-
-  const delay = 500 + Math.random() * 600;
   setTimeout(() => {
-    const t = document.getElementById("typing-indicator");
+    const t = document.getElementById("typing");
     if(t) t.remove();
-    const reply = findChatResponse(text);
-    appendChatMsg("bot", reply);
-  }, delay);
+    appendChatMsg("bot", findChatResponse(text));
+  }, 500 + Math.random() * 500);
 }
 function quickAsk(q){
   document.getElementById("chat-input").value = q;
   sendChat();
 }
 
-/* ============================================================
-   KEYBOARD SHORTCUTS
-   ============================================================ */
 document.addEventListener("keydown", e => {
   if(e.target.matches("input, textarea, select")) return;
   if(e.key === "t" || e.key === "T") toggleTheme();
   if(e.key === "1") switchTab("daily");
   if(e.key === "2") switchTab("weekly");
-  if(e.key === " " && e.target === document.body && currentView === "dashboard"){
-    e.preventDefault(); togglePomodoro();
-  }
 });
 window.addEventListener("beforeunload", () => {
   if(currentNamespace && currentNamespace !== "guest") saveToNamespace();
